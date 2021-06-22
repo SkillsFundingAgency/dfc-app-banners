@@ -16,10 +16,10 @@ namespace DFC.App.Banners.Services.CacheContentService
     {
         private readonly ILogger<SharedContentCacheReloadService> logger;
         private readonly AutoMapper.IMapper mapper;
-        private readonly IDocumentService<SharedContentItemModel> sharedContentDocumentService;
+        private readonly IDocumentService<BannerContentItemModel> sharedContentDocumentService;
         private readonly ICmsApiService cmsApiService;
 
-        public SharedContentCacheReloadService(ILogger<SharedContentCacheReloadService> logger, AutoMapper.IMapper mapper, IDocumentService<SharedContentItemModel> sharedContentDocumentService, ICmsApiService cmsApiService)
+        public SharedContentCacheReloadService(ILogger<SharedContentCacheReloadService> logger, AutoMapper.IMapper mapper, IDocumentService<BannerContentItemModel> sharedContentDocumentService, ICmsApiService cmsApiService)
         {
             this.logger = logger;
             this.mapper = mapper;
@@ -72,7 +72,7 @@ namespace DFC.App.Banners.Services.CacheContentService
                 }
                 else
                 {
-                    var mappedContentItem = mapper.Map<SharedContentItemModel>(apiDataModel);
+                    var mappedContentItem = mapper.Map<BannerContentItemModel>(apiDataModel);
 
                     await sharedContentDocumentService.UpsertAsync(mappedContentItem);
                 }

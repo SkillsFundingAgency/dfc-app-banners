@@ -50,9 +50,9 @@ namespace DFC.App.Banners.Data.UnitTests.ValidationTests
             Assert.True(vr.Count == 0);
         }
 
-        private SharedContentItemModel CreateModel(Guid documentId, string title, string content)
+        private BannerContentItemModel CreateModel(Guid documentId, string title, string content)
         {
-            var model = new SharedContentItemModel
+            var model = new BannerContentItemModel
             {
                 Id = documentId,
                 Title = title,
@@ -66,7 +66,7 @@ namespace DFC.App.Banners.Data.UnitTests.ValidationTests
             return model;
         }
 
-        private List<ValidationResult> Validate(SharedContentItemModel model)
+        private List<ValidationResult> Validate(BannerContentItemModel model)
         {
             var vr = new List<ValidationResult>();
             var vc = new ValidationContext(model);

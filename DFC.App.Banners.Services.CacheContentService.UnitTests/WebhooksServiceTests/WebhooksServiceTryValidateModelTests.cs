@@ -27,7 +27,7 @@ namespace DFC.App.Banners.Services.CacheContentService.UnitTests.WebhooksService
         {
             // Arrange
             const bool expectedResponse = false;
-            var expectedInvalidContentItemModel = new SharedContentItemModel();
+            var expectedInvalidContentItemModel = new BannerContentItemModel();
             var service = BuildWebhooksService();
 
             // Act
@@ -41,7 +41,7 @@ namespace DFC.App.Banners.Services.CacheContentService.UnitTests.WebhooksService
         public void WebhooksServiceTryValidateModelRaisesExceptionForNullContentItemModel()
         {
             // Arrange
-            SharedContentItemModel? nullContentItemModel = null;
+            BannerContentItemModel? nullContentItemModel = null;
             var service = BuildWebhooksService();
 
             // Act

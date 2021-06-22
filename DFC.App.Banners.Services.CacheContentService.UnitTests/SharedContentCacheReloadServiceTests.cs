@@ -17,7 +17,7 @@ namespace DFC.App.Banners.Services.CacheContentService.UnitTests
     public class SharedContentCacheReloadServiceTests
     {
         private readonly IMapper fakeMapper = A.Fake<IMapper>();
-        private readonly IDocumentService<SharedContentItemModel> fakeSharedContentItemDocumentService = A.Fake<IDocumentService<SharedContentItemModel>>();
+        private readonly IDocumentService<BannerContentItemModel> fakeSharedContentItemDocumentService = A.Fake<IDocumentService<BannerContentItemModel>>();
         private readonly ICmsApiService fakeCmsApiService = A.Fake<ICmsApiService>();
 
         [Fact]
@@ -32,7 +32,7 @@ namespace DFC.App.Banners.Services.CacheContentService.UnitTests
 
             //Assert
             A.CallTo(() => fakeCmsApiService.GetItemAsync<SharedContentItemApiDataModel>(A<string>.Ignored, A<Guid>.Ignored)).MustNotHaveHappened();
-            A.CallTo(() => fakeSharedContentItemDocumentService.UpsertAsync(A<SharedContentItemModel>.Ignored)).MustNotHaveHappened();
+            A.CallTo(() => fakeSharedContentItemDocumentService.UpsertAsync(A<BannerContentItemModel>.Ignored)).MustNotHaveHappened();
         }
 
         [Fact]
@@ -49,7 +49,7 @@ namespace DFC.App.Banners.Services.CacheContentService.UnitTests
 
             //Assert
             A.CallTo(() => fakeCmsApiService.GetItemAsync<SharedContentItemApiDataModel>(A<string>.Ignored, A<Guid>.Ignored)).MustHaveHappened(SharedContentKeyHelper.GetSharedContentKeys().Count(), Times.Exactly);
-            A.CallTo(() => fakeSharedContentItemDocumentService.UpsertAsync(A<SharedContentItemModel>.Ignored)).MustHaveHappened(SharedContentKeyHelper.GetSharedContentKeys().Count(), Times.Exactly);
+            A.CallTo(() => fakeSharedContentItemDocumentService.UpsertAsync(A<BannerContentItemModel>.Ignored)).MustHaveHappened(SharedContentKeyHelper.GetSharedContentKeys().Count(), Times.Exactly);
         }
 
         [Fact]
@@ -66,7 +66,7 @@ namespace DFC.App.Banners.Services.CacheContentService.UnitTests
 
             //Assert
             A.CallTo(() => fakeCmsApiService.GetItemAsync<SharedContentItemApiDataModel>(A<string>.Ignored, A<Guid>.Ignored)).MustHaveHappened(SharedContentKeyHelper.GetSharedContentKeys().Count(), Times.Exactly);
-            A.CallTo(() => fakeSharedContentItemDocumentService.UpsertAsync(A<SharedContentItemModel>.Ignored)).MustHaveHappened(SharedContentKeyHelper.GetSharedContentKeys().Count(), Times.Exactly);
+            A.CallTo(() => fakeSharedContentItemDocumentService.UpsertAsync(A<BannerContentItemModel>.Ignored)).MustHaveHappened(SharedContentKeyHelper.GetSharedContentKeys().Count(), Times.Exactly);
         }
 
         [Fact]
@@ -83,7 +83,7 @@ namespace DFC.App.Banners.Services.CacheContentService.UnitTests
 
             //Assert
             A.CallTo(() => fakeCmsApiService.GetItemAsync<SharedContentItemApiDataModel>(A<string>.Ignored, A<Guid>.Ignored)).MustHaveHappened(SharedContentKeyHelper.GetSharedContentKeys().Count(), Times.Exactly);
-            A.CallTo(() => fakeSharedContentItemDocumentService.UpsertAsync(A<SharedContentItemModel>.Ignored)).MustNotHaveHappened();
+            A.CallTo(() => fakeSharedContentItemDocumentService.UpsertAsync(A<BannerContentItemModel>.Ignored)).MustNotHaveHappened();
         }
     }
 }

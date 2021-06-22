@@ -20,13 +20,13 @@ namespace DFC.App.Banners.Services.CacheContentService
         private readonly ILogger<WebhooksService> logger;
         private readonly AutoMapper.IMapper mapper;
         private readonly ICmsApiService cmsApiService;
-        private readonly IDocumentService<SharedContentItemModel> sharedContentItemDocumentService;
+        private readonly IDocumentService<BannerContentItemModel> sharedContentItemDocumentService;
 
         public WebhooksService(
             ILogger<WebhooksService> logger,
             AutoMapper.IMapper mapper,
             ICmsApiService cmsApiService,
-            IDocumentService<SharedContentItemModel> sharedContentItemDocumentService)
+            IDocumentService<BannerContentItemModel> sharedContentItemDocumentService)
         {
             this.logger = logger;
             this.mapper = mapper;
@@ -58,7 +58,7 @@ namespace DFC.App.Banners.Services.CacheContentService
         public async Task<HttpStatusCode> ProcessContentAsync(Uri url)
         {
             var apiDataModel = await cmsApiService.GetItemAsync<SharedContentItemApiDataModel>(url);
-            var sharedContentItemModel = mapper.Map<SharedContentItemModel>(apiDataModel);
+            var sharedContentItemModel = mapper.Map<BannerContentItemModel>(apiDataModel);
 
             if (sharedContentItemModel == null)
             {
@@ -82,7 +82,7 @@ namespace DFC.App.Banners.Services.CacheContentService
             return result ? HttpStatusCode.OK : HttpStatusCode.NoContent;
         }
 
-        public bool TryValidateModel(SharedContentItemModel? sharedContentItemModel)
+        public bool TryValidateModel(BannerContentItemModel? sharedContentItemModel)
         {
             _ = sharedContentItemModel ?? throw new ArgumentNullException(nameof(sharedContentItemModel));
 

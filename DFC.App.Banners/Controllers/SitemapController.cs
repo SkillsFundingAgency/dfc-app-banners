@@ -33,7 +33,7 @@ namespace DFC.App.Banners.Controllers
         {
             logger.LogInformation("Generating Sitemap");
 
-            var sitemapUrlPrefix = $"{Request.GetBaseAddress()}{PagesController.RegistrationPath}";
+            var sitemapUrlPrefix = $"{Request.GetBaseAddress()}{BannersController.RegistrationPath}";
             var sitemap = new Sitemap();
 
             // add the defaults

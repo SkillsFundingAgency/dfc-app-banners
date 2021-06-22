@@ -26,8 +26,8 @@ namespace DFC.App.Banners.Services.CacheContentService.UnitTests.WebhooksService
 
             // Assert
             A.CallTo(() => FakeCmsApiService.GetItemAsync<SharedContentItemApiDataModel>(A<Uri>.Ignored)).MustNotHaveHappened();
-            A.CallTo(() => FakeMapper.Map<SharedContentItemModel>(A<SharedContentItemApiDataModel>.Ignored)).MustNotHaveHappened();
-            A.CallTo(() => FakeSharedContentItemDocumentService.UpsertAsync(A<SharedContentItemModel>.Ignored)).MustNotHaveHappened();
+            A.CallTo(() => FakeMapper.Map<BannerContentItemModel>(A<SharedContentItemApiDataModel>.Ignored)).MustNotHaveHappened();
+            A.CallTo(() => FakeSharedContentItemDocumentService.UpsertAsync(A<BannerContentItemModel>.Ignored)).MustNotHaveHappened();
             A.CallTo(() => FakeSharedContentItemDocumentService.DeleteAsync(A<Guid>.Ignored)).MustNotHaveHappened();
 
             Assert.Equal(expectedResponse, result);
@@ -43,8 +43,8 @@ namespace DFC.App.Banners.Services.CacheContentService.UnitTests.WebhooksService
             var service = BuildWebhooksService();
 
             A.CallTo(() => FakeCmsApiService.GetItemAsync<SharedContentItemApiDataModel>(A<Uri>.Ignored)).Returns(expectedValidContentItemApiDataModel);
-            A.CallTo(() => FakeMapper.Map<SharedContentItemModel>(A<SharedContentItemApiDataModel>.Ignored)).Returns(expectedValidContentItemModel);
-            A.CallTo(() => FakeSharedContentItemDocumentService.UpsertAsync(A<SharedContentItemModel>.Ignored)).Returns(HttpStatusCode.Created);
+            A.CallTo(() => FakeMapper.Map<BannerContentItemModel>(A<SharedContentItemApiDataModel>.Ignored)).Returns(expectedValidContentItemModel);
+            A.CallTo(() => FakeSharedContentItemDocumentService.UpsertAsync(A<BannerContentItemModel>.Ignored)).Returns(HttpStatusCode.Created);
 
             // Act
             await Assert.ThrowsAsync<InvalidDataException>(async () => await service.ProcessMessageAsync(WebhookCacheOperation.CreateOrUpdate, Guid.NewGuid(), ContentIdForCreate, url));
@@ -61,16 +61,16 @@ namespace DFC.App.Banners.Services.CacheContentService.UnitTests.WebhooksService
             var service = BuildWebhooksService();
 
             A.CallTo(() => FakeCmsApiService.GetItemAsync<SharedContentItemApiDataModel>(A<Uri>.Ignored)).Returns(expectedValidContentItemApiDataModel);
-            A.CallTo(() => FakeMapper.Map<SharedContentItemModel>(A<SharedContentItemApiDataModel>.Ignored)).Returns(expectedValidContentItemModel);
-            A.CallTo(() => FakeSharedContentItemDocumentService.UpsertAsync(A<SharedContentItemModel>.Ignored)).Returns(HttpStatusCode.Created);
+            A.CallTo(() => FakeMapper.Map<BannerContentItemModel>(A<SharedContentItemApiDataModel>.Ignored)).Returns(expectedValidContentItemModel);
+            A.CallTo(() => FakeSharedContentItemDocumentService.UpsertAsync(A<BannerContentItemModel>.Ignored)).Returns(HttpStatusCode.Created);
 
             // Act
             var result = await service.ProcessMessageAsync(WebhookCacheOperation.CreateOrUpdate, Guid.NewGuid(), ContentIdForCreate, url);
 
             // Assert
             A.CallTo(() => FakeCmsApiService.GetItemAsync<SharedContentItemApiDataModel>(A<Uri>.Ignored)).MustHaveHappenedOnceExactly();
-            A.CallTo(() => FakeMapper.Map<SharedContentItemModel>(A<SharedContentItemApiDataModel>.Ignored)).MustHaveHappenedOnceExactly();
-            A.CallTo(() => FakeSharedContentItemDocumentService.UpsertAsync(A<SharedContentItemModel>.Ignored)).MustHaveHappenedOnceExactly();
+            A.CallTo(() => FakeMapper.Map<BannerContentItemModel>(A<SharedContentItemApiDataModel>.Ignored)).MustHaveHappenedOnceExactly();
+            A.CallTo(() => FakeSharedContentItemDocumentService.UpsertAsync(A<BannerContentItemModel>.Ignored)).MustHaveHappenedOnceExactly();
             A.CallTo(() => FakeSharedContentItemDocumentService.DeleteAsync(A<Guid>.Ignored)).MustNotHaveHappened();
 
             Assert.Equal(expectedResponse, result);
@@ -87,16 +87,16 @@ namespace DFC.App.Banners.Services.CacheContentService.UnitTests.WebhooksService
             var service = BuildWebhooksService();
 
             A.CallTo(() => FakeCmsApiService.GetItemAsync<SharedContentItemApiDataModel>(A<Uri>.Ignored)).Returns(expectedValidContentItemApiDataModel);
-            A.CallTo(() => FakeMapper.Map<SharedContentItemModel>(A<SharedContentItemApiDataModel>.Ignored)).Returns(expectedValidContentItemModel);
-            A.CallTo(() => FakeSharedContentItemDocumentService.UpsertAsync(A<SharedContentItemModel>.Ignored)).Returns(HttpStatusCode.OK);
+            A.CallTo(() => FakeMapper.Map<BannerContentItemModel>(A<SharedContentItemApiDataModel>.Ignored)).Returns(expectedValidContentItemModel);
+            A.CallTo(() => FakeSharedContentItemDocumentService.UpsertAsync(A<BannerContentItemModel>.Ignored)).Returns(HttpStatusCode.OK);
 
             // Act
             var result = await service.ProcessMessageAsync(WebhookCacheOperation.CreateOrUpdate, Guid.NewGuid(), ContentIdForUpdate, url);
 
             // Assert
             A.CallTo(() => FakeCmsApiService.GetItemAsync<SharedContentItemApiDataModel>(A<Uri>.Ignored)).MustHaveHappenedOnceExactly();
-            A.CallTo(() => FakeMapper.Map<SharedContentItemModel>(A<SharedContentItemApiDataModel>.Ignored)).MustHaveHappenedOnceExactly();
-            A.CallTo(() => FakeSharedContentItemDocumentService.UpsertAsync(A<SharedContentItemModel>.Ignored)).MustHaveHappenedOnceExactly();
+            A.CallTo(() => FakeMapper.Map<BannerContentItemModel>(A<SharedContentItemApiDataModel>.Ignored)).MustHaveHappenedOnceExactly();
+            A.CallTo(() => FakeSharedContentItemDocumentService.UpsertAsync(A<BannerContentItemModel>.Ignored)).MustHaveHappenedOnceExactly();
             A.CallTo(() => FakeSharedContentItemDocumentService.DeleteAsync(A<Guid>.Ignored)).MustNotHaveHappened();
 
             Assert.Equal(expectedResponse, result);
@@ -117,7 +117,7 @@ namespace DFC.App.Banners.Services.CacheContentService.UnitTests.WebhooksService
 
             // Assert
             A.CallTo(() => FakeCmsApiService.GetItemAsync<SharedContentItemApiDataModel>(A<Uri>.Ignored)).MustNotHaveHappened();
-            A.CallTo(() => FakeSharedContentItemDocumentService.UpsertAsync(A<SharedContentItemModel>.Ignored)).MustNotHaveHappened();
+            A.CallTo(() => FakeSharedContentItemDocumentService.UpsertAsync(A<BannerContentItemModel>.Ignored)).MustNotHaveHappened();
             A.CallTo(() => FakeSharedContentItemDocumentService.DeleteAsync(A<Guid>.Ignored)).MustHaveHappenedOnceExactly();
 
             Assert.Equal(expectedResponse, result);

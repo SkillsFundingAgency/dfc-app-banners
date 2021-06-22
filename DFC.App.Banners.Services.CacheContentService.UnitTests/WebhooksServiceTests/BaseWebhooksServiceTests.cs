@@ -21,7 +21,7 @@ namespace DFC.App.Banners.Services.CacheContentService.UnitTests.WebhooksService
             Logger = A.Fake<ILogger<WebhooksService>>();
             FakeMapper = A.Fake<AutoMapper.IMapper>();
             FakeCmsApiService = A.Fake<ICmsApiService>();
-            FakeSharedContentItemDocumentService = A.Fake<IDocumentService<SharedContentItemModel>>();
+            FakeSharedContentItemDocumentService = A.Fake<IDocumentService<BannerContentItemModel>>();
         }
 
         protected Guid ContentIdForCreate { get; } = Guid.NewGuid();
@@ -36,7 +36,7 @@ namespace DFC.App.Banners.Services.CacheContentService.UnitTests.WebhooksService
 
         protected ICmsApiService FakeCmsApiService { get; }
 
-        protected IDocumentService<SharedContentItemModel> FakeSharedContentItemDocumentService { get; }
+        protected IDocumentService<BannerContentItemModel> FakeSharedContentItemDocumentService { get; }
 
         protected static SharedContentItemApiDataModel BuildValidContentItemApiDataModel()
         {
@@ -52,9 +52,9 @@ namespace DFC.App.Banners.Services.CacheContentService.UnitTests.WebhooksService
             return model;
         }
 
-        protected SharedContentItemModel BuildValidContentItemModel()
+        protected BannerContentItemModel BuildValidContentItemModel()
         {
-            var model = new SharedContentItemModel()
+            var model = new BannerContentItemModel()
             {
                 Id = ContentIdForUpdate,
                 Etag = Guid.NewGuid().ToString(),

@@ -13,7 +13,7 @@ namespace DFC.App.Banners.AutoMapperProfiles
     {
         public SharedContentItemModelProfile()
         {
-            CreateMap<SharedContentItemApiDataModel, SharedContentItemModel>()
+            CreateMap<SharedContentItemApiDataModel, BannerContentItemModel>()
                 .ForMember(d => d.Id, s => s.MapFrom(a => a.ItemId))
                 .ForMember(d => d.Etag, s => s.Ignore())
                 .ForMember(d => d.ParentId, s => s.Ignore())
@@ -22,22 +22,22 @@ namespace DFC.App.Banners.AutoMapperProfiles
                 .ForMember(d => d.LastReviewed, s => s.MapFrom(a => a.Published))
                 .ForMember(d => d.LastCached, s => s.Ignore());
 
-            CreateMap<SharedContentItemModel, IndexDocumentViewModel>();
+            CreateMap<BannerContentItemModel, IndexDocumentViewModel>();
 
-            CreateMap<SharedContentItemModel, DocumentViewModel>()
+            CreateMap<BannerContentItemModel, DocumentViewModel>()
                 .ForMember(d => d.HtmlHead, s => s.MapFrom(a => a))
                 .ForMember(d => d.Breadcrumb, s => s.Ignore())
                 .ForMember(d => d.BodyViewModel, s => s.MapFrom(a => a));
 
-            CreateMap<SharedContentItemModel, HtmlHeadViewModel>()
+            CreateMap<BannerContentItemModel, HtmlHeadViewModel>()
                 .ForMember(d => d.CanonicalUrl, s => s.Ignore())
                 .ForMember(d => d.Description, s => s.Ignore())
                 .ForMember(d => d.Keywords, s => s.Ignore());
 
-            CreateMap<SharedContentItemModel, BodyViewModel>()
+            CreateMap<BannerContentItemModel, BodyViewModel>()
                 .ForMember(d => d.Body, s => s.MapFrom(a => new HtmlString(a.Content)));
 
-            CreateMap<SharedContentItemModel, BreadcrumbItemModel>()
+            CreateMap<BannerContentItemModel, BreadcrumbItemModel>()
                 .ForMember(d => d.Route, s => s.Ignore());
 
             CreateMap<BreadcrumbItemModel, BreadcrumbItemViewModel>()

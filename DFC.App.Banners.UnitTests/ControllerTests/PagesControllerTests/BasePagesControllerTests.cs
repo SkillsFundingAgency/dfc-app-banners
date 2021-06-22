@@ -15,8 +15,8 @@ namespace DFC.App.Banners.UnitTests.ControllerTests.PagesControllerTests
     {
         protected BasePagesControllerTests()
         {
-            Logger = A.Fake<ILogger<PagesController>>();
-            FakeSharedContentItemDocumentService = A.Fake<IDocumentService<SharedContentItemModel>>();
+            Logger = A.Fake<ILogger<BannersController>>();
+            FakeSharedContentItemDocumentService = A.Fake<IDocumentService<BannerContentItemModel>>();
             FakeMapper = A.Fake<AutoMapper.IMapper>();
         }
 
@@ -36,19 +36,19 @@ namespace DFC.App.Banners.UnitTests.ControllerTests.PagesControllerTests
             new string[] { MediaTypeNames.Application.Json },
         };
 
-        protected ILogger<PagesController> Logger { get; }
+        protected ILogger<BannersController> Logger { get; }
 
-        protected IDocumentService<SharedContentItemModel> FakeSharedContentItemDocumentService { get; }
+        protected IDocumentService<BannerContentItemModel> FakeSharedContentItemDocumentService { get; }
 
         protected AutoMapper.IMapper FakeMapper { get; }
 
-        protected PagesController BuildPagesController(string mediaTypeName)
+        protected BannersController BuildPagesController(string mediaTypeName)
         {
             var httpContext = new DefaultHttpContext();
 
             httpContext.Request.Headers[HeaderNames.Accept] = mediaTypeName;
 
-            var controller = new PagesController(Logger, FakeMapper, FakeSharedContentItemDocumentService)
+            var controller = new BannersController(Logger, FakeMapper, FakeSharedContentItemDocumentService)
             {
                 ControllerContext = new ControllerContext()
                 {

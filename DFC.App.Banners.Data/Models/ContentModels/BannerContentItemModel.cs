@@ -1,14 +1,15 @@
-﻿using System;
+﻿using DFC.Compui.Cosmos.Contracts;
+
+using System;
 using System.ComponentModel.DataAnnotations;
 using System.Diagnostics.CodeAnalysis;
-using DFC.Compui.Cosmos.Contracts;
 
 namespace DFC.App.Banners.Data.Models.ContentModels
 {
     [ExcludeFromCodeCoverage]
-    public class SharedContentItemModel : DocumentModel
+    public class BannerContentItemModel : DocumentModel
     {
-        public const string DefaultPartitionKey = "shared-content";
+        public const string DefaultPartitionKey = "banners";
 
         public override string? PartitionKey { get; set; } = DefaultPartitionKey;
 
