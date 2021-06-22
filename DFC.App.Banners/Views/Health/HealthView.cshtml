@@ -1,0 +1,27 @@
+﻿@model HealthViewModel
+
+@{
+    Layout = "_LocalLayout";
+
+    ViewData["Title"] = "Health";
+
+    var breadcrumbViewModel = new BreadcrumbViewModel
+    {
+        Breadcrumbs = new List<BreadcrumbItemViewModel>
+{
+            new BreadcrumbItemViewModel
+            {
+                 Route = "/",
+                 Title = "Home",
+            },
+        },
+    };
+}
+
+<partial name="Breadcrumb" model="breadcrumbViewModel" />
+
+<div class="govuk-grid-row">
+    <div class="govuk-grid-column-full">
+        <partial name="Health" model="Model" />
+    </div>
+</div>
