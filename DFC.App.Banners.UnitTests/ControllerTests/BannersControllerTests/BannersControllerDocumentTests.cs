@@ -25,13 +25,13 @@ namespace DFC.App.Banners.UnitTests.ControllerTests.BannersControllerTests
         {
             // Arrange
             var controller = BuildBannersController(mediaTypeName);
-           
+
             // Act
             var result = await controller.GetAsync("/some-location").ConfigureAwait(false);
 
             // Assert
             var viewResult = Assert.IsType<ViewResult>(result);
-            var model = Assert.IsAssignableFrom<PageBannerViewModel>(viewResult.ViewData.Model);
+            _ = Assert.IsAssignableFrom<PageBannerViewModel>(viewResult.ViewData.Model);
 
             controller.Dispose();
         }

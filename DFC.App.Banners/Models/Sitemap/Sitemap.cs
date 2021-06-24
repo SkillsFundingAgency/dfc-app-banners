@@ -71,7 +71,7 @@ namespace DFC.App.Banners.Models
         {
             using var fs = new FileStream(path, FileMode.Create);
             var ns = new XmlSerializerNamespaces();
-            ns.Add("image", "http://www.google.com/schemas/sitemap-image/1.1");
+            ns.Add("image", "https://www.google.com/schemas/sitemap-image/1.1");
 
             var xs = new XmlSerializer(typeof(Sitemap));
             xs.Serialize(fs, this, ns);
@@ -81,7 +81,7 @@ namespace DFC.App.Banners.Models
         {
             using var sw = new StringWriter();
             var ns = new XmlSerializerNamespaces();
-            ns.Add("image", "http://www.google.com/schemas/sitemap-image/1.1");
+            ns.Add("image", "https://www.google.com/schemas/sitemap-image/1.1");
 
             var xs = new XmlSerializer(typeof(Sitemap));
             xs.Serialize(sw, this, ns);

@@ -41,18 +41,15 @@ namespace DFC.App.Banners.Controllers
         {
             var pageBannerContentItemModel = await documentService.GetAsync(a => a.PartitionKey == path);
 
-            if (pageBannerContentItemModel != null)
+            if (pageBannerContentItemModel?.Any() is true)
             {
-                var documents = pageBannerContentItemModel
-                                .Select(a => mapper.Map<PageBannerViewModel>(a));
-
+                var document = mapper.Map<PageBannerViewModel>(pageBannerContentItemModel.First());
                 logger.LogInformation($"{nameof(Index)} has succeeded");
-            }
-            else
-            {
-                logger.LogWarning($"{nameof(Index)} has returned with no results");
+
+                return Ok(document);
             }
 
+            logger.LogWarning($"{nameof(Index)} has returned with no results");
             return this.NegotiateContentResult(new PageBannerViewModel());
         }
     }

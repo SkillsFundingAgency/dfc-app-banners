@@ -15,12 +15,11 @@ namespace DFC.App.Banners.Data.UnitTests.ValidationTests
         private const string GuidEmpty = "00000000-0000-0000-0000-000000000000";
 
         [Theory]
-        [InlineData(null)]
         [InlineData(GuidEmpty)]
         public void CanCheckIfDocumentIdIsInvalid(Guid documentId)
         {
             // Arrange
-            var model = CreateModel(documentId, "A title", "<p>some content</p>");
+            var model = CreateModel(documentId, "<p>some content</p>");
 
             // Act
             var vr = Validate(model);
@@ -31,26 +30,7 @@ namespace DFC.App.Banners.Data.UnitTests.ValidationTests
             Assert.Equal(string.Format(CultureInfo.InvariantCulture, FieldInvalidGuid, nameof(model.Id)), vr.First(f => f.MemberNames.Any(a => a == nameof(model.Id))).ErrorMessage);
         }
 
-        [Theory]
-        [InlineData("abcdefghijklmnopqrstuvwxyz")]
-        [InlineData("0123456789")]
-        [InlineData("abc")]
-        [InlineData("xyz123")]
-        [InlineData("abc_def")]
-        [InlineData("abc-def")]
-        public void CanCheckITitleIsValid(string title)
-        {
-            // Arrange
-            var model = CreateModel(Guid.NewGuid(), title, "<p>some content</p>");
-
-            // Act
-            var vr = Validate(model);
-
-            // Assert
-            Assert.True(vr.Count == 0);
-        }
-
-        private PageBannerContentItemModel CreateModel(Guid documentId, string title, string content)
+        private PageBannerContentItemModel CreateModel(Guid documentId, string content)
         {
             var model = new PageBannerContentItemModel
             {

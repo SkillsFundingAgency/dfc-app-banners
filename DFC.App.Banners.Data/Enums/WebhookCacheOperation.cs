@@ -1,5 +1,4 @@
-﻿
-namespace DFC.App.Banners.Data.Enums
+﻿namespace DFC.App.Banners.Data.Enums
 {
     public enum WebhookCacheOperation
     {
