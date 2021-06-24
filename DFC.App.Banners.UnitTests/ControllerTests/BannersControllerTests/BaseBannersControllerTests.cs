@@ -1,9 +1,14 @@
 ﻿using System.Collections.Generic;
 using System.Net.Mime;
+
+using AutoMapper;
+
 using DFC.App.Banners.Controllers;
 using DFC.App.Banners.Data.Models.ContentModels;
 using DFC.Compui.Cosmos.Contracts;
+
 using FakeItEasy;
+
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
@@ -11,13 +16,13 @@ using Microsoft.Net.Http.Headers;
 
 namespace DFC.App.Banners.UnitTests.ControllerTests.PagesControllerTests
 {
-    public abstract class BasePagesControllerTests
+    public abstract class BaseBannersControllerTests
     {
-        protected BasePagesControllerTests()
+        protected BaseBannersControllerTests()
         {
             Logger = A.Fake<ILogger<BannersController>>();
-            FakeSharedContentItemDocumentService = A.Fake<IDocumentService<BannerContentItemModel>>();
-            FakeMapper = A.Fake<AutoMapper.IMapper>();
+            FakeSharedContentItemDocumentService = A.Fake<IDocumentService<PageBannerContentItemModel>>();
+            FakeMapper = A.Fake<IMapper>();
         }
 
         public static IEnumerable<object[]> HtmlMediaTypes => new List<object[]>
@@ -38,11 +43,11 @@ namespace DFC.App.Banners.UnitTests.ControllerTests.PagesControllerTests
 
         protected ILogger<BannersController> Logger { get; }
 
-        protected IDocumentService<BannerContentItemModel> FakeSharedContentItemDocumentService { get; }
+        protected IDocumentService<PageBannerContentItemModel> FakeSharedContentItemDocumentService { get; }
 
-        protected AutoMapper.IMapper FakeMapper { get; }
+        protected IMapper FakeMapper { get; }
 
-        protected BannersController BuildPagesController(string mediaTypeName)
+        protected BannersController BuildBannersController(string mediaTypeName)
         {
             var httpContext = new DefaultHttpContext();
 

@@ -61,7 +61,7 @@ namespace DFC.App.Banners
         public void ConfigureServices(IServiceCollection services)
         {
             var cosmosDbConnectionSharedContent = configuration.GetSection(CosmosDbSharedContentConfigAppSettings).Get<CosmosDbConnection>();
-            services.AddDocumentServices<BannerContentItemModel>(cosmosDbConnectionSharedContent, env.IsDevelopment());
+            services.AddDocumentServices<PageBannerContentItemModel>(cosmosDbConnectionSharedContent, env.IsDevelopment());
 
             services.AddApplicationInsightsTelemetry();
             services.AddHttpContextAccessor();

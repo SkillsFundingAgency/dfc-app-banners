@@ -15,10 +15,10 @@ namespace DFC.App.Banners.Controllers
         public const string HealthViewCanonicalName = "health";
 
         private readonly ILogger<HealthController> logger;
-        private readonly IDocumentService<BannerContentItemModel> sharedContentItemDocumentService;
+        private readonly IDocumentService<PageBannerContentItemModel> sharedContentItemDocumentService;
         private readonly string resourceName = typeof(Program).Namespace!;
 
-        public HealthController(ILogger<HealthController> logger, IDocumentService<BannerContentItemModel> sharedContentItemDocumentService)
+        public HealthController(ILogger<HealthController> logger, IDocumentService<PageBannerContentItemModel> sharedContentItemDocumentService)
         {
             this.logger = logger;
             this.sharedContentItemDocumentService = sharedContentItemDocumentService;

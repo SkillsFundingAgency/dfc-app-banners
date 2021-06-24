@@ -1,23 +1,21 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Diagnostics.CodeAnalysis;
 
 namespace DFC.App.Banners.ViewModels
 {
     [ExcludeFromCodeCoverage]
-    public class DocumentViewModel
+    public class PageBannerViewModel
     {
-        public HtmlHeadViewModel HtmlHead { get; set; } = new HtmlHeadViewModel();
-
-        public BreadcrumbViewModel? Breadcrumb { get; set; }
-
         [Display(Name = "Document Id")]
         public Guid Id { get; set; }
 
-        public string? Title { get; set; }
+        public string? PageLocation { get; set; }
 
-        [Display(Name = "PartitionKey")]
         public string? PartitionKey { get; set; }
+
+        public Guid Version { get; set; }
 
         public Uri? Url { get; set; }
 
@@ -33,6 +31,6 @@ namespace DFC.App.Banners.ViewModels
         [DisplayFormat(DataFormatString = "{0:dd MMM yyyy HH:mm:ss}")]
         public DateTime LastCached { get; set; }
 
-        public BodyViewModel? BodyViewModel { get; set; }
+        public List<BodyViewModel> Banners { get; set; } = new List<BodyViewModel>();
     }
 }

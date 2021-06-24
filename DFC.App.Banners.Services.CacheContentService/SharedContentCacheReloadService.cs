@@ -8,6 +8,7 @@ using DFC.App.Banners.Data.Models.CmsApiModels;
 using DFC.App.Banners.Data.Models.ContentModels;
 using DFC.Compui.Cosmos.Contracts;
 using DFC.Content.Pkg.Netcore.Data.Contracts;
+
 using Microsoft.Extensions.Logging;
 
 namespace DFC.App.Banners.Services.CacheContentService
@@ -16,10 +17,10 @@ namespace DFC.App.Banners.Services.CacheContentService
     {
         private readonly ILogger<SharedContentCacheReloadService> logger;
         private readonly AutoMapper.IMapper mapper;
-        private readonly IDocumentService<BannerContentItemModel> sharedContentDocumentService;
+        private readonly IDocumentService<PageBannerContentItemModel> sharedContentDocumentService;
         private readonly ICmsApiService cmsApiService;
 
-        public SharedContentCacheReloadService(ILogger<SharedContentCacheReloadService> logger, AutoMapper.IMapper mapper, IDocumentService<BannerContentItemModel> sharedContentDocumentService, ICmsApiService cmsApiService)
+        public SharedContentCacheReloadService(ILogger<SharedContentCacheReloadService> logger, AutoMapper.IMapper mapper, IDocumentService<PageBannerContentItemModel> sharedContentDocumentService, ICmsApiService cmsApiService)
         {
             this.logger = logger;
             this.mapper = mapper;
@@ -72,7 +73,7 @@ namespace DFC.App.Banners.Services.CacheContentService
                 }
                 else
                 {
-                    var mappedContentItem = mapper.Map<BannerContentItemModel>(apiDataModel);
+                    var mappedContentItem = mapper.Map<PageBannerContentItemModel>(apiDataModel);
 
                     await sharedContentDocumentService.UpsertAsync(mappedContentItem);
                 }

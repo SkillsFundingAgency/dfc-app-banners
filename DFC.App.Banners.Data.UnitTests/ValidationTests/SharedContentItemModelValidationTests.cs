@@ -50,12 +50,11 @@ namespace DFC.App.Banners.Data.UnitTests.ValidationTests
             Assert.True(vr.Count == 0);
         }
 
-        private BannerContentItemModel CreateModel(Guid documentId, string title, string content)
+        private PageBannerContentItemModel CreateModel(Guid documentId, string title, string content)
         {
-            var model = new BannerContentItemModel
+            var model = new PageBannerContentItemModel
             {
                 Id = documentId,
-                Title = title,
                 Url = new Uri("aaa-bbb", UriKind.Relative),
                 Content = content,
                 LastReviewed = DateTime.UtcNow,
@@ -66,7 +65,7 @@ namespace DFC.App.Banners.Data.UnitTests.ValidationTests
             return model;
         }
 
-        private List<ValidationResult> Validate(BannerContentItemModel model)
+        private List<ValidationResult> Validate(PageBannerContentItemModel model)
         {
             var vr = new List<ValidationResult>();
             var vc = new ValidationContext(model);

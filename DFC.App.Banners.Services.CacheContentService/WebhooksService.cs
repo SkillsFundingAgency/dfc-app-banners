@@ -20,13 +20,13 @@ namespace DFC.App.Banners.Services.CacheContentService
         private readonly ILogger<WebhooksService> logger;
         private readonly AutoMapper.IMapper mapper;
         private readonly ICmsApiService cmsApiService;
-        private readonly IDocumentService<BannerContentItemModel> sharedContentItemDocumentService;
+        private readonly IDocumentService<PageBannerContentItemModel> sharedContentItemDocumentService;
 
         public WebhooksService(
             ILogger<WebhooksService> logger,
             AutoMapper.IMapper mapper,
             ICmsApiService cmsApiService,
-            IDocumentService<BannerContentItemModel> sharedContentItemDocumentService)
+            IDocumentService<PageBannerContentItemModel> sharedContentItemDocumentService)
         {
             this.logger = logger;
             this.mapper = mapper;
@@ -58,7 +58,7 @@ namespace DFC.App.Banners.Services.CacheContentService
         public async Task<HttpStatusCode> ProcessContentAsync(Uri url)
         {
             var apiDataModel = await cmsApiService.GetItemAsync<SharedContentItemApiDataModel>(url);
-            var sharedContentItemModel = mapper.Map<BannerContentItemModel>(apiDataModel);
+            var sharedContentItemModel = mapper.Map<PageBannerContentItemModel>(apiDataModel);
 
             if (sharedContentItemModel == null)
             {
@@ -82,7 +82,7 @@ namespace DFC.App.Banners.Services.CacheContentService
             return result ? HttpStatusCode.OK : HttpStatusCode.NoContent;
         }
 
-        public bool TryValidateModel(BannerContentItemModel? sharedContentItemModel)
+        public bool TryValidateModel(PageBannerContentItemModel? sharedContentItemModel)
         {
             _ = sharedContentItemModel ?? throw new ArgumentNullException(nameof(sharedContentItemModel));
 
@@ -94,7 +94,7 @@ namespace DFC.App.Banners.Services.CacheContentService
             {
                 foreach (var validationResult in validationResults)
                 {
-                    logger.LogError($"Error validating {sharedContentItemModel.Title} - {sharedContentItemModel.Url}: {string.Join(",", validationResult.MemberNames)} - {validationResult.ErrorMessage}");
+                    logger.LogError($"Error validating {sharedContentItemModel.PageLocation} - {sharedContentItemModel.Url}: {string.Join(",", validationResult.MemberNames)} - {validationResult.ErrorMessage}");
                 }
             }
 
