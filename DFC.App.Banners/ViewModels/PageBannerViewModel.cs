@@ -11,11 +11,11 @@ namespace DFC.App.Banners.ViewModels
         [Display(Name = "Document Id")]
         public Guid Id { get; set; }
 
-        public string? PageLocation { get; set; }
+        public string PageLocation { get; set; } = string.Empty;
 
-        public string? PartitionKey { get; set; }
+        public string PartitionKey { get; set; } = string.Empty;
 
-        public Guid Version { get; set; }
+        public string PageName { get; set; } = string.Empty;
 
         public Uri? Url { get; set; }
 

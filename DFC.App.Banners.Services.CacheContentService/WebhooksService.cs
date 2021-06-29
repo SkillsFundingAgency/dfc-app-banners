@@ -57,7 +57,7 @@ namespace DFC.App.Banners.Services.CacheContentService
 
         public async Task<HttpStatusCode> ProcessContentAsync(Uri url)
         {
-            var apiDataModel = await cmsApiService.GetItemAsync<SharedContentItemApiDataModel>(url);
+            var apiDataModel = await cmsApiService.GetItemAsync<PageBannerContentItemApiDataModel>(url);
             var sharedContentItemModel = mapper.Map<PageBannerContentItemModel>(apiDataModel);
 
             if (sharedContentItemModel == null)

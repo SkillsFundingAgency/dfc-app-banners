@@ -1,0 +1,11 @@
+﻿@model IEnumerable<BodyViewModel>
+
+@foreach (var banner in Model.OrderBy(b => b.Ordinal))
+{
+    if (banner != null)
+    {
+        <div class="">
+            @Html.Raw(banner)
+        </div>
+    }
+}

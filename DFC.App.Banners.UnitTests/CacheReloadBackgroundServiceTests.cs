@@ -12,8 +12,8 @@ namespace DFC.App.Banners.UnitTests
 {
     public class CacheReloadBackgroundServiceTests
     {
-        private readonly ISharedContentCacheReloadService sharedContentCacheReloadService = A.Fake<ISharedContentCacheReloadService>();
-        private readonly ILogger<SharedContentCacheReloadBackgroundService> logger = A.Fake<ILogger<SharedContentCacheReloadBackgroundService>>();
+        private readonly ICacheReloadService cacheReloadService = A.Fake<ICacheReloadService>();
+        private readonly ILogger<CacheReloadBackgroundService> logger = A.Fake<ILogger<CacheReloadBackgroundService>>();
         private readonly IHostedServiceTelemetryWrapper wrapper = A.Fake<IHostedServiceTelemetryWrapper>();
 
         [Fact]
@@ -21,7 +21,7 @@ namespace DFC.App.Banners.UnitTests
         {
             // Arrange
             A.CallTo(() => wrapper.Execute(A<Func<Task>>.Ignored, A<string>.Ignored)).Returns(Task.CompletedTask);
-            var serviceToTest = new SharedContentCacheReloadBackgroundService(logger, new CmsApiClientOptions { BaseAddress = new Uri("http://somewhere.com") }, sharedContentCacheReloadService, wrapper);
+            var serviceToTest = new CacheReloadBackgroundService(logger, new CmsApiClientOptions { BaseAddress = new Uri("http://somewhere.com") }, cacheReloadService, wrapper);
 
             // Act
             await serviceToTest.StartAsync(default);
@@ -35,12 +35,15 @@ namespace DFC.App.Banners.UnitTests
         public async Task CacheReloadBackgroundServiceStartsAsyncThrowsException()
         {
             // Arrange
-            A.CallTo(() => wrapper.Execute(A<Func<Task>>.Ignored, A<string>.Ignored)).Returns(Task.FromException(new Exception("An Exception")));
-            var serviceToTest = new SharedContentCacheReloadBackgroundService(logger, new CmsApiClientOptions { BaseAddress = new Uri("http://somewhere.com") }, sharedContentCacheReloadService, wrapper);
+            const string Message = "An Exception";
+            A.CallTo(() => wrapper.Execute(A<Func<Task>>.Ignored, A<string>.Ignored)).Returns(Task.FromException(new Exception(Message)));
+            var serviceToTest = new CacheReloadBackgroundService(logger, new CmsApiClientOptions { BaseAddress = new Uri("http://somewhere.com") }, cacheReloadService, wrapper);
 
             // Act
             // Assert
-            await Assert.ThrowsAsync<Exception>(async () => await serviceToTest.StartAsync(default));
+            var ex = await Assert.ThrowsAsync<AggregateException>(async () => await serviceToTest.StartAsync(default));
+            Assert.NotNull(ex.InnerException);
+            Assert.Equal(ex.InnerException.Message, Message);
             serviceToTest.Dispose();
         }
     }

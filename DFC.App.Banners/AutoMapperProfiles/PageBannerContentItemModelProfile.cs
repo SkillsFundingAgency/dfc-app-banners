@@ -1,9 +1,10 @@
 ﻿using System.Diagnostics.CodeAnalysis;
+
 using AutoMapper;
-using DFC.App.Banners.Data.Models.CmsApiModels;
+
 using DFC.App.Banners.Data.Models.ContentModels;
-using DFC.App.Banners.Models;
 using DFC.App.Banners.ViewModels;
+
 using Microsoft.AspNetCore.Html;
 
 namespace DFC.App.Banners.AutoMapperProfiles
@@ -13,7 +14,9 @@ namespace DFC.App.Banners.AutoMapperProfiles
     {
         public PageBannerContentItemModelProfile()
         {
-            CreateMap<PageBannerContentItemModel, BodyViewModel>()
+            CreateMap<PageBannerContentItemModel, PageBannerViewModel>();
+
+            CreateMap<BannerContentItemModel, BodyViewModel>()
                 .ForMember(d => d.Body, s => s.MapFrom(a => new HtmlString(a.Content)));
         }
     }

@@ -9,7 +9,7 @@ using Xunit;
 namespace DFC.App.Banners.Data.UnitTests.ValidationTests
 {
     [Trait("Category", "SharedContentItemModel Validation Unit Tests")]
-    public class SharedContentItemModelValidationTests
+    public class ContentItemModelValidationTests
     {
         private const string FieldInvalidGuid = "The field {0} has to be a valid GUID and cannot be an empty GUID.";
         private const string GuidEmpty = "00000000-0000-0000-0000-000000000000";
@@ -19,7 +19,7 @@ namespace DFC.App.Banners.Data.UnitTests.ValidationTests
         public void CanCheckIfDocumentIdIsInvalid(Guid documentId)
         {
             // Arrange
-            var model = CreateModel(documentId, "<p>some content</p>");
+            var model = CreateModel(documentId);
 
             // Act
             var vr = Validate(model);
@@ -30,13 +30,12 @@ namespace DFC.App.Banners.Data.UnitTests.ValidationTests
             Assert.Equal(string.Format(CultureInfo.InvariantCulture, FieldInvalidGuid, nameof(model.Id)), vr.First(f => f.MemberNames.Any(a => a == nameof(model.Id))).ErrorMessage);
         }
 
-        private PageBannerContentItemModel CreateModel(Guid documentId, string content)
+        private PageBannerContentItemModel CreateModel(Guid documentId)
         {
             var model = new PageBannerContentItemModel
             {
                 Id = documentId,
                 Url = new Uri("aaa-bbb", UriKind.Relative),
-                Content = content,
                 LastReviewed = DateTime.UtcNow,
                 CreatedDate = DateTime.UtcNow,
                 LastCached = DateTime.UtcNow,

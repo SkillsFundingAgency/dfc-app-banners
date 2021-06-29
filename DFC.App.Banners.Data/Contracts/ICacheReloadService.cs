@@ -3,7 +3,7 @@ using System.Threading.Tasks;
 
 namespace DFC.App.Banners.Data.Contracts
 {
-    public interface ISharedContentCacheReloadService
+    public interface ICacheReloadService
     {
         Task Reload(CancellationToken stoppingToken);
     }
