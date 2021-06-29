@@ -48,7 +48,7 @@ namespace DFC.App.Banners.Services.CacheContentService.UnitTests.WebhooksService
             var exceptionResult = Assert.Throws<ArgumentNullException>(() => service.TryValidateModel(nullContentItemModel));
 
             // Assert
-            Assert.Equal("Value cannot be null. (Parameter 'sharedContentItemModel')", exceptionResult.Message);
+            Assert.Equal("Value cannot be null. (Parameter 'pageBannerContentItemModel')", exceptionResult.Message);
         }
     }
 }

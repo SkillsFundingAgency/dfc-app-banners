@@ -1,5 +1,7 @@
 ﻿using System.Diagnostics.CodeAnalysis;
+
 using AutoMapper;
+
 using DFC.App.Banners.Data.Contracts;
 using DFC.App.Banners.Data.Models.ContentModels;
 using DFC.App.Banners.HostedServices;
@@ -10,6 +12,7 @@ using DFC.Compui.Subscriptions.Pkg.Netstandard.Extensions;
 using DFC.Compui.Telemetry;
 using DFC.Content.Pkg.Netcore.Data.Models.ClientOptions;
 using DFC.Content.Pkg.Netcore.Extensions;
+
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
@@ -61,17 +64,22 @@ namespace DFC.App.Banners
         public void ConfigureServices(IServiceCollection services)
         {
             var cosmosDbConnectionSharedContent = configuration.GetSection(CosmosDbSharedContentConfigAppSettings).Get<CosmosDbConnection>();
-            services.AddDocumentServices<PageBannerContentItemModel>(cosmosDbConnectionSharedContent, env.IsDevelopment());
+            var cosmosRetryOptions = new Microsoft.Azure.Documents.Client.RetryOptions
+            {
+                MaxRetryAttemptsOnThrottledRequests = 20,
+                MaxRetryWaitTimeInSeconds = 60,
+            };
+            services.AddDocumentServices<PageBannerContentItemModel>(cosmosDbConnectionSharedContent, env.IsDevelopment(), cosmosRetryOptions);
 
             services.AddApplicationInsightsTelemetry();
             services.AddHttpContextAccessor();
-            services.AddTransient<ISharedContentCacheReloadService, SharedContentCacheReloadService>();
+            services.AddTransient<ICacheReloadService, BannersCacheReloadService>();
             services.AddTransient<IWebhooksService, WebhooksService>();
 
             services.AddAutoMapper(typeof(Startup).Assembly);
             services.AddSingleton(configuration.GetSection(nameof(CmsApiClientOptions)).Get<CmsApiClientOptions>() ?? new CmsApiClientOptions());
             services.AddHostedServiceTelemetryWrapper();
-            services.AddHostedService<SharedContentCacheReloadBackgroundService>();
+            services.AddHostedService<CacheReloadBackgroundService>();
             services.AddSubscriptionBackgroundService(configuration);
 
             var policyRegistry = services.AddPolicyRegistry();
@@ -83,8 +91,7 @@ namespace DFC.App.Banners
                     config.RespectBrowserAcceptHeader = true;
                     config.ReturnHttpNotAcceptable = true;
                 })
-                .AddNewtonsoftJson()
-                .SetCompatibilityVersion(CompatibilityVersion.Version_3_0);
+                .AddNewtonsoftJson();
         }
     }
 }

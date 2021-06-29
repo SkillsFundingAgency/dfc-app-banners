@@ -4,8 +4,8 @@ using DFC.Content.Pkg.Netcore.Data.Models;
 namespace DFC.App.Banners.Data.Models.CmsApiModels
 {
     [ExcludeFromCodeCoverage]
-    public class SharedContentItemApiDataModel : BaseContentItemModel
+    public class PageBannerContentItemApiDataModel : BaseContentItemModel
     {
-        public string? Content { get; set; }
+        // TODO: add properties.
     }
 }

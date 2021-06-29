@@ -20,18 +20,18 @@ namespace DFC.App.Banners.Services.CacheContentService
         private readonly ILogger<WebhooksService> logger;
         private readonly AutoMapper.IMapper mapper;
         private readonly ICmsApiService cmsApiService;
-        private readonly IDocumentService<PageBannerContentItemModel> sharedContentItemDocumentService;
+        private readonly IDocumentService<PageBannerContentItemModel> documentService;
 
         public WebhooksService(
             ILogger<WebhooksService> logger,
             AutoMapper.IMapper mapper,
             ICmsApiService cmsApiService,
-            IDocumentService<PageBannerContentItemModel> sharedContentItemDocumentService)
+            IDocumentService<PageBannerContentItemModel> documentService)
         {
             this.logger = logger;
             this.mapper = mapper;
             this.cmsApiService = cmsApiService;
-            this.sharedContentItemDocumentService = sharedContentItemDocumentService;
+            this.documentService = documentService;
         }
 
         public async Task<HttpStatusCode> ProcessMessageAsync(WebhookCacheOperation webhookCacheOperation, Guid eventId, Guid contentId, string apiEndpoint)
@@ -57,44 +57,44 @@ namespace DFC.App.Banners.Services.CacheContentService
 
         public async Task<HttpStatusCode> ProcessContentAsync(Uri url)
         {
-            var apiDataModel = await cmsApiService.GetItemAsync<SharedContentItemApiDataModel>(url);
-            var sharedContentItemModel = mapper.Map<PageBannerContentItemModel>(apiDataModel);
+            var apiDataModel = await cmsApiService.GetItemAsync<PageBannerContentItemApiDataModel>(url);
+            var pageBannerContentItemModel = mapper.Map<PageBannerContentItemModel>(apiDataModel);
 
-            if (sharedContentItemModel == null)
+            if (pageBannerContentItemModel == null)
             {
                 return HttpStatusCode.NoContent;
             }
 
-            if (!TryValidateModel(sharedContentItemModel))
+            if (!TryValidateModel(pageBannerContentItemModel))
             {
                 return HttpStatusCode.BadRequest;
             }
 
-            var contentResult = await sharedContentItemDocumentService.UpsertAsync(sharedContentItemModel);
+            var contentResult = await documentService.UpsertAsync(pageBannerContentItemModel);
 
             return contentResult;
         }
 
         public async Task<HttpStatusCode> DeleteContentAsync(Guid contentId)
         {
-            var result = await sharedContentItemDocumentService.DeleteAsync(contentId);
+            var result = await documentService.DeleteAsync(contentId);
 
             return result ? HttpStatusCode.OK : HttpStatusCode.NoContent;
         }
 
-        public bool TryValidateModel(PageBannerContentItemModel? sharedContentItemModel)
+        public bool TryValidateModel(PageBannerContentItemModel? pageBannerContentItemModel)
         {
-            _ = sharedContentItemModel ?? throw new ArgumentNullException(nameof(sharedContentItemModel));
+            _ = pageBannerContentItemModel ?? throw new ArgumentNullException(nameof(pageBannerContentItemModel));
 
-            var validationContext = new ValidationContext(sharedContentItemModel, null, null);
+            var validationContext = new ValidationContext(pageBannerContentItemModel, null, null);
             var validationResults = new List<ValidationResult>();
-            var isValid = Validator.TryValidateObject(sharedContentItemModel, validationContext, validationResults, true);
+            var isValid = Validator.TryValidateObject(pageBannerContentItemModel, validationContext, validationResults, true);
 
             if (!isValid && validationResults.Any())
             {
                 foreach (var validationResult in validationResults)
                 {
-                    logger.LogError($"Error validating {sharedContentItemModel.PageLocation} - {sharedContentItemModel.Url}: {string.Join(",", validationResult.MemberNames)} - {validationResult.ErrorMessage}");
+                    logger.LogError($"Error validating {pageBannerContentItemModel.PageLocation} - {pageBannerContentItemModel.Url}: {string.Join(",", validationResult.MemberNames)} - {validationResult.ErrorMessage}");
                 }
             }
 

@@ -21,7 +21,7 @@ namespace DFC.App.Banners.UnitTests.ControllerTests.PagesControllerTests
         protected BaseBannersControllerTests()
         {
             Logger = A.Fake<ILogger<BannersController>>();
-            FakeSharedContentItemDocumentService = A.Fake<IDocumentService<PageBannerContentItemModel>>();
+            FakeDocumentService = A.Fake<IDocumentService<PageBannerContentItemModel>>();
             FakeMapper = A.Fake<IMapper>();
         }
 
@@ -43,7 +43,7 @@ namespace DFC.App.Banners.UnitTests.ControllerTests.PagesControllerTests
 
         protected ILogger<BannersController> Logger { get; }
 
-        protected IDocumentService<PageBannerContentItemModel> FakeSharedContentItemDocumentService { get; }
+        protected IDocumentService<PageBannerContentItemModel> FakeDocumentService { get; }
 
         protected IMapper FakeMapper { get; }
 
@@ -53,7 +53,7 @@ namespace DFC.App.Banners.UnitTests.ControllerTests.PagesControllerTests
 
             httpContext.Request.Headers[HeaderNames.Accept] = mediaTypeName;
 
-            var controller = new BannersController(Logger, FakeMapper, FakeSharedContentItemDocumentService)
+            var controller = new BannersController(Logger, FakeMapper, FakeDocumentService)
             {
                 ControllerContext = new ControllerContext()
                 {

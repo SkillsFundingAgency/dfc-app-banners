@@ -6,6 +6,8 @@ namespace DFC.App.Banners.ViewModels
     [ExcludeFromCodeCoverage]
     public class BodyViewModel
     {
-        public HtmlString? Body { get; set; } = new HtmlString("Unknown content");
+        public int Ordinal { get; set; }
+
+        public HtmlString? Body { get; set; } = new HtmlString(string.Empty);
     }
 }

@@ -38,13 +38,12 @@ namespace DFC.App.Banners.Services.CacheContentService.UnitTests.WebhooksService
 
         protected IDocumentService<PageBannerContentItemModel> FakeSharedContentItemDocumentService { get; }
 
-        protected static SharedContentItemApiDataModel BuildValidContentItemApiDataModel()
+        protected static PageBannerContentItemApiDataModel BuildValidContentItemApiDataModel()
         {
-            var model = new SharedContentItemApiDataModel
+            var model = new PageBannerContentItemApiDataModel
             {
                 Title = "an-article",
                 Url = new Uri("https://localhost"),
-                Content = "some content",
                 Published = DateTime.UtcNow,
                 CreatedDate = DateTime.UtcNow,
             };
@@ -59,7 +58,6 @@ namespace DFC.App.Banners.Services.CacheContentService.UnitTests.WebhooksService
                 Id = ContentIdForUpdate,
                 Etag = Guid.NewGuid().ToString(),
                 Url = new Uri("https://localhost"),
-                Content = "some content",
                 LastReviewed = DateTime.UtcNow,
                 CreatedDate = DateTime.UtcNow,
                 LastCached = DateTime.UtcNow,

@@ -13,18 +13,18 @@ using Microsoft.Extensions.Logging;
 
 namespace DFC.App.Banners.Services.CacheContentService
 {
-    public class SharedContentCacheReloadService : ISharedContentCacheReloadService
+    public class BannersCacheReloadService : ICacheReloadService
     {
-        private readonly ILogger<SharedContentCacheReloadService> logger;
+        private readonly ILogger<BannersCacheReloadService> logger;
         private readonly AutoMapper.IMapper mapper;
-        private readonly IDocumentService<PageBannerContentItemModel> sharedContentDocumentService;
+        private readonly IDocumentService<PageBannerContentItemModel> documentService;
         private readonly ICmsApiService cmsApiService;
 
-        public SharedContentCacheReloadService(ILogger<SharedContentCacheReloadService> logger, AutoMapper.IMapper mapper, IDocumentService<PageBannerContentItemModel> sharedContentDocumentService, ICmsApiService cmsApiService)
+        public BannersCacheReloadService(ILogger<BannersCacheReloadService> logger, AutoMapper.IMapper mapper, IDocumentService<PageBannerContentItemModel> documentService, ICmsApiService cmsApiService)
         {
             this.logger = logger;
             this.mapper = mapper;
-            this.sharedContentDocumentService = sharedContentDocumentService;
+            this.documentService = documentService;
             this.cmsApiService = cmsApiService;
         }
 
@@ -32,50 +32,51 @@ namespace DFC.App.Banners.Services.CacheContentService
         {
             try
             {
-                logger.LogInformation("Reload shared content cache started");
+                logger.LogInformation("Reload banners content cache started");
 
                 if (stoppingToken.IsCancellationRequested)
                 {
-                    logger.LogWarning("Reload shared content cache cancelled");
-
+                    logger.LogWarning("Reload banners content cache cancelled");
                     return;
                 }
 
-                await ReloadSharedContent(stoppingToken);
-
-                logger.LogInformation("Reload shared content cache completed");
+                await ReloadContent(stoppingToken);
+                logger.LogInformation("Reload banners content cache completed");
             }
             catch (Exception ex)
             {
-                logger.LogError(ex, "Error in shared content cache reload");
+                logger.LogError(ex, "Error in banners content cache reload");
                 throw;
             }
         }
 
-        public async Task ReloadSharedContent(CancellationToken stoppingToken)
+        public async Task ReloadContent(CancellationToken stoppingToken)
         {
+            // TODO: change this code to get PageBanners and loop through each PageBanner to get child banners
+            // and update the local cache.
+
             var contentItemKeys = SharedContentKeyHelper.GetSharedContentKeys();
 
             foreach (var key in contentItemKeys)
             {
                 if (stoppingToken.IsCancellationRequested)
                 {
-                    logger.LogWarning("Reload shared content cache cancelled");
+                    logger.LogWarning("Reload banners content cache cancelled");
 
                     return;
                 }
 
-                var apiDataModel = await cmsApiService.GetItemAsync<SharedContentItemApiDataModel>("sharedcontent", key);
+                var apiDataModel = await cmsApiService.GetItemAsync<PageBannerContentItemApiDataModel>("pagebanners", key);
 
                 if (apiDataModel == null)
                 {
-                    logger.LogError($"shared content: {key} not found in API response");
+                    logger.LogError($"banners content: {key} not found in API response");
                 }
                 else
                 {
                     var mappedContentItem = mapper.Map<PageBannerContentItemModel>(apiDataModel);
 
-                    await sharedContentDocumentService.UpsertAsync(mappedContentItem);
+                    await documentService.UpsertAsync(mappedContentItem);
                 }
             }
         }
