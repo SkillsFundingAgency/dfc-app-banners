@@ -11,14 +11,14 @@ using Microsoft.Extensions.Logging;
 namespace DFC.App.Banners.HostedServices
 {
     [ExcludeFromCodeCoverage]
-    public class SharedContentCacheReloadBackgroundService : BackgroundService
+    public class CacheReloadBackgroundService : BackgroundService
     {
-        private readonly ILogger<SharedContentCacheReloadBackgroundService> logger;
+        private readonly ILogger<CacheReloadBackgroundService> logger;
         private readonly CmsApiClientOptions cmsApiClientOptions;
-        private readonly ISharedContentCacheReloadService sharedContentCacheReloadService;
+        private readonly ICacheReloadService sharedContentCacheReloadService;
         private readonly IHostedServiceTelemetryWrapper hostedServiceTelemetryWrapper;
 
-        public SharedContentCacheReloadBackgroundService(ILogger<SharedContentCacheReloadBackgroundService> logger, CmsApiClientOptions cmsApiClientOptions, ISharedContentCacheReloadService sharedContentCacheReloadService, IHostedServiceTelemetryWrapper hostedServiceTelemetryWrapper)
+        public CacheReloadBackgroundService(ILogger<CacheReloadBackgroundService> logger, CmsApiClientOptions cmsApiClientOptions, ICacheReloadService sharedContentCacheReloadService, IHostedServiceTelemetryWrapper hostedServiceTelemetryWrapper)
         {
             this.logger = logger;
             this.cmsApiClientOptions = cmsApiClientOptions;
@@ -51,7 +51,7 @@ namespace DFC.App.Banners.HostedServices
 
                 logger.LogInformation($"Executing Telemetry wrapper with service {nameof(sharedContentCacheReloadService)}");
 
-                var sharedContentCacheReloadServiceTask = hostedServiceTelemetryWrapper.Execute(async () => await sharedContentCacheReloadService.Reload(stoppingToken), nameof(SharedContentCacheReloadBackgroundService));
+                var sharedContentCacheReloadServiceTask = hostedServiceTelemetryWrapper.Execute(async () => await sharedContentCacheReloadService.Reload(stoppingToken), nameof(CacheReloadBackgroundService));
                 await sharedContentCacheReloadServiceTask;
 
                 //Caters for errors in the telemetry wrapper

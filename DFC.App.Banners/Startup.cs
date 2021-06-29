@@ -22,7 +22,7 @@ namespace DFC.App.Banners
     [ExcludeFromCodeCoverage]
     public class Startup
     {
-        private const string CosmosDbSharedContentConfigAppSettings = "Configuration:CosmosDbConnections:SharedContent";
+        private const string CosmosDbContentBannersConfigAppSettings = "Configuration:CosmosDbConnections:Banners";
 
         private readonly IConfiguration configuration;
         private readonly IWebHostEnvironment env;
@@ -60,18 +60,18 @@ namespace DFC.App.Banners
 
         public void ConfigureServices(IServiceCollection services)
         {
-            var cosmosDbConnectionSharedContent = configuration.GetSection(CosmosDbSharedContentConfigAppSettings).Get<CosmosDbConnection>();
+            var cosmosDbConnectionSharedContent = configuration.GetSection(CosmosDbContentBannersConfigAppSettings).Get<CosmosDbConnection>();
             services.AddDocumentServices<PageBannerContentItemModel>(cosmosDbConnectionSharedContent, env.IsDevelopment());
 
             services.AddApplicationInsightsTelemetry();
             services.AddHttpContextAccessor();
-            services.AddTransient<ISharedContentCacheReloadService, SharedContentCacheReloadService>();
+            services.AddTransient<ICacheReloadService, SharedContentCacheReloadService>();
             services.AddTransient<IWebhooksService, WebhooksService>();
 
             services.AddAutoMapper(typeof(Startup).Assembly);
             services.AddSingleton(configuration.GetSection(nameof(CmsApiClientOptions)).Get<CmsApiClientOptions>() ?? new CmsApiClientOptions());
             services.AddHostedServiceTelemetryWrapper();
-            services.AddHostedService<SharedContentCacheReloadBackgroundService>();
+            services.AddHostedService<CacheReloadBackgroundService>();
             services.AddSubscriptionBackgroundService(configuration);
 
             var policyRegistry = services.AddPolicyRegistry();

@@ -13,7 +13,7 @@ using Microsoft.Extensions.Logging;
 
 namespace DFC.App.Banners.Services.CacheContentService
 {
-    public class SharedContentCacheReloadService : ISharedContentCacheReloadService
+    public class SharedContentCacheReloadService : ICacheReloadService
     {
         private readonly ILogger<SharedContentCacheReloadService> logger;
         private readonly AutoMapper.IMapper mapper;

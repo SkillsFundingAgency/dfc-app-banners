@@ -12,8 +12,8 @@ namespace DFC.App.Banners.UnitTests
 {
     public class CacheReloadBackgroundServiceTests
     {
-        private readonly ISharedContentCacheReloadService sharedContentCacheReloadService = A.Fake<ISharedContentCacheReloadService>();
-        private readonly ILogger<SharedContentCacheReloadBackgroundService> logger = A.Fake<ILogger<SharedContentCacheReloadBackgroundService>>();
+        private readonly ICacheReloadService sharedContentCacheReloadService = A.Fake<ICacheReloadService>();
+        private readonly ILogger<CacheReloadBackgroundService> logger = A.Fake<ILogger<CacheReloadBackgroundService>>();
         private readonly IHostedServiceTelemetryWrapper wrapper = A.Fake<IHostedServiceTelemetryWrapper>();
 
         [Fact]
@@ -21,7 +21,7 @@ namespace DFC.App.Banners.UnitTests
         {
             // Arrange
             A.CallTo(() => wrapper.Execute(A<Func<Task>>.Ignored, A<string>.Ignored)).Returns(Task.CompletedTask);
-            var serviceToTest = new SharedContentCacheReloadBackgroundService(logger, new CmsApiClientOptions { BaseAddress = new Uri("http://somewhere.com") }, sharedContentCacheReloadService, wrapper);
+            var serviceToTest = new CacheReloadBackgroundService(logger, new CmsApiClientOptions { BaseAddress = new Uri("http://somewhere.com") }, sharedContentCacheReloadService, wrapper);
 
             // Act
             await serviceToTest.StartAsync(default);
@@ -36,7 +36,7 @@ namespace DFC.App.Banners.UnitTests
         {
             // Arrange
             A.CallTo(() => wrapper.Execute(A<Func<Task>>.Ignored, A<string>.Ignored)).Returns(Task.FromException(new Exception("An Exception")));
-            var serviceToTest = new SharedContentCacheReloadBackgroundService(logger, new CmsApiClientOptions { BaseAddress = new Uri("http://somewhere.com") }, sharedContentCacheReloadService, wrapper);
+            var serviceToTest = new CacheReloadBackgroundService(logger, new CmsApiClientOptions { BaseAddress = new Uri("http://somewhere.com") }, sharedContentCacheReloadService, wrapper);
 
             // Act
             // Assert
