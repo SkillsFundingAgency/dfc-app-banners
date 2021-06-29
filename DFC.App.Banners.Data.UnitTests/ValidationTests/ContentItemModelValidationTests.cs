@@ -8,7 +8,7 @@ using Xunit;
 
 namespace DFC.App.Banners.Data.UnitTests.ValidationTests
 {
-    [Trait("Category", "SharedContentItemModel Validation Unit Tests")]
+    [Trait("Category", "ContentItemModel Validation Unit Tests")]
     public class ContentItemModelValidationTests
     {
         private const string FieldInvalidGuid = "The field {0} has to be a valid GUID and cannot be an empty GUID.";
