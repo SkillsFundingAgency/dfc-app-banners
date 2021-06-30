@@ -4,13 +4,13 @@ using System.IO;
 using System.Net;
 using System.Text;
 using System.Threading.Tasks;
+using Microsoft.Extensions.Logging;
 using DFC.App.Banners.Data.Contracts;
 using DFC.App.Banners.Data.Enums;
 using DFC.App.Banners.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Azure.EventGrid;
 using Microsoft.Azure.EventGrid.Models;
-using Microsoft.Extensions.Logging;
 
 namespace DFC.App.Banners.Controllers
 {
@@ -86,7 +86,7 @@ namespace DFC.App.Banners.Controllers
 
                     var result = await webhookService.ProcessMessageAsync(cacheOperation, eventId, contentId, eventGridEventData.Api!);
 
-                    LogResult(eventId, contentId, result);
+                    LogResult(eventId, contentId, result, eventGridEventData?.ContentType);
                 }
                 else
                 {
@@ -97,24 +97,24 @@ namespace DFC.App.Banners.Controllers
             return Ok();
         }
 
-        private void LogResult(Guid eventId, Guid contentPageId, HttpStatusCode result)
+        private void LogResult(Guid eventId, Guid contentId, HttpStatusCode result, string? contentType)
         {
             switch (result)
             {
                 case HttpStatusCode.OK:
-                    logger.LogInformation($"Event Id: {eventId}, Content Page Id: {contentPageId}: Updated Content Page");
+                    logger.LogInformation($"Event Id: {eventId}, Content {contentType} Id: {contentId}: Updated Content {contentType}");
                     break;
 
                 case HttpStatusCode.Created:
-                    logger.LogInformation($"Event Id: {eventId}, Content Page Id: {contentPageId}: Created Content Page");
+                    logger.LogInformation($"Event Id: {eventId}, CContent {contentType} Id: {contentId}: Created Content {contentType}");
                     break;
 
                 case HttpStatusCode.AlreadyReported:
-                    logger.LogInformation($"Event Id: {eventId}, Content Page Id: {contentPageId}: Content Page previously updated");
+                    logger.LogInformation($"Event Id: {eventId}, Content {contentType} Id: {contentId}: Content {contentType} previously updated");
                     break;
 
                 default:
-                    throw new InvalidDataException($"Event Id: {eventId}, Content Page Id: {contentPageId}: Content Page not updated: Status: {result}");
+                    throw new InvalidDataException($"Event Id: {eventId}, Content {contentType} Id: {contentId}: Content {contentType} not updated: Status: {result}");
             }
         }
     }
