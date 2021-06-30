@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -35,15 +34,15 @@ namespace DFC.App.Banners.Controllers
         }
 
         [HttpGet]
-        [Route("PageBanner/{path}")]
-        public async Task<IActionResult> GetAsync([Required(AllowEmptyStrings =false)]string path)
+        [Route("PageBanner/{path?}")]
+        public async Task<IActionResult> DocumentAsync(string? path = "/")
         {
             if (string.IsNullOrWhiteSpace(path))
             {
                 return NoContent();
             }
 
-            IEnumerable<PageBannerContentItemModel>? pageBannerContentItemModel = await GetBannersAsync(path);
+            var pageBannerContentItemModel = await GetBannersAsync(path);
 
             if (pageBannerContentItemModel?.Any() is true)
             {
@@ -58,15 +57,15 @@ namespace DFC.App.Banners.Controllers
         }
 
         [HttpGet]
-        [Route("body/{path}")]
-        public async Task<IActionResult> GetBodyAsync([Required(AllowEmptyStrings = false)] string path)
+        [Route("body/{path?}")]
+        public async Task<IActionResult> GetBodyAsync(string? path = "/")
         {
             if (string.IsNullOrWhiteSpace(path))
             {
                 return NoContent();
             }
 
-            IEnumerable<PageBannerContentItemModel>? pageBannerContentItemModel = await GetBannersAsync(path);
+            var pageBannerContentItemModel = await GetBannersAsync(path);
 
             if (pageBannerContentItemModel?.Any() is true)
             {

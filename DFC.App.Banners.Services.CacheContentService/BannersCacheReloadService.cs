@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -18,7 +19,7 @@ namespace DFC.App.Banners.Services.CacheContentService
         private readonly AutoMapper.IMapper mapper;
         private readonly IDocumentService<PageBannerContentItemModel> documentService;
         private readonly IContentTypeMappingService contentTypeMappingService;
-        private readonly IApiCacheService apiCacheService;
+        //private readonly IApiCacheService apiCacheService;
         private readonly ICmsApiService cmsApiService;
 
         public BannersCacheReloadService(
@@ -26,14 +27,14 @@ namespace DFC.App.Banners.Services.CacheContentService
             AutoMapper.IMapper mapper,
             IDocumentService<PageBannerContentItemModel> documentService,
             IContentTypeMappingService contentTypeMappingService,
-            IApiCacheService apiCacheService,
+            //IApiCacheService apiCacheService,
             ICmsApiService cmsApiService)
         {
             this.logger = logger;
             this.mapper = mapper;
             this.documentService = documentService;
             this.contentTypeMappingService = contentTypeMappingService;
-            this.apiCacheService = apiCacheService;
+            //this.apiCacheService = apiCacheService;
             this.cmsApiService = cmsApiService;
         }
 
@@ -70,8 +71,6 @@ namespace DFC.App.Banners.Services.CacheContentService
 
         public async Task ReloadContent(CancellationToken stoppingToken)
         {
-            // TODO: change this code to get PageBanners and loop through each PageBanner to get child banners
-            // and update the local cache.
             var pageBanners = await cmsApiService.GetSummaryAsync<CmsApiSummaryItemModel>();
             if (pageBanners == null || pageBanners.Count < 1)
             {
@@ -96,7 +95,7 @@ namespace DFC.App.Banners.Services.CacheContentService
                 else
                 {
                     var mappedContentItem = mapper.Map<PageBannerContentItemModel>(apiDataModel);
-
+                    mappedContentItem.Banners = mapper.Map<List<BannerContentItemModel>>(apiDataModel.ContentItems);
                     await documentService.UpsertAsync(mappedContentItem);
                 }
             }

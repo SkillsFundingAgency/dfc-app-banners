@@ -31,6 +31,6 @@ namespace DFC.App.Banners.ViewModels
         [DisplayFormat(DataFormatString = "{0:dd MMM yyyy HH:mm:ss}")]
         public DateTime LastCached { get; set; }
 
-        public List<BodyViewModel> Banners { get; set; } = new List<BodyViewModel>();
+        public List<BannerViewModel> Banners { get; set; } = new List<BannerViewModel>();
     }
 }
