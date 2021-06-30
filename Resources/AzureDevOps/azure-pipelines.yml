@@ -62,12 +62,6 @@ stages:
         targetPath: "$(System.DefaultWorkingDirectory)/Resources/Scripts"
         artifactName: ${{ variables.SolutionBaseName }}.Scripts
 
-    - task: PublishPipelineArtifact@1
-      displayName: Publish Page Registration artifact
-      inputs:
-        targetPath: '$(Build.SourcesDirectory)/Resources/PageRegistration'
-        artifactName: ${{ variables.SolutionBaseName }}.PageRegistrations
-
   - job: BuildDotNetCore
     displayName: Build-DotNetCore
     steps:
