@@ -112,7 +112,6 @@ stages:
       APIMPolicyPath: "$(Pipeline.Workspace)/${{ variables.SolutionBaseName }}.ApimPolicies/"
       ApimImportScript: "$(Pipeline.Workspace)/${{ variables.SolutionBaseName }}.Scripts/Import-ApimOpenApiDefinitionFromFile.ps1"
       SpecificationPath: "$(Pipeline.Workspace)/${{ variables.SolutionBaseName }}.OpenApiDocs"
-      SubscriptionPosturi: '$(SubscriptionPosturi)'
 
 - stage: DeployToLabDraftAppBanners
   condition: succeeded()
@@ -152,7 +151,6 @@ stages:
       APIMPolicyPath: "$(Pipeline.Workspace)/${{ variables.SolutionBaseName }}.ApimPolicies/"
       ApimImportScript: "$(Pipeline.Workspace)/${{ variables.SolutionBaseName }}.Scripts/Import-ApimOpenApiDefinitionFromFile.ps1"
       SpecificationPath: "$(Pipeline.Workspace)/${{ variables.SolutionBaseName }}.OpenApiDocs"
-      SubscriptionPosturi: '$(SubscriptionPosturi)'
 
 - stage: DeployToDevAppBanners
   condition: succeeded()
@@ -191,7 +189,6 @@ stages:
       APIMPolicyPath: "$(Pipeline.Workspace)/${{ variables.SolutionBaseName }}.ApimPolicies/"
       ApimImportScript: "$(Pipeline.Workspace)/${{ variables.SolutionBaseName }}.Scripts/Import-ApimOpenApiDefinitionFromFile.ps1"
       SpecificationPath: "$(Pipeline.Workspace)/${{ variables.SolutionBaseName }}.OpenApiDocs"
-      SubscriptionPosturi: '$(SubscriptionPosturi)'
 
 - stage: DeployToDevDraftAppBanners
   condition: succeeded()
@@ -231,7 +228,6 @@ stages:
       APIMPolicyPath: "$(Pipeline.Workspace)/${{ variables.SolutionBaseName }}.ApimPolicies/"
       ApimImportScript: "$(Pipeline.Workspace)/${{ variables.SolutionBaseName }}.Scripts/Import-ApimOpenApiDefinitionFromFile.ps1"
       SpecificationPath: "$(Pipeline.Workspace)/${{ variables.SolutionBaseName }}.OpenApiDocs"
-      SubscriptionPosturi: '$(SubscriptionPosturi)'
 
 - stage: DeployToSitAppBanners
   condition: succeeded()
@@ -270,7 +266,6 @@ stages:
       APIMPolicyPath: "$(Pipeline.Workspace)/${{ variables.SolutionBaseName }}.ApimPolicies/"
       ApimImportScript: "$(Pipeline.Workspace)/${{ variables.SolutionBaseName }}.Scripts/Import-ApimOpenApiDefinitionFromFile.ps1"
       SpecificationPath: "$(Pipeline.Workspace)/${{ variables.SolutionBaseName }}.OpenApiDocs"
-      SubscriptionPosturi: '$(SubscriptionPosturi)'
 
 - stage: DeployToSitDraftAppBanners
   condition: succeeded()
@@ -310,4 +305,3 @@ stages:
       APIMPolicyPath: "$(Pipeline.Workspace)/${{ variables.SolutionBaseName }}.ApimPolicies/"
       ApimImportScript: "$(Pipeline.Workspace)/${{ variables.SolutionBaseName }}.Scripts/Import-ApimOpenApiDefinitionFromFile.ps1"
       SpecificationPath: "$(Pipeline.Workspace)/${{ variables.SolutionBaseName }}.OpenApiDocs"
-      SubscriptionPosturi: '$(SubscriptionPosturi)'
