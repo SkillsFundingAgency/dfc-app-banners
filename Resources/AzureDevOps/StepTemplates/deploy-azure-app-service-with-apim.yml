@@ -12,6 +12,7 @@ parameters:
   APIMPolicyPath: ''
   ApimImportScript: ''
   SpecificationPath: ''
+  SubscriptionPosturi: ''
 
 steps:
 - checkout: dfc-devops

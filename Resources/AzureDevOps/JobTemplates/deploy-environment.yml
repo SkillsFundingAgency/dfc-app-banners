@@ -22,6 +22,7 @@ parameters:
   APIMPolicyPath: ''
   ApimImportScript: ''
   SpecificationPath: ''
+  SubscriptionPosturi: ''
 
 jobs:
 - deployment: DeployTemplate
@@ -70,3 +71,4 @@ jobs:
             APIMPolicyPath: '${{ parameters.APIMPolicyPath }}'
             ApimImportScript: '${{ parameters.ApimImportScript }}'
             SpecificationPath:  '${{ parameters.SpecificationPath }}'
+            SubscriptionPosturi: '${{ parameters.SubscriptionPosturi }}'
