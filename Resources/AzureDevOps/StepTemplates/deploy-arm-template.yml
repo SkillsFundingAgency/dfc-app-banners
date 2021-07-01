@@ -35,6 +35,7 @@ steps:
     ScriptPath: "${{ parameters.DfCDevopsPath }}/PSCoreScripts/Test-CosmosDbDatabaseDoesntExist.ps1"
     ScriptArguments: '-ResourceGroup ${{ parameters.AppSharedResourceGroup }} -CosmosDbAccountName ${{ parameters.appSharedCosmosDBName }} -DatabaseName dfc-app-banners'
     azurePowerShellVersion: LatestVersion
+    FailOnStandardError: true
 
 - task: esfadevops.Tokenization.custom-build-task.Tokenization@0
   displayName: 'Tokenization: Transform file parameters.json'

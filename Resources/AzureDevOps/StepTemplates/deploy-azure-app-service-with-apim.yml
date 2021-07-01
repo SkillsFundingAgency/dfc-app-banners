@@ -45,7 +45,6 @@ steps:
     ScriptPath: '${{ parameters.DfCDevopsPath }}/PSCoreScripts/Invoke-SmokeTestOnWebApp.ps1'
     ScriptArguments: |
      -ResourceGroup ${{ parameters.ResourceGroup }} -AppName ${{ parameters.WebAppName }} -Path '/health/ping' -Slot staging -TimeoutInSecs 20 -Verbose
-
     FailOnStandardError: true
     azurePowerShellVersion: LatestVersion
 
@@ -80,6 +79,7 @@ steps:
     ScriptPath: '${{ parameters.ApimImportScript }}'	
     ScriptArguments: "-ApimResourceGroup '${{ parameters.SharedResourceGroupName }}' -InstanceName '${{ parameters.ApimServiceName }}' -ApiName '${{ parameters.ApimProductInstanceName }}-${{ parameters.ApiName }}' -OpenApiSpecificationFile '${{ parameters.SpecificationPath }}/WebhookReceiver.txt' -ApiPath '${{ parameters.ApimProductInstanceName }}/${{ parameters.ApiName }}'"	
     azurePowerShellVersion: LatestVersion
+    FailOnStandardError: true
 
 - task: esfadevops.Tokenization.custom-build-task.Tokenization@0
   displayName: 'Tokenization: Transform file APIM Policy File'
@@ -94,6 +94,7 @@ steps:
     ScriptPath: '$(Agent.BuildDirectory)/s/dfc-devops/PSCoreScripts/Set-ApimPolicy.ps1'
     ScriptArguments: '-PolicyScope operation -ApimResourceGroup ${{ parameters.SharedResourceGroupName }} -ApimServiceName ${{ parameters.ApimServiceName }} -PolicyFilePath "$(Agent.BuildDirectory)/dfc.app.banners.apimpolicies/ApimPolicy-IsolatedAppServiceAsEventGridWebhookEndpoint.xml" -ApiId ${{ parameters.ApiId }} -OperationId post-api-webhook-receiveevents'
     azurePowerShellVersion: LatestVersion
+    FailOnStandardError: true
 
 - task: AzurePowerShell@5
   displayName: 'Send a post request to /subscription'
@@ -102,5 +103,5 @@ steps:
     ScriptType: InlineScript
     Inline: |
      Invoke-WebRequest -Uri ${{ parameters.SubscriptionPosturi }} -Method POST
-    errorActionPreference: continue
     azurePowerShellVersion: LatestVersion
+    FailOnStandardError: true
