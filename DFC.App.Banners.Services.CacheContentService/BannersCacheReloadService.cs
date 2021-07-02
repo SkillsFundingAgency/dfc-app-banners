@@ -19,7 +19,7 @@ namespace DFC.App.Banners.Services.CacheContentService
         private readonly AutoMapper.IMapper mapper;
         private readonly IDocumentService<PageBannerContentItemModel> documentService;
         private readonly IContentTypeMappingService contentTypeMappingService;
-        //private readonly IApiCacheService apiCacheService;
+        private readonly IApiCacheService apiCacheService;
         private readonly ICmsApiService cmsApiService;
 
         public BannersCacheReloadService(
@@ -27,14 +27,14 @@ namespace DFC.App.Banners.Services.CacheContentService
             AutoMapper.IMapper mapper,
             IDocumentService<PageBannerContentItemModel> documentService,
             IContentTypeMappingService contentTypeMappingService,
-            //IApiCacheService apiCacheService,
+            IApiCacheService apiCacheService,
             ICmsApiService cmsApiService)
         {
             this.logger = logger;
             this.mapper = mapper;
             this.documentService = documentService;
             this.contentTypeMappingService = contentTypeMappingService;
-            //this.apiCacheService = apiCacheService;
+            this.apiCacheService = apiCacheService;
             this.cmsApiService = cmsApiService;
         }
 
@@ -50,7 +50,7 @@ namespace DFC.App.Banners.Services.CacheContentService
                     return;
                 }
 
-                //apiCacheService.StartCache();
+                apiCacheService.StartCache();
 
                 contentTypeMappingService.AddMapping("PageBanner", typeof(PageBannerContentItemApiDataModel));
                 contentTypeMappingService.AddMapping("Banner", typeof(BannerContentItemApiDataModel));
@@ -65,7 +65,7 @@ namespace DFC.App.Banners.Services.CacheContentService
             }
             finally
             {
-                //apiCacheService.StopCache();
+                apiCacheService.StopCache();
             }
         }
 

@@ -1,7 +1,9 @@
 ﻿using System.Linq;
 using System.Net.Mime;
+
 using DFC.App.Banners.Extensions;
 using DFC.App.Banners.Models;
+
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 
@@ -9,8 +11,6 @@ namespace DFC.App.Banners.Controllers
 {
     public class SitemapController : Controller
     {
-        public const string SitemapViewCanonicalName = "sitemap";
-
         private readonly ILogger<SitemapController> logger;
 
         public SitemapController(ILogger<SitemapController> logger)
@@ -19,7 +19,7 @@ namespace DFC.App.Banners.Controllers
         }
 
         [HttpGet]
-        [Route("pages/sitemap")]
+        [Route("sitemap")]
         public IActionResult SitemapView()
         {
             var result = Sitemap();

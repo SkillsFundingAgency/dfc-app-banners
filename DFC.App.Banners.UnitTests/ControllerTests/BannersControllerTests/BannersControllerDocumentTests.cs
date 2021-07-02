@@ -4,7 +4,6 @@ using System.Linq.Expressions;
 using System.Threading.Tasks;
 
 using DFC.App.Banners.Data.Models.ContentModels;
-using DFC.App.Banners.UnitTests.ControllerTests.PagesControllerTests;
 using DFC.App.Banners.ViewModels;
 
 using FakeItEasy;

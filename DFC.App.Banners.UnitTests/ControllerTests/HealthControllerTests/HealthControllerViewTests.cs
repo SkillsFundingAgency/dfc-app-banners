@@ -19,7 +19,7 @@ namespace DFC.App.Banners.UnitTests.ControllerTests.HealthControllerTests
             bool expectedResult = true;
             using var controller = BuildHealthController(mediaTypeName);
 
-            A.CallTo(() => FakeContentPageService.PingAsync()).Returns(expectedResult);
+            A.CallTo(() => FakeDocumentService.PingAsync()).Returns(expectedResult);
 
             // Act
             var result = await controller.HealthView();
@@ -37,7 +37,7 @@ namespace DFC.App.Banners.UnitTests.ControllerTests.HealthControllerTests
             bool expectedResult = true;
             using var controller = BuildHealthController(mediaTypeName);
 
-            A.CallTo(() => FakeContentPageService.PingAsync()).Returns(expectedResult);
+            A.CallTo(() => FakeDocumentService.PingAsync()).Returns(expectedResult);
 
             // Act
             var result = await controller.HealthView();
@@ -55,7 +55,7 @@ namespace DFC.App.Banners.UnitTests.ControllerTests.HealthControllerTests
             bool expectedResult = true;
             using var controller = BuildHealthController(mediaTypeName);
 
-            A.CallTo(() => FakeContentPageService.PingAsync()).Returns(expectedResult);
+            A.CallTo(() => FakeDocumentService.PingAsync()).Returns(expectedResult);
 
             // Act
             var result = await controller.HealthView();
