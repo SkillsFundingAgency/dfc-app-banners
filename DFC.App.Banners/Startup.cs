@@ -15,7 +15,6 @@ using DFC.Content.Pkg.Netcore.Extensions;
 
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -77,7 +76,8 @@ namespace DFC.App.Banners
             services.AddTransient<IWebhooksService, WebhooksService>();
 
             services.AddAutoMapper(typeof(Startup).Assembly);
-            services.AddSingleton(configuration.GetSection(nameof(CmsApiClientOptions)).Get<CmsApiClientOptions>() ?? new CmsApiClientOptions());
+            CmsApiClientOptions cmsApiClientOptions = configuration.GetSection(nameof(CmsApiClientOptions)).Get<CmsApiClientOptions>();
+            services.AddSingleton(cmsApiClientOptions ?? new CmsApiClientOptions());
             services.AddHostedServiceTelemetryWrapper();
             services.AddHostedService<CacheReloadBackgroundService>();
             services.AddSubscriptionBackgroundService(configuration);

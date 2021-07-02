@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -35,15 +34,44 @@ namespace DFC.App.Banners.Controllers
         }
 
         [HttpGet]
-        [Route("PageBanner/{path}")]
-        public async Task<IActionResult> GetAsync([Required(AllowEmptyStrings =false)]string path)
+        [Route("/")]
+        public async Task<IActionResult> IndexAsync()
+        {
+            var viewModel = new IndexViewModel()
+            {
+                LocalPath = $"{RegistrationPath}/document",
+                Documents = new List<IndexDocumentViewModel>(),
+            };
+
+            var documents = await documentService.GetAllAsync();
+
+            if (documents?.Any() == true)
+            {
+                var docs = documents.OrderBy(o => o.PageLocation)
+                    .Select(a => new IndexDocumentViewModel
+                    {
+                        PageLocation = a.PageLocation,
+                        PageName = a.PageName,
+                    });
+
+                viewModel.Documents.AddRange(docs);
+
+                logger.LogInformation($"{nameof(Index)} has succeeded");
+            }
+
+            return View(viewModel);
+        }
+
+        [HttpGet]
+        [Route("document/{path?}")]
+        public async Task<IActionResult> DocumentAsync(string? path = "/")
         {
             if (string.IsNullOrWhiteSpace(path))
             {
                 return NoContent();
             }
 
-            IEnumerable<PageBannerContentItemModel>? pageBannerContentItemModel = await GetBannersAsync(path);
+            var pageBannerContentItemModel = await GetBannersAsync(path);
 
             if (pageBannerContentItemModel?.Any() is true)
             {
@@ -58,15 +86,15 @@ namespace DFC.App.Banners.Controllers
         }
 
         [HttpGet]
-        [Route("body/{path}")]
-        public async Task<IActionResult> GetBodyAsync([Required(AllowEmptyStrings = false)] string path)
+        [Route("body/{path?}")]
+        public async Task<IActionResult> GetBodyAsync(string? path = "/")
         {
             if (string.IsNullOrWhiteSpace(path))
             {
                 return NoContent();
             }
 
-            IEnumerable<PageBannerContentItemModel>? pageBannerContentItemModel = await GetBannersAsync(path);
+            var pageBannerContentItemModel = await GetBannersAsync(path);
 
             if (pageBannerContentItemModel?.Any() is true)
             {
@@ -82,6 +110,11 @@ namespace DFC.App.Banners.Controllers
 
         private async Task<IEnumerable<PageBannerContentItemModel>> GetBannersAsync(string path)
         {
+            if (!path.Contains("/"))
+            {
+                path = $"/{path}";
+            }
+
             var banners = await documentService.GetAsync(a => a.PartitionKey == path);
 
             if (banners?.Any() is true || path.Equals("/"))

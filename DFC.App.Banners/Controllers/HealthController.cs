@@ -1,10 +1,12 @@
 ﻿using System.Collections.Generic;
 using System.Net;
 using System.Threading.Tasks;
+
 using DFC.App.Banners.Data.Models.ContentModels;
 using DFC.App.Banners.Extensions;
 using DFC.App.Banners.ViewModels;
 using DFC.Compui.Cosmos.Contracts;
+
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 
@@ -25,7 +27,7 @@ namespace DFC.App.Banners.Controllers
         }
 
         [HttpGet]
-        [Route("pages/health")]
+        [Route("banners/health")]
         public async Task<IActionResult> HealthView()
         {
             var result = await Health();

@@ -21,13 +21,13 @@ namespace DFC.App.Banners.UnitTests.ControllerTests.HealthControllerTests
             bool expectedResult = true;
             using var controller = BuildHealthController(MediaTypeNames.Application.Json);
 
-            A.CallTo(() => FakeContentPageService.PingAsync()).Returns(expectedResult);
+            A.CallTo(() => FakeDocumentService.PingAsync()).Returns(expectedResult);
 
             // Act
             var result = await controller.Health();
 
             // Assert
-            A.CallTo(() => FakeContentPageService.PingAsync()).MustHaveHappenedOnceExactly();
+            A.CallTo(() => FakeDocumentService.PingAsync()).MustHaveHappenedOnceExactly();
 
             var jsonResult = Assert.IsType<OkObjectResult>(result);
             var models = Assert.IsAssignableFrom<List<HealthItemViewModel>>(jsonResult.Value);
@@ -44,13 +44,13 @@ namespace DFC.App.Banners.UnitTests.ControllerTests.HealthControllerTests
             bool expectedResult = false;
             using var controller = BuildHealthController(MediaTypeNames.Application.Json);
 
-            A.CallTo(() => FakeContentPageService.PingAsync()).Returns(expectedResult);
+            A.CallTo(() => FakeDocumentService.PingAsync()).Returns(expectedResult);
 
             // Act
             var result = await controller.Health();
 
             // Assert
-            A.CallTo(() => FakeContentPageService.PingAsync()).MustHaveHappenedOnceExactly();
+            A.CallTo(() => FakeDocumentService.PingAsync()).MustHaveHappenedOnceExactly();
 
             var statusResult = Assert.IsType<StatusCodeResult>(result);
 

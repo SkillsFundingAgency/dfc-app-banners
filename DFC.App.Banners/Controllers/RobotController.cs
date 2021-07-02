@@ -1,5 +1,7 @@
 ﻿using System.Net.Mime;
+
 using DFC.App.Banners.Models.Robots;
+
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
@@ -20,7 +22,7 @@ namespace DFC.App.Banners.Controllers
         }
 
         [HttpGet]
-        [Route("pages/robots")]
+        [Route("banners/robots")]
         public IActionResult RobotView()
         {
             var result = Robot();
