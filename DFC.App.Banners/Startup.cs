@@ -71,6 +71,7 @@ namespace DFC.App.Banners
             services.AddHttpContextAccessor();
             services.AddTransient<ICacheReloadService, BannersCacheReloadService>();
             services.AddTransient<IWebhooksService, WebhooksService>();
+            services.AddTransient<IBannerDocumentService, BannerDocumentService>();
 
             services.AddAutoMapper(typeof(Startup).Assembly);
             services.AddSingleton(configuration.GetSection(nameof(CmsApiClientOptions)).Get<CmsApiClientOptions>() ?? new CmsApiClientOptions());

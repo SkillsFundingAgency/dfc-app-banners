@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Html;
 namespace DFC.App.Banners.ViewModels
 {
     [ExcludeFromCodeCoverage]
-    public class BodyViewModel
+    public class BannerViewModel
     {
         public int Ordinal { get; set; }
 

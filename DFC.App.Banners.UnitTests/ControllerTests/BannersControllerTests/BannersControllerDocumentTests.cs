@@ -73,7 +73,7 @@ namespace DFC.App.Banners.UnitTests.ControllerTests.BannersControllerTests
 
             // Assert
             var viewResult = Assert.IsType<ViewResult>(result);
-            _ = Assert.IsAssignableFrom<List<BodyViewModel>>(viewResult.ViewData.Model);
+            _ = Assert.IsAssignableFrom<List<BannerViewModel>>(viewResult.ViewData.Model);
 
             controller.Dispose();
         }

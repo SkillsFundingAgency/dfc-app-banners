@@ -1,7 +1,7 @@
 ﻿using System;
+using DFC.App.Banners.Data.Contracts;
 using DFC.App.Banners.Data.Models.CmsApiModels;
 using DFC.App.Banners.Data.Models.ContentModels;
-using DFC.Compui.Cosmos.Contracts;
 using DFC.Content.Pkg.Netcore.Data.Contracts;
 using FakeItEasy;
 using Microsoft.Extensions.Logging;
@@ -21,7 +21,8 @@ namespace DFC.App.Banners.Services.CacheContentService.UnitTests.WebhooksService
             Logger = A.Fake<ILogger<WebhooksService>>();
             FakeMapper = A.Fake<AutoMapper.IMapper>();
             FakeCmsApiService = A.Fake<ICmsApiService>();
-            FakeSharedContentItemDocumentService = A.Fake<IDocumentService<PageBannerContentItemModel>>();
+            FakeBannerDocumentService = A.Fake<IBannerDocumentService>();
+            FakeContentTypeMappingService = A.Fake<IContentTypeMappingService>();
         }
 
         protected Guid ContentIdForCreate { get; } = Guid.NewGuid();
@@ -36,7 +37,9 @@ namespace DFC.App.Banners.Services.CacheContentService.UnitTests.WebhooksService
 
         protected ICmsApiService FakeCmsApiService { get; }
 
-        protected IDocumentService<PageBannerContentItemModel> FakeSharedContentItemDocumentService { get; }
+        protected IBannerDocumentService FakeBannerDocumentService { get; }
+
+        protected IContentTypeMappingService FakeContentTypeMappingService { get; }
 
         protected static PageBannerContentItemApiDataModel BuildValidContentItemApiDataModel()
         {
@@ -68,7 +71,7 @@ namespace DFC.App.Banners.Services.CacheContentService.UnitTests.WebhooksService
 
         protected WebhooksService BuildWebhooksService()
         {
-            var service = new WebhooksService(Logger, FakeMapper, FakeCmsApiService, FakeSharedContentItemDocumentService);
+            var service = new WebhooksService(Logger, FakeMapper, FakeCmsApiService, FakeContentTypeMappingService, FakeBannerDocumentService);
 
             return service;
         }

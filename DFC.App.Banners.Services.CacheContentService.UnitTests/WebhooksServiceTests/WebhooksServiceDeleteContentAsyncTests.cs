@@ -17,13 +17,13 @@ namespace DFC.App.Banners.Services.CacheContentService.UnitTests.WebhooksService
             const HttpStatusCode expectedResult = HttpStatusCode.OK;
             var service = BuildWebhooksService();
 
-            A.CallTo(() => FakeSharedContentItemDocumentService.DeleteAsync(A<Guid>.Ignored)).Returns(expectedResponse);
+            A.CallTo(() => FakeBannerDocumentService.DeleteAsync(A<Guid>.Ignored)).Returns(expectedResponse);
 
             // Act
             var result = await service.DeleteContentAsync(ContentIdForDelete);
 
             // Assert
-            A.CallTo(() => FakeSharedContentItemDocumentService.DeleteAsync(A<Guid>.Ignored)).MustHaveHappenedOnceExactly();
+            A.CallTo(() => FakeBannerDocumentService.DeleteAsync(A<Guid>.Ignored)).MustHaveHappenedOnceExactly();
 
             Assert.Equal(expectedResult, result);
         }
@@ -36,13 +36,13 @@ namespace DFC.App.Banners.Services.CacheContentService.UnitTests.WebhooksService
             const HttpStatusCode expectedResult = HttpStatusCode.NoContent;
             var service = BuildWebhooksService();
 
-            A.CallTo(() => FakeSharedContentItemDocumentService.DeleteAsync(A<Guid>.Ignored)).Returns(expectedResponse);
+            A.CallTo(() => FakeBannerDocumentService.DeleteAsync(A<Guid>.Ignored)).Returns(expectedResponse);
 
             // Act
             var result = await service.DeleteContentAsync(ContentIdForDelete);
 
             // Assert
-            A.CallTo(() => FakeSharedContentItemDocumentService.DeleteAsync(A<Guid>.Ignored)).MustHaveHappenedOnceExactly();
+            A.CallTo(() => FakeBannerDocumentService.DeleteAsync(A<Guid>.Ignored)).MustHaveHappenedOnceExactly();
 
             Assert.Equal(expectedResult, result);
         }
