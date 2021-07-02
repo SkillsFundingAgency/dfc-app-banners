@@ -9,7 +9,10 @@ namespace DFC.App.Banners.Data.Models.CmsApiModels
     [ExcludeFromCodeCoverage]
     public class PageBannerContentItemApiDataModel : BaseContentItemModel
     {
-        [JsonProperty("PageUrl")]
+        [JsonProperty("banner_WebPageURL")]
         public string PageLocation { get; set; } = string.Empty;
+
+        [JsonProperty("banner_WebPageName")]
+        public string PageName { get; set; } = string.Empty;
     }
 }

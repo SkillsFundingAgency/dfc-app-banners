@@ -74,6 +74,7 @@ namespace DFC.App.Banners.Services.CacheContentService.UnitTests
             await cacheReloadService.Reload(CancellationToken.None);
 
             //Assert
+            A.CallTo(() => fakeDocumentService.PurgeAsync()).MustHaveHappenedOnceExactly();
             A.CallTo(() => fakeCmsApiService.GetItemAsync<PageBannerContentItemApiDataModel>(A<Uri>.Ignored)).MustHaveHappenedOnceExactly();
             A.CallTo(() => fakeDocumentService.UpsertAsync(A<PageBannerContentItemModel>.Ignored)).MustHaveHappenedOnceExactly();
         }

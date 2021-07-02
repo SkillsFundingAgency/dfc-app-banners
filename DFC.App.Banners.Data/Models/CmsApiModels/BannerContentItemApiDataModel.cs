@@ -1,5 +1,4 @@
-﻿
-using System;
+﻿using System;
 using System.Diagnostics.CodeAnalysis;
 
 using DFC.Content.Pkg.Netcore.Data.Models;

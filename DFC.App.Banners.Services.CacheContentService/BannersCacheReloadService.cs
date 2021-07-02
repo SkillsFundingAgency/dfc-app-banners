@@ -71,6 +71,7 @@ namespace DFC.App.Banners.Services.CacheContentService
 
         public async Task ReloadContent(CancellationToken stoppingToken)
         {
+            await documentService.PurgeAsync();
             var pageBanners = await cmsApiService.GetSummaryAsync<CmsApiSummaryItemModel>();
             if (pageBanners == null || pageBanners.Count < 1)
             {
