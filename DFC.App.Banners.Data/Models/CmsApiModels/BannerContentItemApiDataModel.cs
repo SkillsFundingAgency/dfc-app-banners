@@ -1,10 +1,12 @@
 ﻿
 using System;
+using System.Diagnostics.CodeAnalysis;
 
 using DFC.Content.Pkg.Netcore.Data.Models;
 
 namespace DFC.App.Banners.Data.Models.CmsApiModels
 {
+    [ExcludeFromCodeCoverage]
     public class BannerContentItemApiDataModel : BaseContentItemModel
     {
         public int Ordinal { get; set; }
