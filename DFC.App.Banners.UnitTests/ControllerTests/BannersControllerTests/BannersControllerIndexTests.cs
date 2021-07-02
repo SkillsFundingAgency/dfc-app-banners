@@ -13,7 +13,6 @@ namespace DFC.App.Banners.UnitTests.ControllerTests.BannersControllerTests
 {
     public class BannersControllerIndexTests : BaseBannersControllerTests
     {
-
         [Theory]
         [MemberData(nameof(HtmlMediaTypes))]
         public async Task PagesControllerIndexHtmlReturnsSuccess(string mediaTypeName)
