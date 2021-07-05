@@ -86,6 +86,7 @@ namespace DFC.App.Banners.Services.CacheContentService.UnitTests.EventHandlerTes
             A.CallTo(() => fakeBannerDocumentService.GetPagebannerUrlsAsync(A<string>.Ignored, A<string?>.Ignored)).Returns(pagebannerUrls);
 
             A.CallTo(() => fakeWebhookContentProcessor.ProcessContentAsync(A<Uri>.Ignored)).Throws<AggregateException>();
+
             // Act
             var result = await bannerEventHandler.ProcessContentAsync(contentId, url);
 
@@ -132,7 +133,7 @@ namespace DFC.App.Banners.Services.CacheContentService.UnitTests.EventHandlerTes
 
             A.CallTo(() => fakeBannerDocumentService.GetPagebannerUrlsAsync(A<string>.Ignored, A<string?>.Ignored)).Returns(pagebannerUrls);
 
-            A.CallTo(() => fakeWebhookContentProcessor.ProcessContentAsync(A<Uri>.Ignored)).ReturnsNextFromSequence(HttpStatusCode.BadRequest,HttpStatusCode.OK);
+            A.CallTo(() => fakeWebhookContentProcessor.ProcessContentAsync(A<Uri>.Ignored)).ReturnsNextFromSequence(HttpStatusCode.BadRequest, HttpStatusCode.OK);
 
             // Act
             var result = await bannerEventHandler.ProcessContentAsync(contentId, url);
