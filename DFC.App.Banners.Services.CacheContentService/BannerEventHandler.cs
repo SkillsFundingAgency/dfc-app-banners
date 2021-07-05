@@ -21,7 +21,7 @@ namespace DFC.App.Banners.Services.CacheContentService
             this.logger = logger;
         }
 
-        public string ProcessType => DependencyInjectionKeyHelpers.BannerEventHandler;
+        public string ProcessType => CmsContentKeyHelper.BannerTag;
 
         public async Task<HttpStatusCode> DeleteContentAsync(Guid contentId, Uri url)
         {

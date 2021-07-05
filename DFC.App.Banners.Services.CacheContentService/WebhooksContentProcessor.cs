@@ -12,16 +12,16 @@ using Microsoft.Extensions.Logging;
 
 namespace DFC.App.Banners.Services.CacheContentService
 {
-    public class WebhookContentProcessor : IWebhookContentProcessor
+    public class WebhooksContentProcessor : IWebhookContentProcessor
     {
-        private readonly ILogger<WebhooksService> logger;
+        private readonly ILogger<WebhooksContentProcessor> logger;
         private readonly AutoMapper.IMapper mapper;
         private readonly ICmsApiService cmsApiService;
         private readonly IContentTypeMappingService contentTypeMappingService;
         private readonly IBannerDocumentService bannerDocumentService;
 
-        public WebhookContentProcessor(
-            ILogger<WebhooksService> logger,
+        public WebhooksContentProcessor(
+            ILogger<WebhooksContentProcessor> logger,
             AutoMapper.IMapper mapper,
             ICmsApiService cmsApiService,
             IContentTypeMappingService contentTypeMappingService,
@@ -55,8 +55,7 @@ namespace DFC.App.Banners.Services.CacheContentService
 
             pageBannerContentItemModel.Banners = mapper.Map<List<BannerContentItemModel>>(apiDataModel?.ContentItems);
 
-            var contentResult = await bannerDocumentService.UpsertAsync(pageBannerContentItemModel);
-            return contentResult;
+            return await bannerDocumentService.UpsertAsync(pageBannerContentItemModel);
         }
 
         public async Task<HttpStatusCode> DeleteContentAsync(Guid contentId)
@@ -66,7 +65,7 @@ namespace DFC.App.Banners.Services.CacheContentService
             return result ? HttpStatusCode.OK : HttpStatusCode.NoContent;
         }
 
-        private bool TryValidateModel(PageBannerContentItemModel? pageBannerContentItemModel)
+        public bool TryValidateModel(PageBannerContentItemModel? pageBannerContentItemModel)
         {
             _ = pageBannerContentItemModel ?? throw new ArgumentNullException(nameof(pageBannerContentItemModel));
 

@@ -15,7 +15,7 @@ namespace DFC.App.Banners.Services.CacheContentService
             this.webhookContentProcessor = webhookContentProcessor;
         }
 
-        public string ProcessType => DependencyInjectionKeyHelpers.PagebannerEventHandler;
+        public string ProcessType => CmsContentKeyHelper.PageBannerTag;
 
         public async Task<HttpStatusCode> DeleteContentAsync(Guid contentId, Uri url)
         {
