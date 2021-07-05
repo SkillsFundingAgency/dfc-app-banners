@@ -50,7 +50,7 @@ namespace DFC.App.Banners.Services.CacheContentService
 
             var query = documentClient.CreateDocumentQuery<IEnumerable<string>>(
                 documentCollectionUri,
-                new SqlQuerySpec($"SELECT c.Url FROM c JOIN b IN c.Banners WHERE b.ItemId = @itemId")
+                new SqlQuerySpec($"SELECT DISTINCT c.Url FROM c JOIN b IN c.Banners WHERE b.ItemId = @itemId")
                 {
                     Parameters = new SqlParameterCollection(new[]
                     {
