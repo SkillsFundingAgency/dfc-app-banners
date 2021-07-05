@@ -73,6 +73,29 @@ namespace DFC.App.Banners.Services.CacheContentService.UnitTests.EventHandlerTes
         }
 
         [Fact]
+        public async Task BannerEventHandlerProcessContentAsyncForCreateThrowsException()
+        {
+            // Arrange
+            const HttpStatusCode expectedResponse = HttpStatusCode.BadRequest;
+            var url = new Uri("https://somewhere.com");
+            var pagebannerUrls = new List<Uri> { new Uri("https://pagebanner1.com"), new Uri("https://pagebanner2.com") };
+
+            var contentId = Guid.NewGuid();
+            var bannerEventHandler = new BannerEventHandler(fakeWebhookContentProcessor, fakeBannerDocumentService, logger);
+
+            A.CallTo(() => fakeBannerDocumentService.GetPagebannerUrlsAsync(A<string>.Ignored, A<string?>.Ignored)).Returns(pagebannerUrls);
+
+            A.CallTo(() => fakeWebhookContentProcessor.ProcessContentAsync(A<Uri>.Ignored)).Throws<AggregateException>();
+            // Act
+            var result = await bannerEventHandler.ProcessContentAsync(contentId, url);
+
+            // Assert
+            A.CallTo(() => fakeWebhookContentProcessor.ProcessContentAsync(A<Uri>.Ignored)).MustHaveHappened();
+
+            Assert.Equal(expectedResponse, result);
+        }
+
+        [Fact]
         public async Task BannerEventHandlerProcessContentAsyncForUpdateReturnsSuccess()
         {
             // Arrange
