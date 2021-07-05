@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using DFC.App.Banners.Data.Contracts;
+using DFC.App.Banners.Data.Helpers;
 using FakeItEasy;
 using Microsoft.Extensions.Logging;
 
@@ -31,13 +32,23 @@ namespace DFC.App.Banners.Services.CacheContentService.UnitTests.WebhooksService
             return service;
         }
 
-        protected IEventHandler AddEventHandler(string eventHandler)
+        protected IEventHandler? AddEventHandler(string eventHandler)
         {
-            var handler = A.Fake<IEventHandler>();
-            FakeEventHandlers.Add(handler);
-            A.CallTo(() => handler.ProcessType).Returns(eventHandler);
-            FakeEventHandlers.Add(handler);
-            return handler;
+            switch (eventHandler)
+            {
+                case CmsContentKeyHelper.BannerTag:
+                case CmsContentKeyHelper.PageBannerTag:
+                    {
+                        var handler = A.Fake<IEventHandler>();
+                        FakeEventHandlers.Add(handler);
+                        A.CallTo(() => handler.ProcessType).Returns(eventHandler);
+                        FakeEventHandlers.Add(handler);
+                        return handler;
+                    }
+
+                default:
+                    return null;
+            }
         }
     }
 }
