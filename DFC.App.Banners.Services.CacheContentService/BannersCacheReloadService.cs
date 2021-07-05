@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Threading;
 using System.Threading.Tasks;
-
 using DFC.App.Banners.Data.Contracts;
 using DFC.App.Banners.Data.Helpers;
 using DFC.App.Banners.Data.Models.CmsApiModels;

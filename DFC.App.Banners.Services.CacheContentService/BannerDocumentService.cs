@@ -35,9 +35,9 @@ namespace DFC.App.Banners.Services.CacheContentService
             return await documentService.GetByIdAsync(id, partitionKey);
         }
 
-        public async Task<IEnumerable<Uri>> GetPagebannerUrisAsync(string bannerContentItemId, string? partitionKeyValue = null)
+        public async Task<IEnumerable<Uri>> GetPagebannerUrlsAsync(string bannerContentItemId, string? partitionKeyValue = null)
         {
-            var models = new List<Uri>();
+            var urls = new List<Uri>();
             var feedOptions = new FeedOptions { MaxItemCount = 1, EnableCrossPartitionQuery = true };
 
             if (!string.IsNullOrEmpty(partitionKeyValue))
@@ -62,10 +62,10 @@ namespace DFC.App.Banners.Services.CacheContentService
             while (query.HasMoreResults)
             {
                 var result = await query.ExecuteNextAsync<PageBannerContentItemModel>().ConfigureAwait(false);
-                models.AddRange(result.Select(x => x.Url!));
+                urls.AddRange(result.Select(x => x.Url!));
             }
 
-            return models.Any() ? models : new List<Uri>();
+            return urls.Any() ? urls : new List<Uri>();
         }
 
         public async Task<HttpStatusCode> UpsertAsync(PageBannerContentItemModel pageBannerContentItemModel)

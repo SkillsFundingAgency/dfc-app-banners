@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using DFC.App.Banners.Data.Contracts;
 using DFC.App.Banners.Data.Models.CmsApiModels;
 using DFC.App.Banners.Data.Models.ContentModels;
@@ -19,10 +20,7 @@ namespace DFC.App.Banners.Services.CacheContentService.UnitTests.WebhooksService
         protected BaseWebhooksServiceTests()
         {
             Logger = A.Fake<ILogger<WebhooksService>>();
-            FakeMapper = A.Fake<AutoMapper.IMapper>();
-            FakeCmsApiService = A.Fake<ICmsApiService>();
-            FakeBannerDocumentService = A.Fake<IBannerDocumentService>();
-            FakeContentTypeMappingService = A.Fake<IContentTypeMappingService>();
+            FakeEventHandlers = new List<IEventHandler>();
         }
 
         protected Guid ContentIdForCreate { get; } = Guid.NewGuid();
@@ -40,6 +38,8 @@ namespace DFC.App.Banners.Services.CacheContentService.UnitTests.WebhooksService
         protected IBannerDocumentService FakeBannerDocumentService { get; }
 
         protected IContentTypeMappingService FakeContentTypeMappingService { get; }
+
+        protected IList<IEventHandler> FakeEventHandlers { get; }
 
         protected static PageBannerContentItemApiDataModel BuildValidContentItemApiDataModel()
         {
@@ -71,7 +71,7 @@ namespace DFC.App.Banners.Services.CacheContentService.UnitTests.WebhooksService
 
         protected WebhooksService BuildWebhooksService()
         {
-            var service = new WebhooksService(Logger, FakeMapper, FakeCmsApiService, FakeContentTypeMappingService, FakeBannerDocumentService);
+            var service = new WebhooksService(Logger, FakeEventHandlers);
 
             return service;
         }

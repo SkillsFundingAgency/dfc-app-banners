@@ -84,9 +84,9 @@ namespace DFC.App.Banners.Controllers
 
                     logger.LogInformation($"Got Event Id: {eventId}: {eventGridEvent.EventType}: Cache operation: {cacheOperation} {eventGridEventData.Api}");
 
-                    var result = await webhookService.ProcessMessageAsync(cacheOperation, eventId, contentId, eventGridEventData.Api!);
+                    var result = await webhookService.ProcessMessageAsync(cacheOperation, eventId, contentId, eventGridEventData.Api!, eventGridEventData.ContentType!);
 
-                    LogResult(eventId, contentId, result, eventGridEventData?.ContentType);
+                    LogResult(eventId, contentId, result, eventGridEventData.ContentType);
                 }
                 else
                 {
