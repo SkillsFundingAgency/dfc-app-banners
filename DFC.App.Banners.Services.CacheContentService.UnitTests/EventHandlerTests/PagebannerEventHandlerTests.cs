@@ -1,4 +1,5 @@
 ﻿using DFC.App.Banners.Data.Contracts;
+using DFC.App.Banners.Data.Helpers;
 using FakeItEasy;
 using System;
 using System.Net;
@@ -55,6 +56,16 @@ namespace DFC.App.Banners.Services.CacheContentService.UnitTests.EventHandlerTes
             A.CallTo(() => fakeWebhookContentProcessor.DeleteContentAsync(A<Guid>.Ignored)).MustHaveHappenedOnceExactly();
 
             Assert.Equal(expectedResponse, result);
+        }
+
+        [Fact]
+        public void PagebannerEventHandlerProcessTypeReturnsCorrectValue()
+        {
+            // Arrange
+            var pagebannerEventHandler = new PagebannerEventHandler(fakeWebhookContentProcessor);
+
+            // Assert
+            Assert.Equal(pagebannerEventHandler.ProcessType, CmsContentKeyHelper.PageBannerTag);
         }
     }
 }

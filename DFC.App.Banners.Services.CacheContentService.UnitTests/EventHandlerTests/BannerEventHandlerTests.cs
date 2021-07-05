@@ -1,4 +1,5 @@
 ﻿using DFC.App.Banners.Data.Contracts;
+using DFC.App.Banners.Data.Helpers;
 using FakeItEasy;
 using Microsoft.Extensions.Logging;
 using System;
@@ -86,6 +87,7 @@ namespace DFC.App.Banners.Services.CacheContentService.UnitTests.EventHandlerTes
             A.CallTo(() => fakeBannerDocumentService.GetPagebannerUrlsAsync(A<string>.Ignored, A<string?>.Ignored)).Returns(pagebannerUrls);
 
             A.CallTo(() => fakeWebhookContentProcessor.ProcessContentAsync(A<Uri>.Ignored)).Throws<AggregateException>();
+
             // Act
             var result = await bannerEventHandler.ProcessContentAsync(contentId, url);
 
@@ -132,7 +134,7 @@ namespace DFC.App.Banners.Services.CacheContentService.UnitTests.EventHandlerTes
 
             A.CallTo(() => fakeBannerDocumentService.GetPagebannerUrlsAsync(A<string>.Ignored, A<string?>.Ignored)).Returns(pagebannerUrls);
 
-            A.CallTo(() => fakeWebhookContentProcessor.ProcessContentAsync(A<Uri>.Ignored)).ReturnsNextFromSequence(HttpStatusCode.BadRequest,HttpStatusCode.OK);
+            A.CallTo(() => fakeWebhookContentProcessor.ProcessContentAsync(A<Uri>.Ignored)).ReturnsNextFromSequence(HttpStatusCode.BadRequest, HttpStatusCode.OK);
 
             // Act
             var result = await bannerEventHandler.ProcessContentAsync(contentId, url);
@@ -165,6 +167,16 @@ namespace DFC.App.Banners.Services.CacheContentService.UnitTests.EventHandlerTes
             A.CallTo(() => fakeWebhookContentProcessor.ProcessContentAsync(A<Uri>.Ignored)).MustHaveHappenedTwiceExactly();
 
             Assert.Equal(expectedResponse, result);
+        }
+
+        [Fact]
+        public void BannerEventHandlerProcessTypeReturnsCorrectValue()
+        {
+            // Arrange
+            var bannerEventHandler = new BannerEventHandler(fakeWebhookContentProcessor, fakeBannerDocumentService, logger);
+
+            // Assert
+            Assert.Equal(bannerEventHandler.ProcessType, CmsContentKeyHelper.BannerTag);
         }
     }
 }

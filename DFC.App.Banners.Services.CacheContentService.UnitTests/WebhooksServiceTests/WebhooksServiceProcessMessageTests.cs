@@ -27,7 +27,7 @@ namespace DFC.App.Banners.Services.CacheContentService.UnitTests.WebhooksService
             var result = await service.ProcessMessageAsync(WebhookCacheOperation.None, Guid.NewGuid(), ContentIdForCreate, url, contentType);
 
             // Assert
-            A.CallTo(() => eventHandler.ProcessContentAsync(A<Guid>.Ignored, A<Uri>.Ignored)).MustNotHaveHappened();
+            A.CallTo(() => eventHandler!.ProcessContentAsync(A<Guid>.Ignored, A<Uri>.Ignored)).MustNotHaveHappened();
             Assert.Equal(expectedResponse, result);
         }
 
@@ -52,16 +52,32 @@ namespace DFC.App.Banners.Services.CacheContentService.UnitTests.WebhooksService
             // Arrange
             const HttpStatusCode expectedResponse = HttpStatusCode.Created;
             var url = "https://somewhere.com";
-            A.CallTo(() => AddEventHandler(contentType).ProcessContentAsync(A<Guid>.Ignored, A<Uri>.Ignored)).Returns(HttpStatusCode.Created);
+            var eventHandler = AddEventHandler(contentType);
+            A.CallTo(() => eventHandler!.ProcessContentAsync(A<Guid>.Ignored, A<Uri>.Ignored)).Returns(HttpStatusCode.Created);
             var service = BuildWebhooksService();
 
             // Act
             var result = await service.ProcessMessageAsync(WebhookCacheOperation.CreateOrUpdate, Guid.NewGuid(), ContentIdForCreate, url, contentType);
 
             // Assert
-            A.CallTo(() => AddEventHandler(contentType).ProcessContentAsync(A<Guid>.Ignored, A<Uri>.Ignored)).MustNotHaveHappened();
+            A.CallTo(() => eventHandler!.ProcessContentAsync(A<Guid>.Ignored, A<Uri>.Ignored)).MustHaveHappened();
 
             Assert.Equal(expectedResponse, result);
+        }
+
+        [Theory]
+        [InlineData("Page")]
+        [InlineData("SharedContent")]
+        [InlineData("PageLocation")]
+        public async Task WebhooksServiceProcessMessageAsyncThrowExceptionForNonBannerContentTypes(string contentType)
+        {
+            // Arrange
+            var url = "https://somewhere.com";
+            var eventHandler = AddEventHandler(contentType);
+            var service = BuildWebhooksService();
+
+            // Act
+            await Assert.ThrowsAsync<InvalidOperationException>(async () => await service.ProcessMessageAsync(WebhookCacheOperation.CreateOrUpdate, Guid.NewGuid(), ContentIdForCreate, url, contentType));
         }
 
         [Theory]
@@ -72,14 +88,15 @@ namespace DFC.App.Banners.Services.CacheContentService.UnitTests.WebhooksService
             // Arrange
             const HttpStatusCode expectedResponse = HttpStatusCode.OK;
             var url = "https://somewhere.com";
-            A.CallTo(() => AddEventHandler(contentType).ProcessContentAsync(A<Guid>.Ignored, A<Uri>.Ignored)).Returns(HttpStatusCode.OK);
+            var eventHandler = AddEventHandler(contentType);
+            A.CallTo(() => eventHandler!.ProcessContentAsync(A<Guid>.Ignored, A<Uri>.Ignored)).Returns(HttpStatusCode.OK);
             var service = BuildWebhooksService();
 
             // Act
             var result = await service.ProcessMessageAsync(WebhookCacheOperation.CreateOrUpdate, Guid.NewGuid(), ContentIdForUpdate, url, contentType);
 
             // Assert
-            A.CallTo(() => AddEventHandler(contentType).ProcessContentAsync(A<Guid>.Ignored, A<Uri>.Ignored)).MustNotHaveHappened();
+            A.CallTo(() => eventHandler!.ProcessContentAsync(A<Guid>.Ignored, A<Uri>.Ignored)).MustHaveHappened();
 
             Assert.Equal(expectedResponse, result);
         }
@@ -92,14 +109,15 @@ namespace DFC.App.Banners.Services.CacheContentService.UnitTests.WebhooksService
             // Arrange
             const HttpStatusCode expectedResponse = HttpStatusCode.OK;
             var url = "https://somewhere.com";
-            A.CallTo(() => AddEventHandler(contentType).DeleteContentAsync(A<Guid>.Ignored, A<Uri>.Ignored)).Returns(HttpStatusCode.OK);
+            var eventHandler = AddEventHandler(contentType);
+            A.CallTo(() => eventHandler!.DeleteContentAsync(A<Guid>.Ignored, A<Uri>.Ignored)).Returns(HttpStatusCode.OK);
             var service = BuildWebhooksService();
 
             // Act
             var result = await service.ProcessMessageAsync(WebhookCacheOperation.Delete, Guid.NewGuid(), ContentIdForDelete, url, contentType);
 
             // Assert
-            A.CallTo(() => AddEventHandler(contentType).ProcessContentAsync(A<Guid>.Ignored, A<Uri>.Ignored)).MustNotHaveHappened();
+            A.CallTo(() => eventHandler!.DeleteContentAsync(A<Guid>.Ignored, A<Uri>.Ignored)).MustHaveHappened();
 
             Assert.Equal(expectedResponse, result);
         }

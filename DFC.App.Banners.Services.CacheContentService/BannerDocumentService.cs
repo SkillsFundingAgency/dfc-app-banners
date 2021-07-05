@@ -6,12 +6,14 @@ using Microsoft.Azure.Documents.Client;
 using Microsoft.Azure.Documents.Linq;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
 
 namespace DFC.App.Banners.Services.CacheContentService
 {
+    [ExcludeFromCodeCoverage]
     public class BannerDocumentService : IBannerDocumentService
     {
         private readonly CosmosDbConnection cosmosDbConnection;
@@ -48,7 +50,7 @@ namespace DFC.App.Banners.Services.CacheContentService
 
             Uri documentCollectionUri = UriFactory.CreateDocumentCollectionUri(cosmosDbConnection.DatabaseId, cosmosDbConnection.CollectionId);
 
-            var query = documentClient.CreateDocumentQuery<IEnumerable<string>>(
+            IDocumentQuery<IEnumerable<string>>? query = documentClient.CreateDocumentQuery<IEnumerable<string>>(
                 documentCollectionUri,
                 new SqlQuerySpec($"SELECT DISTINCT c.Url FROM c JOIN b IN c.Banners WHERE b.ItemId = @itemId")
                 {
