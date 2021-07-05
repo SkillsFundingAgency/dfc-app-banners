@@ -14,7 +14,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Microsoft.Net.Http.Headers;
 
-namespace DFC.App.Banners.UnitTests.ControllerTests.PagesControllerTests
+namespace DFC.App.Banners.UnitTests.ControllerTests.BannersControllerTests
 {
     public abstract class BaseBannersControllerTests
     {

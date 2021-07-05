@@ -2,10 +2,10 @@
 
 @foreach (var banner in Model.OrderBy(b => b.Ordinal))
 {
-    if (banner != null)
+    if (banner != null && banner.IsActive)
     {
         <div class="">
-            @Html.Raw(banner)
+            @Html.Raw(banner.Body)
         </div>
     }
 }

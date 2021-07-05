@@ -1,15 +1,19 @@
 ﻿using System;
 using System.IO;
 using System.Text;
+
 using DFC.App.Banners.Controllers;
 using DFC.App.Banners.Data.Contracts;
+
 using FakeItEasy;
+
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ModelBinding.Validation;
 using Microsoft.Azure.EventGrid.Models;
 using Microsoft.Extensions.Logging;
 using Microsoft.Net.Http.Headers;
+
 using Newtonsoft.Json;
 
 namespace DFC.App.Banners.UnitTests.ControllerTests.WebhookControllerTests
@@ -22,7 +26,7 @@ namespace DFC.App.Banners.UnitTests.ControllerTests.WebhookControllerTests
         protected const string EventTypeDeleted = "deleted";
         protected const string EventTypeUnpublished = "unpublished";
 
-        protected const string ContentTypePages = "pages";
+        protected const string ContentTypeBanners = "banners";
 
         protected BaseWebhooksControllerTests()
         {
@@ -47,7 +51,7 @@ namespace DFC.App.Banners.UnitTests.ControllerTests.WebhookControllerTests
                 new EventGridEvent
                 {
                     Id = Guid.NewGuid().ToString(),
-                    Subject = $"{ContentTypePages}/a-canonical-name",
+                    Subject = $"{ContentTypeBanners}/a-canonical-name",
                     Data = data,
                     EventType = eventType,
                     EventTime = DateTime.Now,

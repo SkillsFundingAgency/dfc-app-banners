@@ -1,15 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Linq.Expressions;
-using System.Text;
 using System.Threading.Tasks;
 
-using DFC.App.Banners.Models;
-using DFC.App.Banners.UnitTests.ControllerTests.PagesControllerTests;
-using DFC.App.Banners.ViewModels;
-using DFC.Compui.Cosmos.Models;
 using DFC.App.Banners.Data.Models.ContentModels;
+using DFC.App.Banners.ViewModels;
 
 using FakeItEasy;
 
@@ -29,7 +24,7 @@ namespace DFC.App.Banners.UnitTests.ControllerTests.BannersControllerTests
             var controller = BuildBannersController(mediaTypeName);
 
             // Act
-            var result = await controller.GetAsync("/some-location");
+            var result = await controller.DocumentAsync("/some-location");
 
             // Assert
             Assert.IsType<NoContentResult>(result);
@@ -48,7 +43,7 @@ namespace DFC.App.Banners.UnitTests.ControllerTests.BannersControllerTests
                 .Returns(expectedResults);
 
             // Act
-            var result = await controller.GetAsync("/some-location");
+            var result = await controller.DocumentAsync("/some-location");
 
             // Assert
             var viewResult = Assert.IsType<ViewResult>(result);

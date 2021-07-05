@@ -77,7 +77,8 @@ namespace DFC.App.Banners
             services.AddTransient<IWebhookContentProcessor, WebhooksContentProcessor>();
 
             services.AddAutoMapper(typeof(Startup).Assembly);
-            services.AddSingleton(configuration.GetSection(nameof(CmsApiClientOptions)).Get<CmsApiClientOptions>() ?? new CmsApiClientOptions());
+            CmsApiClientOptions cmsApiClientOptions = configuration.GetSection(nameof(CmsApiClientOptions)).Get<CmsApiClientOptions>();
+            services.AddSingleton(cmsApiClientOptions ?? new CmsApiClientOptions());
             services.AddHostedServiceTelemetryWrapper();
             services.AddHostedService<CacheReloadBackgroundService>();
             services.AddSubscriptionBackgroundService(configuration);

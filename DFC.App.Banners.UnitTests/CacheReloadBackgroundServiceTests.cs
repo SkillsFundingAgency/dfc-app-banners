@@ -1,11 +1,15 @@
 ﻿using System;
 using System.Threading.Tasks;
+
 using DFC.App.Banners.Data.Contracts;
 using DFC.App.Banners.HostedServices;
 using DFC.Compui.Telemetry.HostedService;
 using DFC.Content.Pkg.Netcore.Data.Models.ClientOptions;
+
 using FakeItEasy;
+
 using Microsoft.Extensions.Logging;
+
 using Xunit;
 
 namespace DFC.App.Banners.UnitTests
@@ -43,7 +47,7 @@ namespace DFC.App.Banners.UnitTests
             // Assert
             var ex = await Assert.ThrowsAsync<AggregateException>(async () => await serviceToTest.StartAsync(default));
             Assert.NotNull(ex.InnerException);
-            Assert.Equal(ex.InnerException.Message, Message);
+            Assert.Equal(ex.InnerException?.Message, Message);
             serviceToTest.Dispose();
         }
     }
