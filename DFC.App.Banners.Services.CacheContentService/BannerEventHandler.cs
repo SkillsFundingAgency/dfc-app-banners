@@ -45,12 +45,12 @@ namespace DFC.App.Banners.Services.CacheContentService
             try
             {
                 var result = await Task.WhenAll(pagebannerUrls.Select(x => webhookContentProcessor.ProcessContentAsync(x)));
-                return result.All(x => x == HttpStatusCode.OK) ? HttpStatusCode.OK : HttpStatusCode.NoContent;
+                return result.Any(x => x == HttpStatusCode.BadRequest) ? HttpStatusCode.BadRequest : HttpStatusCode.OK;
             }
             catch (AggregateException exception)
             {
                 exception.Flatten().InnerExceptions.ToList().ForEach(x => logger.LogError($"Failed to refresh cache for {url} : {exception.Flatten().Message}"));
-                return HttpStatusCode.NoContent;
+                return HttpStatusCode.BadRequest;
             }
         }
     }
