@@ -37,7 +37,7 @@ namespace DFC.App.Banners.Services.CacheContentService.UnitTests.DocumentService
             var result = await service.GetByIdAsync(ContentIdForUpdate, "/");
 
             //Assert
-            A.CallTo(() => FakeDocumentService.GetByIdAsync(A<Guid>.Ignored,A<string>.Ignored)).MustHaveHappenedOnceExactly();
+            A.CallTo(() => FakeDocumentService.GetByIdAsync(A<Guid>.Ignored, A<string>.Ignored)).MustHaveHappenedOnceExactly();
             Assert.Equal(result?.Id, BuildValidContentItemModel().Id);
         }
 
