@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Net;
 using System.Text;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
@@ -85,8 +84,6 @@ namespace DFC.App.Banners.Controllers
                     logger.LogInformation($"Got Event Id: {eventId}: {eventGridEvent.EventType}: Cache operation: {cacheOperation} {eventGridEventData.Api}");
 
                     var result = await webhookService.ProcessMessageAsync(cacheOperation, eventId, contentId, eventGridEventData.Api!, eventGridEventData.ContentType!);
-
-                    LogResult(eventId, contentId, result, eventGridEventData.ContentType);
                 }
                 else
                 {
@@ -95,32 +92,6 @@ namespace DFC.App.Banners.Controllers
             }
 
             return Ok();
-        }
-
-        private void LogResult(Guid eventId, Guid contentId, HttpStatusCode result, string? contentType)
-        {
-            switch (result)
-            {
-                case HttpStatusCode.OK:
-                    logger.LogInformation($"Event Id: {eventId}, Content {contentType} Id: {contentId}: Updated Content {contentType}");
-                    break;
-
-                case HttpStatusCode.Created:
-                    logger.LogInformation($"Event Id: {eventId}, CContent {contentType} Id: {contentId}: Created Content {contentType}");
-                    break;
-
-                case HttpStatusCode.AlreadyReported:
-                    logger.LogInformation($"Event Id: {eventId}, Content {contentType} Id: {contentId}: Content {contentType} previously updated");
-                    break;
-
-                case HttpStatusCode.Continue:
-                    logger.LogInformation($"Event Id: {eventId}, Content {contentType} Id: {contentId}: No Page Banners found");
-                    break;
-
-                default:
-                    logger.LogError($"Event Id: {eventId}, Content {contentType} Id: {contentId}: Content {contentType} not updated: Status: {result}");
-                    break;
-            }
         }
     }
 }

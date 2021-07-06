@@ -5,6 +5,7 @@ using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
 using DFC.App.Banners.Data.Contracts;
+using DFC.App.Banners.Data.Helpers;
 using DFC.App.Banners.Data.Models.CmsApiModels;
 using DFC.App.Banners.Data.Models.ContentModels;
 using DFC.Content.Pkg.Netcore.Data.Contracts;
@@ -36,8 +37,8 @@ namespace DFC.App.Banners.Services.CacheContentService
 
         public async Task<HttpStatusCode> ProcessContentAsync(Uri url)
         {
-            contentTypeMappingService.AddMapping("Pagebanner", typeof(PageBannerContentItemApiDataModel));
-            contentTypeMappingService.AddMapping("Banner", typeof(BannerContentItemApiDataModel));
+            contentTypeMappingService.AddMapping(CmsContentKeyHelper.PageBannerTag, typeof(PageBannerContentItemApiDataModel));
+            contentTypeMappingService.AddMapping(CmsContentKeyHelper.BannerTag, typeof(BannerContentItemApiDataModel));
 
             var apiDataModel = await cmsApiService.GetItemAsync<PageBannerContentItemApiDataModel>(url);
 
@@ -45,6 +46,7 @@ namespace DFC.App.Banners.Services.CacheContentService
 
             if (pageBannerContentItemModel == null)
             {
+                logger.LogInformation($"Page Banner Url: {url}, result {HttpStatusCode.NoContent}: No content found");
                 return HttpStatusCode.NoContent;
             }
 
@@ -55,12 +57,18 @@ namespace DFC.App.Banners.Services.CacheContentService
 
             pageBannerContentItemModel.Banners = mapper.Map<List<BannerContentItemModel>>(apiDataModel?.ContentItems);
 
-            return await bannerDocumentService.UpsertAsync(pageBannerContentItemModel);
+            var result = await bannerDocumentService.UpsertAsync(pageBannerContentItemModel);
+
+            logger.LogInformation($"Page Banner Url: {url}, result {result}: Updated content for Page Banner");
+
+            return result;
         }
 
         public async Task<HttpStatusCode> DeleteContentAsync(Guid contentId)
         {
             var result = await bannerDocumentService.DeleteAsync(contentId);
+
+            logger.LogInformation($"Page Banner event Id: {contentId}, result {result}: Deleted content for Page Banner");
 
             return result ? HttpStatusCode.OK : HttpStatusCode.NoContent;
         }

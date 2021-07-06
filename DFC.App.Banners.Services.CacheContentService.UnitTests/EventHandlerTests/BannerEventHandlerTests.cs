@@ -28,7 +28,7 @@ namespace DFC.App.Banners.Services.CacheContentService.UnitTests.EventHandlerTes
         public async Task BannerEventHandlerProcessContentAsyncForNoPagebannersReturnsSuccess()
         {
             // Arrange
-            const HttpStatusCode expectedResponse = HttpStatusCode.Continue;
+            const HttpStatusCode expectedResponse = HttpStatusCode.Accepted;
             var url = new Uri("https://somewhere.com");
             var pagebannerUrls = new List<Uri>();
 
