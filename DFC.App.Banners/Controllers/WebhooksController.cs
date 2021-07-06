@@ -113,8 +113,13 @@ namespace DFC.App.Banners.Controllers
                     logger.LogInformation($"Event Id: {eventId}, Content {contentType} Id: {contentId}: Content {contentType} previously updated");
                     break;
 
+                case HttpStatusCode.Continue:
+                    logger.LogInformation($"Event Id: {eventId}, Content {contentType} Id: {contentId}: No Page Banners found");
+                    break;
+
                 default:
-                    throw new InvalidDataException($"Event Id: {eventId}, Content {contentType} Id: {contentId}: Content {contentType} not updated: Status: {result}");
+                    logger.LogError($"Event Id: {eventId}, Content {contentType} Id: {contentId}: Content {contentType} not updated: Status: {result}");
+                    break;
             }
         }
     }

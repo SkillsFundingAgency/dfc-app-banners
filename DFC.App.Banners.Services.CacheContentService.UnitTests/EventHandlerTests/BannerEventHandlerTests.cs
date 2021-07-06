@@ -5,7 +5,6 @@ using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.Net;
-using System.Text;
 using System.Threading.Tasks;
 using Xunit;
 
@@ -29,7 +28,7 @@ namespace DFC.App.Banners.Services.CacheContentService.UnitTests.EventHandlerTes
         public async Task BannerEventHandlerProcessContentAsyncForNoPagebannersReturnsSuccess()
         {
             // Arrange
-            const HttpStatusCode expectedResponse = HttpStatusCode.Accepted;
+            const HttpStatusCode expectedResponse = HttpStatusCode.Continue;
             var url = new Uri("https://somewhere.com");
             var pagebannerUrls = new List<Uri>();
 

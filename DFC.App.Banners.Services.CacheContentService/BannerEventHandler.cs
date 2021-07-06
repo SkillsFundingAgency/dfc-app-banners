@@ -39,7 +39,7 @@ namespace DFC.App.Banners.Services.CacheContentService
 
             if (!pagebannerUrls.Any())
             {
-                return HttpStatusCode.Accepted;
+                return HttpStatusCode.Continue;
             }
 
             try
