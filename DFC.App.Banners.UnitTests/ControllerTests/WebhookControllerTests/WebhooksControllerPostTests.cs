@@ -125,24 +125,6 @@ namespace DFC.App.Banners.UnitTests.ControllerTests.WebhookControllerTests
         }
 
         [Theory]
-        [MemberData(nameof(PublishedEvents))]
-        public async Task WebhooksControllerPublishCreatePostReturnsExceptionForConflict(string mediaTypeName, string eventType)
-        {
-            // Arrange
-            var eventGridEvents = BuildValidEventGridEvent(eventType, new EventGridEventData { ItemId = ItemIdForCreate.ToString(), Api = "https://somewhere.com", });
-            using var controller = BuildWebhooksController(mediaTypeName);
-            controller.HttpContext.Request.Body = BuildStreamFromModel(eventGridEvents);
-
-            A.CallTo(() => FakeWebhooksService.ProcessMessageAsync(A<WebhookCacheOperation>.Ignored, A<Guid>.Ignored, A<Guid>.Ignored, A<string>.Ignored, A<string>.Ignored)).Returns(HttpStatusCode.Conflict);
-
-            // Act
-            await Assert.ThrowsAsync<InvalidDataException>(async () => await controller.ReceiveEvents());
-
-            // Assert
-            A.CallTo(() => FakeWebhooksService.ProcessMessageAsync(A<WebhookCacheOperation>.Ignored, A<Guid>.Ignored, A<Guid>.Ignored, A<string>.Ignored, A<string>.Ignored)).MustHaveHappenedOnceExactly();
-        }
-
-        [Theory]
         [MemberData(nameof(InvalidIdValues))]
         public async Task WebhooksControllerPostReturnsErrorForInvalidEventId(string id)
         {

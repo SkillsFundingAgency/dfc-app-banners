@@ -39,13 +39,19 @@ namespace DFC.App.Banners.Services.CacheContentService
 
             if (!pagebannerUrls.Any())
             {
+                logger.LogInformation($"Banner content item Id:{contentId} - No Page Banners found");
                 return HttpStatusCode.Accepted;
             }
 
             try
             {
                 var result = await Task.WhenAll(pagebannerUrls.Select(x => webhookContentProcessor.ProcessContentAsync(x)));
-                return result.Any(x => x == HttpStatusCode.BadRequest) ? HttpStatusCode.BadRequest : HttpStatusCode.OK;
+
+                var renVal = result.Any(x => x == HttpStatusCode.BadRequest) ? HttpStatusCode.BadRequest : HttpStatusCode.OK;
+
+                logger.LogInformation($"Banner content item Id: {contentId}, Url {url} Id: Updated page banners: {string.Join(",", pagebannerUrls)}");
+
+                return renVal;
             }
             catch (AggregateException exception)
             {
