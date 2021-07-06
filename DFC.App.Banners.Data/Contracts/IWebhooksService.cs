@@ -7,6 +7,6 @@ namespace DFC.App.Banners.Data.Contracts
 {
     public interface IWebhooksService
     {
-        Task<HttpStatusCode> ProcessMessageAsync(WebhookCacheOperation webhookCacheOperation, Guid eventId, Guid contentId, string apiEndpoint);
+        Task<HttpStatusCode> ProcessMessageAsync(WebhookCacheOperation webhookCacheOperation, Guid eventId, Guid contentId, string apiEndpoint, string contentType);
     }
 }

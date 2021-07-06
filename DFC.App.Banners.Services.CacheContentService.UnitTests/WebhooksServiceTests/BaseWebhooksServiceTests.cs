@@ -1,8 +1,7 @@
 ﻿using System;
-using DFC.App.Banners.Data.Models.CmsApiModels;
-using DFC.App.Banners.Data.Models.ContentModels;
-using DFC.Compui.Cosmos.Contracts;
-using DFC.Content.Pkg.Netcore.Data.Contracts;
+using System.Collections.Generic;
+using DFC.App.Banners.Data.Contracts;
+using DFC.App.Banners.Data.Helpers;
 using FakeItEasy;
 using Microsoft.Extensions.Logging;
 
@@ -10,18 +9,10 @@ namespace DFC.App.Banners.Services.CacheContentService.UnitTests.WebhooksService
 {
     public abstract class BaseWebhooksServiceTests
     {
-        protected const string EventTypePublished = "published";
-        protected const string EventTypeDraft = "draft";
-        protected const string EventTypeDraftDiscarded = "draft-discarded";
-        protected const string EventTypeDeleted = "deleted";
-        protected const string EventTypeUnpublished = "unpublished";
-
         protected BaseWebhooksServiceTests()
         {
             Logger = A.Fake<ILogger<WebhooksService>>();
-            FakeMapper = A.Fake<AutoMapper.IMapper>();
-            FakeCmsApiService = A.Fake<ICmsApiService>();
-            FakeSharedContentItemDocumentService = A.Fake<IDocumentService<PageBannerContentItemModel>>();
+            FakeEventHandlers = new List<IEventHandler>();
         }
 
         protected Guid ContentIdForCreate { get; } = Guid.NewGuid();
@@ -32,45 +23,32 @@ namespace DFC.App.Banners.Services.CacheContentService.UnitTests.WebhooksService
 
         protected ILogger<WebhooksService> Logger { get; }
 
-        protected AutoMapper.IMapper FakeMapper { get; }
-
-        protected ICmsApiService FakeCmsApiService { get; }
-
-        protected IDocumentService<PageBannerContentItemModel> FakeSharedContentItemDocumentService { get; }
-
-        protected static PageBannerContentItemApiDataModel BuildValidContentItemApiDataModel()
-        {
-            var model = new PageBannerContentItemApiDataModel
-            {
-                Title = "an-article",
-                Url = new Uri("https://localhost"),
-                Published = DateTime.UtcNow,
-                CreatedDate = DateTime.UtcNow,
-            };
-
-            return model;
-        }
-
-        protected PageBannerContentItemModel BuildValidContentItemModel()
-        {
-            var model = new PageBannerContentItemModel()
-            {
-                Id = ContentIdForUpdate,
-                Etag = Guid.NewGuid().ToString(),
-                Url = new Uri("https://localhost"),
-                LastReviewed = DateTime.UtcNow,
-                CreatedDate = DateTime.UtcNow,
-                LastCached = DateTime.UtcNow,
-            };
-
-            return model;
-        }
+        protected IList<IEventHandler> FakeEventHandlers { get; }
 
         protected WebhooksService BuildWebhooksService()
         {
-            var service = new WebhooksService(Logger, FakeMapper, FakeCmsApiService, FakeSharedContentItemDocumentService);
+            var service = new WebhooksService(Logger, FakeEventHandlers);
 
             return service;
+        }
+
+        protected IEventHandler? AddEventHandler(string eventHandler)
+        {
+            switch (eventHandler)
+            {
+                case CmsContentKeyHelper.BannerTag:
+                case CmsContentKeyHelper.PageBannerTag:
+                    {
+                        var handler = A.Fake<IEventHandler>();
+                        FakeEventHandlers.Add(handler);
+                        A.CallTo(() => handler.ProcessType).Returns(eventHandler);
+                        FakeEventHandlers.Add(handler);
+                        return handler;
+                    }
+
+                default:
+                    return null;
+            }
         }
     }
 }

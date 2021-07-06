@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Diagnostics.CodeAnalysis;
 
-using Newtonsoft.Json;
-
 namespace DFC.App.Banners.Data.Models.ContentModels
 {
     [ExcludeFromCodeCoverage]

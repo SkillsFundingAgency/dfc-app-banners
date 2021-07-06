@@ -1,5 +1,4 @@
 ﻿using System.Diagnostics.CodeAnalysis;
-
 using AutoMapper;
 
 using DFC.App.Banners.Data.Models.CmsApiModels;

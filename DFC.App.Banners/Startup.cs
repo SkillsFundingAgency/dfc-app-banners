@@ -1,7 +1,5 @@
 ﻿using System.Diagnostics.CodeAnalysis;
-
 using AutoMapper;
-
 using DFC.App.Banners.Data.Contracts;
 using DFC.App.Banners.Data.Models.ContentModels;
 using DFC.App.Banners.HostedServices;
@@ -12,7 +10,6 @@ using DFC.Compui.Subscriptions.Pkg.Netstandard.Extensions;
 using DFC.Compui.Telemetry;
 using DFC.Content.Pkg.Netcore.Data.Models.ClientOptions;
 using DFC.Content.Pkg.Netcore.Extensions;
-
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
@@ -24,7 +21,7 @@ namespace DFC.App.Banners
     [ExcludeFromCodeCoverage]
     public class Startup
     {
-        private const string CosmosDbSharedContentConfigAppSettings = "Configuration:CosmosDbConnections:SharedContent";
+        private const string CosmosDbContentBannersConfigAppSettings = "Configuration:CosmosDbConnections:ContentBanners";
 
         private readonly IConfiguration configuration;
         private readonly IWebHostEnvironment env;
@@ -62,7 +59,7 @@ namespace DFC.App.Banners
 
         public void ConfigureServices(IServiceCollection services)
         {
-            var cosmosDbConnectionSharedContent = configuration.GetSection(CosmosDbSharedContentConfigAppSettings).Get<CosmosDbConnection>();
+            var cosmosDbConnectionSharedContent = configuration.GetSection(CosmosDbContentBannersConfigAppSettings).Get<CosmosDbConnection>();
             var cosmosRetryOptions = new Microsoft.Azure.Documents.Client.RetryOptions
             {
                 MaxRetryAttemptsOnThrottledRequests = 20,
@@ -74,6 +71,10 @@ namespace DFC.App.Banners
             services.AddHttpContextAccessor();
             services.AddTransient<ICacheReloadService, BannersCacheReloadService>();
             services.AddTransient<IWebhooksService, WebhooksService>();
+            services.AddTransient<IBannerDocumentService, BannerDocumentService>();
+            services.AddTransient<IEventHandler, BannerEventHandler>();
+            services.AddTransient<IEventHandler, PagebannerEventHandler>();
+            services.AddTransient<IWebhookContentProcessor, WebhooksContentProcessor>();
 
             services.AddAutoMapper(typeof(Startup).Assembly);
             CmsApiClientOptions cmsApiClientOptions = configuration.GetSection(nameof(CmsApiClientOptions)).Get<CmsApiClientOptions>();
