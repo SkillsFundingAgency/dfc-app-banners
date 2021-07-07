@@ -231,120 +231,120 @@
                         "value": "[parameters('clientAffinity')]"
                     },
                     "appServiceAppSettings": {
-                        "value": [
-                            {
-                                "name": "MSDEPLOY_RENAME_LOCKED_FILES",
-                                "value": "1"
-                            },
-                            {
-                                "name": "APPINSIGHTS_INSTRUMENTATIONKEY",
-                                "value": "[reference(variables('webAppInsightsName')).outputs.InstrumentationKey.value]"
-                            },
-                            {
-                                "name": "AzureWebJobsStorage",
-                                "value": "[concat('DefaultEndpointsProtocol=https;AccountName=',parameters('appSharedStorageAccountName'),';AccountKey=',listKeys(resourceId(parameters('appSharedResourceGroup'), 'Microsoft.Storage/storageAccounts', parameters('appSharedStorageAccountName')), providers('Microsoft.Storage', 'storageAccounts').apiVersions[0]).keys[0].value, ';EndpointSuffix=core.windows.net')]"
-                            },
-                            {
-                                "name": "WEBSITE_RUN_FROM_PACKAGE",
-                                "value": "1"
-                            },
-                            {
-                                "name": "WEBSITE_ADD_SITENAME_BINDINGS_IN_APPHOST_CONFIG",
-                                "value": "1"
-                            },
-                            {
-                                "name": "Configuration__CosmosDbConnections__SharedContent__AccessKey",
-                                "value": "[parameters('cosmosDbKey')]"
-                            },
-                            {
-                                "name": "Configuration__CosmosDbConnections__SharedContent__EndpointUrl",
-                                "value": "[variables('cosmosDbEndpoint')]"
-                            },
-                            {
-                                "name": "Configuration__CosmosDbConnections__SharedContent__DatabaseId",
-                                "value": "[variables('cosmosDbDatabaseName')]"
-                            },
-                            {
-                                "name": "Configuration__CosmosDbConnections__SharedContent__CollectionId",
-                                "value": "[parameters('cosmosDbCollectionName')]"
-                            },
-                            {
-                                "name": "Configuration__CosmosDbConnections__SharedContent__PartitionKey",
-                                "value": "[variables('cosmosDbCollectionPartitionKey')]"
-                            },
-                            {
-                                "name": "CmsApiClientOptions__BaseAddress",
-                                "value": "[parameters('contentUrl')]"
-                            },
-                            {
-                                "name": "CmsApiClientOptions__SummaryEndpoint",
-                                "value": "/pagebanner"
-                            },
-                            {
-                                "name": "CmsApiClientOptions__Timeout",
-                                "value": "00:00:30"
-                            },
-                            {
-                                "name": "Configuration__ApplicationName",
-                                "value": "[parameters('ApplicationName')]"
-                            },
-                            {
-                                "name": "Policies__HttpCircuitBreaker__DurationOfBreak",
-                                "value": "00:01:00"
-                            },
-                            {
-                                "name": "Policies__HttpCircuitBreaker__ExceptionsAllowedBeforeBreaking",
-                                "value": 3
-                            },
-                            {
-                                "name": "Policies__HttpRetry__BackoffPower",
-                                "value": 2
-                            },
-                            {
-                                "name": "Policies__HttpRetry__Count",
-                                "value": 3
-                            },
-                            {
-                                "name": "SubscriptionSettings__Filter__IncludeEventTypes__0",
-                                "value": "published"
-                            },
-                            {
-                                "name": "SubscriptionSettings__Filter__IncludeEventTypes__1",
-                                "value": "unpublished"
-                            },
-                            {
-                                "name": "SubscriptionSettings__Filter__IncludeEventTypes__2",
-                                "value": "deleted"
-                            },
-                            {
-                                "name": "SubscriptionSettings__Filter__IncludeEventTypes__3",
-                                "value": "[parameters('SubscriptionSettingsFilterIncludeEventTypes3')]"
-                            },
-                            {
-                                "name": "SubscriptionSettings__Filter__IncludeEventTypes__4",
-                                "value": "[parameters('SubscriptionSettingsFilterIncludeEventTypes4')]"
-                            },
-                            {
-                                "name": "SubscriptionSettings__Endpoint",
-                                "value": "[concat(parameters('SubscriptionSettingsEndpoint'),'/api/webhook/ReceiveEvents?subscription-key=',parameters('apimCompositeApiKey'))]"
-                            },
-                            {
-                                "name": "SubscriptionSettings__SubscriptionServiceEndpoint",
-                                "value": "[concat(parameters('subscriptionUrl'),'/api/Execute')]"
-                            },
-                            {
-                                "name": "SubscriptionSettings__Filter__PropertyContainsFilters__0__Key",
-                                "value": "subject"
-                            },
-                            {
-                                "name": "SubscriptionSettings__Filter__PropertyContainsFilters__0__Values__0",
-                                "value": "[parameters('SubscriptionSettingsFilterPropertyContainsFilters0Values0')]"
-                            },
-                            {
-                                "name": "SubscriptionSettings__Filter__PropertyContainsFilters__0__Values__1",
-                                "value": "[parameters('SubscriptionSettingsFilterPropertyContainsFilters0Values1')]"
-                            }
-                        ]
+                      "value": [
+                        {
+                          "name": "MSDEPLOY_RENAME_LOCKED_FILES",
+                          "value": "1"
+                        },
+                        {
+                          "name": "APPINSIGHTS_INSTRUMENTATIONKEY",
+                          "value": "[reference(variables('webAppInsightsName')).outputs.InstrumentationKey.value]"
+                        },
+                        {
+                          "name": "AzureWebJobsStorage",
+                          "value": "[concat('DefaultEndpointsProtocol=https;AccountName=',parameters('appSharedStorageAccountName'),';AccountKey=',listKeys(resourceId(parameters('appSharedResourceGroup'), 'Microsoft.Storage/storageAccounts', parameters('appSharedStorageAccountName')), providers('Microsoft.Storage', 'storageAccounts').apiVersions[0]).keys[0].value, ';EndpointSuffix=core.windows.net')]"
+                        },
+                        {
+                          "name": "WEBSITE_RUN_FROM_PACKAGE",
+                          "value": "1"
+                        },
+                        {
+                          "name": "WEBSITE_ADD_SITENAME_BINDINGS_IN_APPHOST_CONFIG",
+                          "value": "1"
+                        },
+                        {
+                          "name": "Configuration__CosmosDbConnections__ContentBanners__AccessKey",
+                          "value": "[parameters('cosmosDbKey')]"
+                        },
+                        {
+                          "name": "Configuration__CosmosDbConnections__ContentBanners__EndpointUrl",
+                          "value": "[variables('cosmosDbEndpoint')]"
+                        },
+                        {
+                          "name": "Configuration__CosmosDbConnections__ContentBanners__DatabaseId",
+                          "value": "[variables('cosmosDbDatabaseName')]"
+                        },
+                        {
+                          "name": "Configuration__CosmosDbConnections__ContentBanners__CollectionId",
+                          "value": "[parameters('cosmosDbCollectionName')]"
+                        },
+                        {
+                          "name": "Configuration__CosmosDbConnections__ContentBanners__PartitionKey",
+                          "value": "[variables('cosmosDbCollectionPartitionKey')]"
+                        },
+                        {
+                          "name": "CmsApiClientOptions__BaseAddress",
+                          "value": "[parameters('contentUrl')]"
+                        },
+                        {
+                          "name": "CmsApiClientOptions__SummaryEndpoint",
+                          "value": "/pagebanner"
+                        },
+                        {
+                          "name": "CmsApiClientOptions__Timeout",
+                          "value": "00:00:30"
+                        },
+                        {
+                          "name": "Configuration__ApplicationName",
+                          "value": "[parameters('ApplicationName')]"
+                        },
+                        {
+                          "name": "Policies__HttpCircuitBreaker__DurationOfBreak",
+                          "value": "00:01:00"
+                        },
+                        {
+                          "name": "Policies__HttpCircuitBreaker__ExceptionsAllowedBeforeBreaking",
+                          "value": 3
+                        },
+                        {
+                          "name": "Policies__HttpRetry__BackoffPower",
+                          "value": 2
+                        },
+                        {
+                          "name": "Policies__HttpRetry__Count",
+                          "value": 3
+                        },
+                        {
+                          "name": "SubscriptionSettings__Filter__IncludeEventTypes__0",
+                          "value": "published"
+                        },
+                        {
+                          "name": "SubscriptionSettings__Filter__IncludeEventTypes__1",
+                          "value": "unpublished"
+                        },
+                        {
+                          "name": "SubscriptionSettings__Filter__IncludeEventTypes__2",
+                          "value": "deleted"
+                        },
+                        {
+                          "name": "SubscriptionSettings__Filter__IncludeEventTypes__3",
+                          "value": "[parameters('SubscriptionSettingsFilterIncludeEventTypes3')]"
+                        },
+                        {
+                          "name": "SubscriptionSettings__Filter__IncludeEventTypes__4",
+                          "value": "[parameters('SubscriptionSettingsFilterIncludeEventTypes4')]"
+                        },
+                        {
+                          "name": "SubscriptionSettings__Endpoint",
+                          "value": "[concat(parameters('SubscriptionSettingsEndpoint'),'/api/webhook/ReceiveEvents?subscription-key=',parameters('apimCompositeApiKey'))]"
+                        },
+                        {
+                          "name": "SubscriptionSettings__SubscriptionServiceEndpoint",
+                          "value": "[concat(parameters('subscriptionUrl'),'/api/Execute')]"
+                        },
+                        {
+                          "name": "SubscriptionSettings__Filter__PropertyContainsFilters__0__Key",
+                          "value": "subject"
+                        },
+                        {
+                          "name": "SubscriptionSettings__Filter__PropertyContainsFilters__0__Values__0",
+                          "value": "[parameters('SubscriptionSettingsFilterPropertyContainsFilters0Values0')]"
+                        },
+                        {
+                          "name": "SubscriptionSettings__Filter__PropertyContainsFilters__0__Values__1",
+                          "value": "[parameters('SubscriptionSettingsFilterPropertyContainsFilters0Values1')]"
+                        }
+                      ]
                     }
                 }
             }

@@ -64,7 +64,7 @@ namespace DFC.App.Banners.UnitTests.ControllerTests.BannersControllerTests
                 .Returns(expectedResults);
 
             // Act
-            var result = await controller.GetBodyAsync("/some-location");
+            var result = await controller.BodyAsync("/some-location");
 
             // Assert
             var viewResult = Assert.IsType<ViewResult>(result);

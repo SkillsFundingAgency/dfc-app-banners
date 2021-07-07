@@ -87,7 +87,7 @@ namespace DFC.App.Banners.Controllers
 
         [HttpGet]
         [Route("body/{path?}")]
-        public async Task<IActionResult> GetBodyAsync(string? path = "/")
+        public async Task<IActionResult> BodyAsync(string? path = "/")
         {
             if (string.IsNullOrWhiteSpace(path))
             {
