@@ -66,12 +66,7 @@ namespace DFC.App.Banners.Controllers
         [Route("document/{**path}")]
         public async Task<IActionResult> DocumentAsync(string? path = "/")
         {
-            if (string.IsNullOrWhiteSpace(path))
-            {
-                return NoContent();
-            }
-
-            var pageBannerContentItemModel = await GetBannersAsync(path);
+            var pageBannerContentItemModel = await GetBannersAsync(path ?? "/");
 
             if (pageBannerContentItemModel?.Any() is true)
             {
@@ -89,12 +84,7 @@ namespace DFC.App.Banners.Controllers
         [Route("body/{**path}")]
         public async Task<IActionResult> BodyAsync(string? path = "/")
         {
-            if (string.IsNullOrWhiteSpace(path))
-            {
-                return NoContent();
-            }
-
-            var pageBannerContentItemModel = await GetBannersAsync(path);
+            var pageBannerContentItemModel = await GetBannersAsync(path ?? "/");
 
             if (pageBannerContentItemModel?.Any() is true)
             {

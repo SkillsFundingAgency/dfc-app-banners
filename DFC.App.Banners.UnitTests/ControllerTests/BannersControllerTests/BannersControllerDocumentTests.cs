@@ -54,6 +54,22 @@ namespace DFC.App.Banners.UnitTests.ControllerTests.BannersControllerTests
 
         [Theory]
         [MemberData(nameof(HtmlMediaTypes))]
+        public async Task BannersControllerBodyHtmlReturnsNoContent(string mediaTypeName)
+        {
+            // Arrange
+            var controller = BuildBannersController(mediaTypeName);
+
+            // Act
+            var result = await controller.BodyAsync("/some-location");
+
+            // Assert
+            Assert.IsType<NoContentResult>(result);
+
+            controller.Dispose();
+        }
+
+        [Theory]
+        [MemberData(nameof(HtmlMediaTypes))]
         public async Task BannersControllerBodyHtmlReturnsSuccess(string mediaTypeName)
         {
             // Arrange
