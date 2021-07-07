@@ -98,9 +98,7 @@ namespace DFC.App.Banners.UnitTests.ControllerTests.BannersControllerTests
             var expectedResults = A.CollectionOfDummy<PageBannerContentItemModel>(1);
             expectedResults[0].Banners = new List<BannerContentItemModel>(A.CollectionOfDummy<BannerContentItemModel>(1));
             var controller = BuildBannersController(mediaTypeName);
-            Expression<Func<PageBannerContentItemModel, bool>> res;
             A.CallTo(() => FakeDocumentService.GetAsync(A<Expression<Func<PageBannerContentItemModel, bool>>>.Ignored))
-                .Invokes((Expression<Func<PageBannerContentItemModel, bool>> expression) => res = expression)
                 .Returns(Array.Empty<PageBannerContentItemModel>()).Once()
                 .Then
                 .Returns(expectedResults);
