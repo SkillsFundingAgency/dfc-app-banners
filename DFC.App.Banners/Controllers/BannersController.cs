@@ -63,7 +63,7 @@ namespace DFC.App.Banners.Controllers
         }
 
         [HttpGet]
-        [Route("document/{path?}")]
+        [Route("document/{**path}")]
         public async Task<IActionResult> DocumentAsync(string? path = "/")
         {
             if (string.IsNullOrWhiteSpace(path))
@@ -86,7 +86,7 @@ namespace DFC.App.Banners.Controllers
         }
 
         [HttpGet]
-        [Route("body/{path?}")]
+        [Route("body/{**path}")]
         public async Task<IActionResult> BodyAsync(string? path = "/")
         {
             if (string.IsNullOrWhiteSpace(path))
@@ -110,7 +110,7 @@ namespace DFC.App.Banners.Controllers
 
         private async Task<IEnumerable<PageBannerContentItemModel>> GetBannersAsync(string path)
         {
-            if (!path.Contains("/"))
+            if (!path.StartsWith('/'))
             {
                 path = $"/{path}";
             }
@@ -122,9 +122,8 @@ namespace DFC.App.Banners.Controllers
                 return banners ?? Array.Empty<PageBannerContentItemModel>();
             }
 
-            var pathSegments = path.Split('/');
-            var parentPath = string.Join("/", pathSegments.Take(pathSegments.Length - 1));
-            return await GetBannersAsync($"/{parentPath}");
+            var parentPath = path.Substring(0, path.LastIndexOf('/'));
+            return await GetBannersAsync(parentPath);
         }
     }
 }

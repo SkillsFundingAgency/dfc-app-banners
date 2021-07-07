@@ -72,5 +72,32 @@ namespace DFC.App.Banners.UnitTests.ControllerTests.BannersControllerTests
 
             controller.Dispose();
         }
+
+        [Theory]
+        [MemberData(nameof(HtmlMediaTypes))]
+        public async Task BannersControllerBodyHtmlWhenBannerNotFoundForPageLocationThenReturnsBannerForParentPageLocation(string mediaTypeName)
+        {
+            // Arrange
+            var path = "/careers-advice/interview-advice";
+            var expectedResults = A.CollectionOfDummy<PageBannerContentItemModel>(1);
+            expectedResults[0].Banners = new List<BannerContentItemModel>(A.CollectionOfDummy<BannerContentItemModel>(1));
+            var controller = BuildBannersController(mediaTypeName);
+            Expression<Func<PageBannerContentItemModel, bool>> res;
+            A.CallTo(() => FakeDocumentService.GetAsync(A<Expression<Func<PageBannerContentItemModel, bool>>>.Ignored))
+                .Invokes((Expression<Func<PageBannerContentItemModel, bool>> expression) => res = expression)
+                .Returns(Array.Empty<PageBannerContentItemModel>()).Once()
+                .Then
+                .Returns(expectedResults);
+
+            // Act
+            var result = await controller.BodyAsync(path);
+
+            // Assert
+            var viewResult = Assert.IsType<ViewResult>(result);
+            _ = Assert.IsAssignableFrom<List<BannerViewModel>>(viewResult.ViewData.Model);
+            A.CallTo(() => FakeDocumentService.GetAsync(A<Expression<Func<PageBannerContentItemModel, bool>>>.Ignored)).MustHaveHappenedTwiceExactly();
+
+            controller.Dispose();
+        }
     }
 }
