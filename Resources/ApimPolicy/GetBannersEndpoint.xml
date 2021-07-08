@@ -4,6 +4,7 @@
     <set-header name="Accept" exists-action="override">
       <value>application/json</value>
     </set-header>
+    <set-backend-service base-url="__applicationUrl__" />
   </inbound>
   <backend>
     <base />
