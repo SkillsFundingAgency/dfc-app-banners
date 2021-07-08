@@ -1,11 +1,24 @@
 ﻿openapi: 3.0.1
 info:
   title: __apiName__
-  description: 'Webhook receiver for Event Grid Events' 
+  description: 'Retrieve banners operation and webhook receiver for Event Grid Events' 
   version: 1.0.0
 servers:
   - url: __FunctionAppUrl__
 paths:
+  /banners/body/*:
+    get:
+      description: Returns a list of all banners for the given path
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json; charset=utf-8:
+              schema:
+                $ref: '#/components/schemas/DynamicResponse'
+        '204':
+          description: No banners found for the given path.
+          content: {}
   /api/webhook/ReceiveEvents:
     post:
       description: Receives a webhook event from an Event Grid Topic
@@ -17,3 +30,7 @@ paths:
       responses:
         '200':
           description: successful operation
+components:
+  schemas:
+    DynamicResponse: 
+      type: "object"
