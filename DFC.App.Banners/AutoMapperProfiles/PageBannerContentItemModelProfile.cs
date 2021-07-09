@@ -1,4 +1,6 @@
-﻿using System.Diagnostics.CodeAnalysis;
+﻿using System;
+using System.Diagnostics.CodeAnalysis;
+
 using AutoMapper;
 
 using DFC.App.Banners.Data.Models.CmsApiModels;
@@ -26,9 +28,8 @@ namespace DFC.App.Banners.AutoMapperProfiles
                 .ForMember(d => d.Id, s => s.MapFrom(x => x.ItemId))
                 .ForMember(d => d.PageName, s => s.MapFrom(x => x.PageName))
                 .ForMember(d => d.Banners, s => s.MapFrom(x => x.ContentItems))
-                .ForMember(d => d.PartitionKey, s => s.MapFrom(x => x.PageLocation))
-                .ForMember(d => d.PageLocation, s => s.MapFrom(x => x.PageLocation))
-                .ForMember(d => d.Banners, s => s.Ignore())
+                .ForMember(d => d.PartitionKey, s => s.MapFrom(x => MapPageLocation(x.PageLocation)))
+                .ForMember(d => d.PageLocation, s => s.MapFrom(x => MapPageLocation(x.PageLocation)))
                 .ForMember(d => d.LastReviewed, s => s.Ignore())
                 .ForMember(d => d.LastCached, s => s.Ignore())
                 .ForMember(d => d.Etag, s => s.Ignore())
@@ -50,6 +51,16 @@ namespace DFC.App.Banners.AutoMapperProfiles
                 .ForMember(d => d.UseBrowserWidth, s => s.Ignore())
                 .ForMember(d => d.LastCached, s => s.Ignore())
                 .ForMember(d => d.LastReviewed, s => s.Ignore());
+        }
+
+        private static string MapPageLocation(string pageLocation)
+        {
+            if (Uri.TryCreate(pageLocation, UriKind.Absolute, out var pageUrl))
+            {
+                return pageUrl.LocalPath;
+            }
+
+            return pageLocation.StartsWith('/') ? pageLocation : $"/{pageLocation}";
         }
     }
 }
