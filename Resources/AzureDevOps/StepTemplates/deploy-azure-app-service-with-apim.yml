@@ -102,7 +102,7 @@ steps:
     TargetFileNames: 'GetBannersEndpoint.xml'
 
 - task: AzurePowerShell@5
-  displayName: 'Apply EventGrid APIM Policy'
+  displayName: 'Apply GetBanners APIM Policy'
   inputs:
     azureSubscription: '${{ parameters.AzureSubscription }}'
     ScriptPath: '$(Agent.BuildDirectory)/s/dfc-devops/PSCoreScripts/Set-ApimPolicy.ps1'
