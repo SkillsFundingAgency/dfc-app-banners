@@ -1,9 +1,12 @@
 ﻿using DFC.App.Banners.Data.Models.CmsApiModels;
 using DFC.App.Banners.Data.Models.ContentModels;
+using DFC.App.Banners.Services.CacheContentService.UnitTests.DocumentServiceTests.TestDoubles;
 using DFC.Compui.Cosmos.Contracts;
 using FakeItEasy;
 using Microsoft.Azure.Documents;
 using System;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace DFC.App.Banners.Services.CacheContentService.UnitTests.DocumentServiceTests
 {
@@ -11,20 +14,20 @@ namespace DFC.App.Banners.Services.CacheContentService.UnitTests.DocumentService
     {
         public BaseBannerDocumentServiceTests()
         {
-            FakeCosmosDbConnection = A.Fake<CosmosDbConnection>();
             FakeDocumentClient = A.Fake<IDocumentClient>();
             FakeDocumentService = A.Fake<IDocumentService<PageBannerContentItemModel>>();
+            FakeDocumentQuery = A.Fake<IFakeDocumentQuery<IEnumerable<string>>>();
         }
 
         protected Guid ContentIdForUpdate { get; } = Guid.NewGuid();
 
         protected Guid ContentIdForDelete { get; } = Guid.NewGuid();
 
-        protected CosmosDbConnection FakeCosmosDbConnection { get; }
-
         protected IDocumentClient FakeDocumentClient { get; }
 
         protected IDocumentService<PageBannerContentItemModel> FakeDocumentService { get; }
+
+        protected IFakeDocumentQuery<IEnumerable<string>> FakeDocumentQuery { get; }
 
         protected static PageBannerContentItemApiDataModel BuildValidContentItemApiDataModel()
         {
@@ -39,13 +42,13 @@ namespace DFC.App.Banners.Services.CacheContentService.UnitTests.DocumentService
             return model;
         }
 
-        protected PageBannerContentItemModel BuildValidContentItemModel()
+        protected PageBannerContentItemModel BuildValidPageBannerContentItemModel(string pagebannerUrl = "https://localhost")
         {
             var model = new PageBannerContentItemModel()
             {
                 Id = ContentIdForUpdate,
                 Etag = Guid.NewGuid().ToString(),
-                Url = new Uri("https://localhost"),
+                Url = new Uri(pagebannerUrl),
                 LastReviewed = DateTime.UtcNow,
                 CreatedDate = DateTime.UtcNow,
                 LastCached = DateTime.UtcNow,
@@ -54,9 +57,19 @@ namespace DFC.App.Banners.Services.CacheContentService.UnitTests.DocumentService
             return model;
         }
 
+        protected IEnumerable<PageBannerContentItemModel> BuildValidPageBannerContentItemModels(IEnumerable<string> pagebannerUrls)
+        {
+            return pagebannerUrls.Select(x => BuildValidPageBannerContentItemModel(x));
+        }
+
         protected BannerDocumentService BuildBannerDocumentService()
         {
-            return new BannerDocumentService(FakeDocumentService, FakeCosmosDbConnection, FakeDocumentClient);
+            var cosmosDbConnection = new CosmosDbConnection
+            {
+                DatabaseId = "dfc-app-banners",
+                CollectionId = "banners",
+            };
+            return new BannerDocumentService(FakeDocumentService, cosmosDbConnection, FakeDocumentClient);
         }
     }
 }
