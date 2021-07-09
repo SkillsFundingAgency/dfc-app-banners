@@ -27,7 +27,7 @@ namespace DFC.App.Banners.AutoMapperProfiles
             CreateMap<PageBannerContentItemApiDataModel, PageBannerContentItemModel>()
                 .ForMember(d => d.Id, s => s.MapFrom(x => x.ItemId))
                 .ForMember(d => d.PageName, s => s.MapFrom(x => x.PageName))
-                .ForMember(d => d.Banners, s => s.MapFrom(x => x.ContentItems))
+                .ForMember(d => d.Banners, s => s.ConvertUsing(new BannerContentItemModelConverter(), x => x.ContentItems))
                 .ForMember(d => d.PartitionKey, s => s.MapFrom(x => MapPageLocation(x.PageLocation)))
                 .ForMember(d => d.PageLocation, s => s.MapFrom(x => MapPageLocation(x.PageLocation)))
                 .ForMember(d => d.LastReviewed, s => s.Ignore())
