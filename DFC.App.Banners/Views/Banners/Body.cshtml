@@ -2,7 +2,7 @@
 
 @foreach (var banner in Model.OrderBy(b => b.Ordinal))
 {
-    if (banner != null && banner.IsActive)
+    if (banner?.IsActive is true)
     {
         @Html.Raw(banner.Body)
     }
