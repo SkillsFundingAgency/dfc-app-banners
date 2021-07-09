@@ -81,8 +81,6 @@ namespace DFC.App.Banners.Services.CacheContentService.UnitTests.DocumentService
 
             A.CallTo(() => FakeDocumentClient.CreateDocumentQuery<IEnumerable<string>>(A<Uri>.Ignored, A<SqlQuerySpec>.Ignored, A<FeedOptions>.Ignored)).Returns(FakeDocumentQuery);
 
-            A.CallTo(() => FakeDocumentService.GetByIdAsync(A<Guid>.Ignored, A<string>.Ignored)).Returns(BuildValidPageBannerContentItemModel());
-
             var service = BuildBannerDocumentService();
 
             // Act
