@@ -35,7 +35,8 @@ namespace DFC.App.Banners.Services.CacheContentService.UnitTests.DocumentService
         public async Task BannerDocumentServiceGetByIdAsyncReturnsPageBannerContentItemModels()
         {
             // Arrage
-            A.CallTo(() => FakeDocumentService.GetByIdAsync(A<Guid>.Ignored, A<string>.Ignored)).Returns(BuildValidPageBannerContentItemModel());
+            var expectedPageBannerContentItemModel = BuildValidPageBannerContentItemModel();
+            A.CallTo(() => FakeDocumentService.GetByIdAsync(A<Guid>.Ignored, A<string>.Ignored)).Returns(expectedPageBannerContentItemModel);
             var service = BuildBannerDocumentService();
 
             // Act
@@ -43,7 +44,7 @@ namespace DFC.App.Banners.Services.CacheContentService.UnitTests.DocumentService
 
             //Assert
             A.CallTo(() => FakeDocumentService.GetByIdAsync(A<Guid>.Ignored, A<string>.Ignored)).MustHaveHappenedOnceExactly();
-            Assert.Equal(result?.Id, BuildValidPageBannerContentItemModel().Id);
+            Assert.Equal(result?.Id, expectedPageBannerContentItemModel.Id);
         }
 
         [Fact]
