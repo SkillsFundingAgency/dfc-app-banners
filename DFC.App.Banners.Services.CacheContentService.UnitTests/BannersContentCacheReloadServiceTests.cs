@@ -4,7 +4,7 @@ using System.Threading;
 using System.Threading.Tasks;
 
 using AutoMapper;
-
+using DFC.App.Banners.Data.Contracts;
 using DFC.App.Banners.Data.Models.CmsApiModels;
 using DFC.App.Banners.Data.Models.ContentModels;
 using DFC.Compui.Cosmos.Contracts;
@@ -21,7 +21,7 @@ namespace DFC.App.Banners.Services.CacheContentService.UnitTests
     public class BannersContentCacheReloadServiceTests
     {
         private readonly IMapper fakeMapper = A.Fake<IMapper>();
-        private readonly IDocumentService<PageBannerContentItemModel> fakeDocumentService = A.Fake<IDocumentService<PageBannerContentItemModel>>();
+        private readonly IBannerDocumentService fakeBannerDocumentService = A.Fake<IBannerDocumentService>();
         private readonly ICmsApiService fakeCmsApiService = A.Fake<ICmsApiService>();
         private readonly IApiCacheService fakeApiCacheService = A.Fake<IApiCacheService>();
         private readonly IContentTypeMappingService fakeContentTypeMappingService = A.Fake<IContentTypeMappingService>();
@@ -31,14 +31,14 @@ namespace DFC.App.Banners.Services.CacheContentService.UnitTests
         {
             //Arrange
             var cancellationToken = new CancellationToken(true);
-            var cacheReloadService = new BannersCacheReloadService(A.Fake<ILogger<BannersCacheReloadService>>(), fakeMapper, fakeDocumentService, fakeContentTypeMappingService, fakeApiCacheService, fakeCmsApiService);
+            var cacheReloadService = new BannersCacheReloadService(A.Fake<ILogger<BannersCacheReloadService>>(), fakeMapper, fakeBannerDocumentService, fakeContentTypeMappingService, fakeApiCacheService, fakeCmsApiService);
 
             //Act
             await cacheReloadService.Reload(cancellationToken);
 
             //Assert
             A.CallTo(() => fakeCmsApiService.GetItemAsync<PageBannerContentItemApiDataModel>(A<Uri>.Ignored)).MustNotHaveHappened();
-            A.CallTo(() => fakeDocumentService.UpsertAsync(A<PageBannerContentItemModel>.Ignored)).MustNotHaveHappened();
+            A.CallTo(() => fakeBannerDocumentService.UpsertAsync(A<PageBannerContentItemModel>.Ignored)).MustNotHaveHappened();
         }
 
         [Fact]
@@ -46,7 +46,7 @@ namespace DFC.App.Banners.Services.CacheContentService.UnitTests
         {
             //Arrange
             var cancellationToken = new CancellationToken(true);
-            var cacheReloadService = new BannersCacheReloadService(A.Fake<ILogger<BannersCacheReloadService>>(), fakeMapper, fakeDocumentService, fakeContentTypeMappingService, fakeApiCacheService, fakeCmsApiService);
+            var cacheReloadService = new BannersCacheReloadService(A.Fake<ILogger<BannersCacheReloadService>>(), fakeMapper, fakeBannerDocumentService, fakeContentTypeMappingService, fakeApiCacheService, fakeCmsApiService);
 
             var dummySummary = new CmsApiSummaryItemModel { Url = new Uri("https://sample.com") };
             A.CallTo(() => fakeCmsApiService.GetSummaryAsync<CmsApiSummaryItemModel>()).Returns(new List<CmsApiSummaryItemModel>() { dummySummary });
@@ -56,7 +56,7 @@ namespace DFC.App.Banners.Services.CacheContentService.UnitTests
 
             //Assert
             A.CallTo(() => fakeCmsApiService.GetItemAsync<PageBannerContentItemApiDataModel>(A<Uri>.Ignored)).MustNotHaveHappened();
-            A.CallTo(() => fakeDocumentService.UpsertAsync(A<PageBannerContentItemModel>.Ignored)).MustNotHaveHappened();
+            A.CallTo(() => fakeBannerDocumentService.UpsertAsync(A<PageBannerContentItemModel>.Ignored)).MustNotHaveHappened();
         }
 
         [Fact]
@@ -68,15 +68,15 @@ namespace DFC.App.Banners.Services.CacheContentService.UnitTests
 
             A.CallTo(() => fakeCmsApiService.GetSummaryAsync<CmsApiSummaryItemModel>()).Returns(new List<CmsApiSummaryItemModel>() { dummySummary });
             A.CallTo(() => fakeCmsApiService.GetItemAsync<PageBannerContentItemApiDataModel>(A<string>.Ignored, A<Guid>.Ignored)).Returns(dummyContentItem);
-            var cacheReloadService = new BannersCacheReloadService(A.Fake<ILogger<BannersCacheReloadService>>(), fakeMapper, fakeDocumentService, fakeContentTypeMappingService, fakeApiCacheService, fakeCmsApiService);
+            var cacheReloadService = new BannersCacheReloadService(A.Fake<ILogger<BannersCacheReloadService>>(), fakeMapper, fakeBannerDocumentService, fakeContentTypeMappingService, fakeApiCacheService, fakeCmsApiService);
 
             //Act
             await cacheReloadService.Reload(CancellationToken.None);
 
             //Assert
-            A.CallTo(() => fakeDocumentService.PurgeAsync()).MustHaveHappenedOnceExactly();
+            A.CallTo(() => fakeBannerDocumentService.PurgeAsync()).MustHaveHappenedOnceExactly();
             A.CallTo(() => fakeCmsApiService.GetItemAsync<PageBannerContentItemApiDataModel>(A<Uri>.Ignored)).MustHaveHappenedOnceExactly();
-            A.CallTo(() => fakeDocumentService.UpsertAsync(A<PageBannerContentItemModel>.Ignored)).MustHaveHappenedOnceExactly();
+            A.CallTo(() => fakeBannerDocumentService.UpsertAsync(A<PageBannerContentItemModel>.Ignored)).MustHaveHappenedOnceExactly();
         }
 
         [Fact]
@@ -90,14 +90,14 @@ namespace DFC.App.Banners.Services.CacheContentService.UnitTests
 
             A.CallTo(() => fakeCmsApiService.GetSummaryAsync<CmsApiSummaryItemModel>()).Returns(new List<CmsApiSummaryItemModel>() { dummySummary1, dummySummary2, dummySummary3 });
             A.CallTo(() => fakeCmsApiService.GetItemAsync<PageBannerContentItemApiDataModel>(A<Uri>.Ignored)).Returns(dummyContentItem);
-            var cacheReloadService = new BannersCacheReloadService(A.Fake<ILogger<BannersCacheReloadService>>(), fakeMapper, fakeDocumentService, fakeContentTypeMappingService, fakeApiCacheService, fakeCmsApiService);
+            var cacheReloadService = new BannersCacheReloadService(A.Fake<ILogger<BannersCacheReloadService>>(), fakeMapper, fakeBannerDocumentService, fakeContentTypeMappingService, fakeApiCacheService, fakeCmsApiService);
 
             //Act
             await cacheReloadService.Reload(CancellationToken.None);
 
             //Assert
             A.CallTo(() => fakeCmsApiService.GetItemAsync<PageBannerContentItemApiDataModel>(A<Uri>.Ignored)).MustHaveHappened(3, Times.Exactly);
-            A.CallTo(() => fakeDocumentService.UpsertAsync(A<PageBannerContentItemModel>.Ignored)).MustHaveHappened(3, Times.Exactly);
+            A.CallTo(() => fakeBannerDocumentService.UpsertAsync(A<PageBannerContentItemModel>.Ignored)).MustHaveHappened(3, Times.Exactly);
         }
 
         [Fact]
@@ -105,14 +105,14 @@ namespace DFC.App.Banners.Services.CacheContentService.UnitTests
         {
             //Arrange
             A.CallTo(() => fakeCmsApiService.GetSummaryAsync<CmsApiSummaryItemModel>()).Returns(new List<CmsApiSummaryItemModel>() { });
-            var cacheReloadService = new BannersCacheReloadService(A.Fake<ILogger<BannersCacheReloadService>>(), fakeMapper, fakeDocumentService, fakeContentTypeMappingService, fakeApiCacheService, fakeCmsApiService);
+            var cacheReloadService = new BannersCacheReloadService(A.Fake<ILogger<BannersCacheReloadService>>(), fakeMapper, fakeBannerDocumentService, fakeContentTypeMappingService, fakeApiCacheService, fakeCmsApiService);
 
             //Act
             await cacheReloadService.Reload(CancellationToken.None);
 
             //Assert
             A.CallTo(() => fakeCmsApiService.GetItemAsync<PageBannerContentItemApiDataModel>(A<Uri>.Ignored)).MustNotHaveHappened();
-            A.CallTo(() => fakeDocumentService.UpsertAsync(A<PageBannerContentItemModel>.Ignored)).MustNotHaveHappened();
+            A.CallTo(() => fakeBannerDocumentService.UpsertAsync(A<PageBannerContentItemModel>.Ignored)).MustNotHaveHappened();
         }
 
         [Fact]
@@ -124,14 +124,14 @@ namespace DFC.App.Banners.Services.CacheContentService.UnitTests
 
             A.CallTo(() => fakeCmsApiService.GetSummaryAsync<CmsApiSummaryItemModel>()).Returns(new List<CmsApiSummaryItemModel>() { dummySummary });
             A.CallTo(() => fakeCmsApiService.GetItemAsync<PageBannerContentItemApiDataModel>(A<Uri>.Ignored)).Returns(nullContentItem);
-            var cacheReloadService = new BannersCacheReloadService(A.Fake<ILogger<BannersCacheReloadService>>(), fakeMapper, fakeDocumentService, fakeContentTypeMappingService, fakeApiCacheService, fakeCmsApiService);
+            var cacheReloadService = new BannersCacheReloadService(A.Fake<ILogger<BannersCacheReloadService>>(), fakeMapper, fakeBannerDocumentService, fakeContentTypeMappingService, fakeApiCacheService, fakeCmsApiService);
 
             //Act
             await cacheReloadService.Reload(CancellationToken.None);
 
             //Assert
             A.CallTo(() => fakeCmsApiService.GetItemAsync<PageBannerContentItemApiDataModel>(A<Uri>.Ignored)).MustHaveHappenedOnceExactly();
-            A.CallTo(() => fakeDocumentService.UpsertAsync(A<PageBannerContentItemModel>.Ignored)).MustNotHaveHappened();
+            A.CallTo(() => fakeBannerDocumentService.UpsertAsync(A<PageBannerContentItemModel>.Ignored)).MustNotHaveHappened();
         }
 
         [Fact]
@@ -141,7 +141,7 @@ namespace DFC.App.Banners.Services.CacheContentService.UnitTests
             var ex = new Exception("some exception");
 
             A.CallTo(() => fakeCmsApiService.GetSummaryAsync<CmsApiSummaryItemModel>()).ThrowsAsync(ex);
-            var cacheReloadService = new BannersCacheReloadService(A.Fake<ILogger<BannersCacheReloadService>>(), fakeMapper, fakeDocumentService, fakeContentTypeMappingService, fakeApiCacheService, fakeCmsApiService);
+            var cacheReloadService = new BannersCacheReloadService(A.Fake<ILogger<BannersCacheReloadService>>(), fakeMapper, fakeBannerDocumentService, fakeContentTypeMappingService, fakeApiCacheService, fakeCmsApiService);
 
             //Act + Assert
             var e = await Assert.ThrowsAsync<Exception>(async () => await cacheReloadService.Reload(CancellationToken.None));
@@ -149,7 +149,7 @@ namespace DFC.App.Banners.Services.CacheContentService.UnitTests
 
             //Assert
             A.CallTo(() => fakeCmsApiService.GetItemAsync<PageBannerContentItemApiDataModel>(A<Uri>.Ignored)).MustNotHaveHappened();
-            A.CallTo(() => fakeDocumentService.UpsertAsync(A<PageBannerContentItemModel>.Ignored)).MustNotHaveHappened();
+            A.CallTo(() => fakeBannerDocumentService.UpsertAsync(A<PageBannerContentItemModel>.Ignored)).MustNotHaveHappened();
         }
     }
 }

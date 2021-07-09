@@ -25,14 +25,14 @@ namespace DFC.App.Banners.Services.CacheContentService
             this.documentClient = documentClient;
         }
 
-        public async Task<bool> DeleteAsync(Guid id)
+        public Task<bool> DeleteAsync(Guid id)
         {
-            return await documentService.DeleteAsync(id);
+            return documentService.DeleteAsync(id);
         }
 
-        public async Task<PageBannerContentItemModel?> GetByIdAsync(Guid id, string? partitionKey = null)
+        public Task<PageBannerContentItemModel?> GetByIdAsync(Guid id, string? partitionKey = null)
         {
-            return await documentService.GetByIdAsync(id, partitionKey);
+            return documentService.GetByIdAsync(id, partitionKey);
         }
 
         public async Task<IEnumerable<Uri>> GetPagebannerUrlsAsync(string bannerContentItemId, string? partitionKeyValue = null)
@@ -68,9 +68,14 @@ namespace DFC.App.Banners.Services.CacheContentService
             return urls.Any() ? urls : new List<Uri>();
         }
 
-        public async Task<HttpStatusCode> UpsertAsync(PageBannerContentItemModel pageBannerContentItemModel)
+        public Task<HttpStatusCode> UpsertAsync(PageBannerContentItemModel pageBannerContentItemModel)
         {
-            return await documentService.UpsertAsync(pageBannerContentItemModel);
+            return documentService.UpsertAsync(pageBannerContentItemModel);
+        }
+
+        public Task<bool> PurgeAsync()
+        {
+            return documentService.PurgeAsync();
         }
     }
 }

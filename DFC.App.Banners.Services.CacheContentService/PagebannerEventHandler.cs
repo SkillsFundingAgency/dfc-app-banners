@@ -8,23 +8,23 @@ namespace DFC.App.Banners.Services.CacheContentService
 {
     public class PagebannerEventHandler : IEventHandler
     {
-        private readonly IWebhookContentProcessor webhookContentProcessor;
+        private readonly IBannersCacheReloadService bannersCacheReloadService;
 
-        public PagebannerEventHandler(IWebhookContentProcessor webhookContentProcessor)
+        public PagebannerEventHandler(IBannersCacheReloadService bannersCacheReloadService)
         {
-            this.webhookContentProcessor = webhookContentProcessor;
+            this.bannersCacheReloadService = bannersCacheReloadService;
         }
 
         public string ProcessType => CmsContentKeyHelper.PageBannerTag;
 
         public async Task<HttpStatusCode> DeleteContentAsync(Guid contentId, Uri url)
         {
-            return await webhookContentProcessor.DeleteContentAsync(contentId);
+            return await bannersCacheReloadService.DeletePageBannerContentAsync(contentId);
         }
 
         public async Task<HttpStatusCode> ProcessContentAsync(Guid contentId, Uri url)
         {
-            return await webhookContentProcessor.ProcessContentAsync(url);
+            return await bannersCacheReloadService.ProcessPageBannerContentAsync(url);
         }
     }
 }

@@ -11,11 +11,11 @@ namespace DFC.App.Banners.Services.CacheContentService.UnitTests.EventHandlerTes
     [Trait("Category", "Pagebanner Event Handler Unit Tests")]
     public class PagebannerEventHandlerTests
     {
-        private readonly IWebhookContentProcessor fakeWebhookContentProcessor;
+        private readonly IBannersCacheReloadService fakeBannersCacheReloadService;
 
         public PagebannerEventHandlerTests()
         {
-            fakeWebhookContentProcessor = A.Fake<IWebhookContentProcessor>();
+            fakeBannersCacheReloadService = A.Fake<IBannersCacheReloadService>();
         }
 
         [Fact]
@@ -25,15 +25,15 @@ namespace DFC.App.Banners.Services.CacheContentService.UnitTests.EventHandlerTes
             const HttpStatusCode expectedResponse = HttpStatusCode.Created;
             var url = new Uri("https://somewhere.com");
             var contentId = Guid.NewGuid();
-            var pagebannerEventHandler = new PagebannerEventHandler(fakeWebhookContentProcessor);
+            var pagebannerEventHandler = new PagebannerEventHandler(fakeBannersCacheReloadService);
 
-            A.CallTo(() => fakeWebhookContentProcessor.ProcessContentAsync(A<Uri>.Ignored)).Returns(expectedResponse);
+            A.CallTo(() => fakeBannersCacheReloadService.ProcessPageBannerContentAsync(A<Uri>.Ignored)).Returns(expectedResponse);
 
             // Act
             var result = await pagebannerEventHandler.ProcessContentAsync(contentId, url);
 
             // Assert
-            A.CallTo(() => fakeWebhookContentProcessor.ProcessContentAsync(A<Uri>.Ignored)).MustHaveHappenedOnceExactly();
+            A.CallTo(() => fakeBannersCacheReloadService.ProcessPageBannerContentAsync(A<Uri>.Ignored)).MustHaveHappenedOnceExactly();
 
             Assert.Equal(expectedResponse, result);
         }
@@ -45,15 +45,15 @@ namespace DFC.App.Banners.Services.CacheContentService.UnitTests.EventHandlerTes
             const HttpStatusCode expectedResponse = HttpStatusCode.Created;
             var url = new Uri("https://somewhere.com");
             var contentId = Guid.NewGuid();
-            var pagebannerEventHandler = new PagebannerEventHandler(fakeWebhookContentProcessor);
+            var pagebannerEventHandler = new PagebannerEventHandler(fakeBannersCacheReloadService);
 
-            A.CallTo(() => fakeWebhookContentProcessor.DeleteContentAsync(A<Guid>.Ignored)).Returns(expectedResponse);
+            A.CallTo(() => fakeBannersCacheReloadService.DeletePageBannerContentAsync(A<Guid>.Ignored)).Returns(expectedResponse);
 
             // Act
             var result = await pagebannerEventHandler.DeleteContentAsync(contentId, url);
 
             // Assert
-            A.CallTo(() => fakeWebhookContentProcessor.DeleteContentAsync(A<Guid>.Ignored)).MustHaveHappenedOnceExactly();
+            A.CallTo(() => fakeBannersCacheReloadService.DeletePageBannerContentAsync(A<Guid>.Ignored)).MustHaveHappenedOnceExactly();
 
             Assert.Equal(expectedResponse, result);
         }
@@ -62,7 +62,7 @@ namespace DFC.App.Banners.Services.CacheContentService.UnitTests.EventHandlerTes
         public void PagebannerEventHandlerProcessTypeReturnsCorrectValue()
         {
             // Arrange
-            var pagebannerEventHandler = new PagebannerEventHandler(fakeWebhookContentProcessor);
+            var pagebannerEventHandler = new PagebannerEventHandler(fakeBannersCacheReloadService);
 
             // Assert
             Assert.Equal(pagebannerEventHandler.ProcessType, CmsContentKeyHelper.PageBannerTag);

@@ -17,10 +17,10 @@ namespace DFC.App.Banners.HostedServices
     {
         private readonly ILogger<CacheReloadBackgroundService> logger;
         private readonly CmsApiClientOptions cmsApiClientOptions;
-        private readonly ICacheReloadService cacheReloadService;
+        private readonly IBannersCacheReloadService cacheReloadService;
         private readonly IHostedServiceTelemetryWrapper hostedServiceTelemetryWrapper;
 
-        public CacheReloadBackgroundService(ILogger<CacheReloadBackgroundService> logger, CmsApiClientOptions cmsApiClientOptions, ICacheReloadService cacheReloadService, IHostedServiceTelemetryWrapper hostedServiceTelemetryWrapper)
+        public CacheReloadBackgroundService(ILogger<CacheReloadBackgroundService> logger, CmsApiClientOptions cmsApiClientOptions, IBannersCacheReloadService cacheReloadService, IHostedServiceTelemetryWrapper hostedServiceTelemetryWrapper)
         {
             this.logger = logger;
             this.cmsApiClientOptions = cmsApiClientOptions;

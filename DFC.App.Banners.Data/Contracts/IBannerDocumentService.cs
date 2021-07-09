@@ -12,6 +12,8 @@ namespace DFC.App.Banners.Data.Contracts
 
         Task<bool> DeleteAsync(Guid id);
 
+        Task<bool> PurgeAsync();
+
         Task<HttpStatusCode> UpsertAsync(PageBannerContentItemModel pageBannerContentItemModel);
 
         Task<PageBannerContentItemModel?> GetByIdAsync(Guid id, string? partitionKey = null);
