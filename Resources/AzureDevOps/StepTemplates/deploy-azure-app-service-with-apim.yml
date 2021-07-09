@@ -81,7 +81,7 @@ steps:
     FailOnStandardError: true
 
 - task: esfadevops.Tokenization.custom-build-task.Tokenization@0
-  displayName: 'Tokenization: Transform file APIM Policy File'
+  displayName: 'Tokenization: Transform EventGrid APIM Policy File'
   inputs:
     SourcePath: '${{ parameters.APIMPolicyPath }}'
     TargetFileNames: 'ApimPolicy-IsolatedAppServiceAsEventGridWebhookEndpoint.xml'
@@ -92,5 +92,20 @@ steps:
     azureSubscription: '${{ parameters.AzureSubscription }}'
     ScriptPath: '$(Agent.BuildDirectory)/s/dfc-devops/PSCoreScripts/Set-ApimPolicy.ps1'
     ScriptArguments: '-PolicyScope operation -ApimResourceGroup ${{ parameters.SharedResourceGroupName }} -ApimServiceName ${{ parameters.ApimServiceName }} -PolicyFilePath "$(Agent.BuildDirectory)/dfc.app.banners.apimpolicies/ApimPolicy-IsolatedAppServiceAsEventGridWebhookEndpoint.xml" -ApiId ${{ parameters.ApiId }} -OperationId post-api-webhook-receiveevents'
+    azurePowerShellVersion: LatestVersion
+    FailOnStandardError: true
+
+- task: esfadevops.Tokenization.custom-build-task.Tokenization@0
+  displayName: 'Tokenization: Transform GetBanners APIM Policy File'
+  inputs:
+    SourcePath: '${{ parameters.APIMPolicyPath }}'
+    TargetFileNames: 'GetBannersEndpoint.xml'
+
+- task: AzurePowerShell@5
+  displayName: 'Apply GetBanners APIM Policy'
+  inputs:
+    azureSubscription: '${{ parameters.AzureSubscription }}'
+    ScriptPath: '$(Agent.BuildDirectory)/s/dfc-devops/PSCoreScripts/Set-ApimPolicy.ps1'
+    ScriptArguments: '-PolicyScope operation -ApimResourceGroup ${{ parameters.SharedResourceGroupName }} -ApimServiceName ${{ parameters.ApimServiceName }} -PolicyFilePath "$(Agent.BuildDirectory)/dfc.app.banners.apimpolicies/GetBannersEndpoint.xml" -ApiId ${{ parameters.ApiId }} -OperationId get-banners-body'
     azurePowerShellVersion: LatestVersion
     FailOnStandardError: true
