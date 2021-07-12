@@ -4,11 +4,13 @@ using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
+
 using DFC.App.Banners.Data.Contracts;
 using DFC.App.Banners.Data.Helpers;
 using DFC.App.Banners.Data.Models.CmsApiModels;
 using DFC.App.Banners.Data.Models.ContentModels;
 using DFC.Content.Pkg.Netcore.Data.Contracts;
+
 using Microsoft.Extensions.Logging;
 
 namespace DFC.App.Banners.Services.CacheContentService
@@ -54,8 +56,6 @@ namespace DFC.App.Banners.Services.CacheContentService
             {
                 return HttpStatusCode.BadRequest;
             }
-
-            pageBannerContentItemModel.Banners = mapper.Map<List<BannerContentItemModel>>(apiDataModel?.ContentItems);
 
             var result = await bannerDocumentService.UpsertAsync(pageBannerContentItemModel);
 
