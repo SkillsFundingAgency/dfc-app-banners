@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Net;
 using System.Threading;
 using System.Threading.Tasks;
-
 using DFC.App.Banners.Data.Contracts;
 using DFC.App.Banners.Data.Models.CmsApiModels;
 using DFC.App.Banners.Data.Models.ContentModels;
@@ -17,9 +16,9 @@ namespace DFC.App.Banners.Services.CacheContentService
         private readonly ILogger<BannersCacheReloadService> logger;
         private readonly AutoMapper.IMapper mapper;
         private readonly IBannerDocumentService bannerDocumentService;
-        private readonly IContentTypeMappingService contentTypeMappingService;
         private readonly IApiCacheService apiCacheService;
         private readonly ICmsApiService cmsApiService;
+        private readonly IContentTypeMappingService contentTypeMappingService;
 
         public BannersCacheReloadService(
             ILogger<BannersCacheReloadService> logger,
@@ -36,8 +35,7 @@ namespace DFC.App.Banners.Services.CacheContentService
             this.apiCacheService = apiCacheService;
             this.cmsApiService = cmsApiService;
 
-            this.contentTypeMappingService.AddMapping("PageBanner", typeof(PageBannerContentItemApiDataModel));
-            this.contentTypeMappingService.AddMapping("Banner", typeof(BannerContentItemApiDataModel));
+            AddMapSettings();
         }
 
         public async Task Reload(CancellationToken stoppingToken)
@@ -121,5 +119,10 @@ namespace DFC.App.Banners.Services.CacheContentService
             return result ? HttpStatusCode.OK : HttpStatusCode.NoContent;
         }
 
+        private void AddMapSettings()
+        {
+            this.contentTypeMappingService.AddMapping("PageBanner", typeof(PageBannerContentItemApiDataModel));
+            this.contentTypeMappingService.AddMapping("Banner", typeof(BannerContentItemApiDataModel));
+        }
     }
 }
