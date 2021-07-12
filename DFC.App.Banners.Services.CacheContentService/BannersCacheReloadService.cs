@@ -93,9 +93,7 @@ namespace DFC.App.Banners.Services.CacheContentService
 
         public async Task<HttpStatusCode> ProcessPageBannerContentAsync(Uri url)
         {
-
             var apiDataModel = await cmsApiService.GetItemAsync<PageBannerContentItemApiDataModel>(url);
-
             if (apiDataModel == null)
             {
                 logger.LogInformation($"Page Banner Url: {url}, result {HttpStatusCode.NoContent}: No content found");

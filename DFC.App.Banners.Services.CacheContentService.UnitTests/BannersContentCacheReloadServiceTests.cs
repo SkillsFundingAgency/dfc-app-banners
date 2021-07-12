@@ -1,19 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Net;
 using System.Threading;
 using System.Threading.Tasks;
-
 using AutoMapper;
 using DFC.App.Banners.Data.Contracts;
 using DFC.App.Banners.Data.Models.CmsApiModels;
 using DFC.App.Banners.Data.Models.ContentModels;
-using DFC.Compui.Cosmos.Contracts;
 using DFC.Content.Pkg.Netcore.Data.Contracts;
-
 using FakeItEasy;
-
 using Microsoft.Extensions.Logging;
-
 using Xunit;
 
 namespace DFC.App.Banners.Services.CacheContentService.UnitTests
@@ -25,6 +21,8 @@ namespace DFC.App.Banners.Services.CacheContentService.UnitTests
         private readonly ICmsApiService fakeCmsApiService = A.Fake<ICmsApiService>();
         private readonly IApiCacheService fakeApiCacheService = A.Fake<IApiCacheService>();
         private readonly IContentTypeMappingService fakeContentTypeMappingService = A.Fake<IContentTypeMappingService>();
+        private readonly Guid contentIdForDelete = Guid.NewGuid();
+        private readonly Guid contentIdForUpdate = Guid.NewGuid();
 
         [Fact]
         public async Task ReloadWhenCancellationRequestedThenCmsApiAndDocumentServiceNotCalled()
@@ -150,6 +148,152 @@ namespace DFC.App.Banners.Services.CacheContentService.UnitTests
             //Assert
             A.CallTo(() => fakeCmsApiService.GetItemAsync<PageBannerContentItemApiDataModel>(A<Uri>.Ignored)).MustNotHaveHappened();
             A.CallTo(() => fakeBannerDocumentService.UpsertAsync(A<PageBannerContentItemModel>.Ignored)).MustNotHaveHappened();
+        }
+
+        [Fact]
+        public async Task DeletePageBannerContentAsyncReturnsNoContent()
+        {
+            // Arrange
+            const bool expectedResponse = false;
+            const HttpStatusCode expectedResult = HttpStatusCode.NoContent;
+            var service = new BannersCacheReloadService(A.Fake<ILogger<BannersCacheReloadService>>(), fakeMapper, fakeBannerDocumentService, fakeContentTypeMappingService, fakeApiCacheService, fakeCmsApiService);
+
+            A.CallTo(() => fakeBannerDocumentService.DeleteAsync(A<Guid>.Ignored)).Returns(expectedResponse);
+
+            // Act
+            var result = await service.DeletePageBannerContentAsync(contentIdForDelete);
+
+            // Assert
+            A.CallTo(() => fakeBannerDocumentService.DeleteAsync(A<Guid>.Ignored)).MustHaveHappenedOnceExactly();
+
+            Assert.Equal(expectedResult, result);
+        }
+
+        [Fact]
+        public async Task DeletePageBannerContentAsyncForDeleteReturnsSuccess()
+        {
+            // Arrange
+            const bool expectedResponse = true;
+            const HttpStatusCode expectedResult = HttpStatusCode.OK;
+            var service = new BannersCacheReloadService(A.Fake<ILogger<BannersCacheReloadService>>(), fakeMapper, fakeBannerDocumentService, fakeContentTypeMappingService, fakeApiCacheService, fakeCmsApiService);
+
+            A.CallTo(() => fakeBannerDocumentService.DeleteAsync(A<Guid>.Ignored)).Returns(expectedResponse);
+
+            // Act
+            var result = await service.DeletePageBannerContentAsync(contentIdForDelete);
+
+            // Assert
+            A.CallTo(() => fakeBannerDocumentService.DeleteAsync(A<Guid>.Ignored)).MustHaveHappenedOnceExactly();
+
+            Assert.Equal(expectedResult, result);
+        }
+
+        [Fact]
+        public async Task ProcessPageBannerContentAsyncForCreateReturnsSuccess()
+        {
+            // Arrange
+            const HttpStatusCode expectedResponse = HttpStatusCode.Created;
+            var expectedValidContentItemApiDataModel = BuildValidContentItemApiDataModel();
+            var expectedValidContentItemModel = BuildValidContentItemModel();
+            var url = new Uri("https://somewhere.com");
+            var service = new BannersCacheReloadService(A.Fake<ILogger<BannersCacheReloadService>>(), fakeMapper, fakeBannerDocumentService, fakeContentTypeMappingService, fakeApiCacheService, fakeCmsApiService);
+
+            A.CallTo(() => fakeCmsApiService.GetItemAsync<PageBannerContentItemApiDataModel>(A<Uri>.Ignored)).Returns(expectedValidContentItemApiDataModel);
+            A.CallTo(() => fakeMapper.Map<PageBannerContentItemModel>(A<PageBannerContentItemApiDataModel>.Ignored)).Returns(expectedValidContentItemModel);
+            A.CallTo(() => fakeBannerDocumentService.GetByIdAsync(A<Guid>.Ignored, A<string>.Ignored)).Returns(expectedValidContentItemModel);
+            A.CallTo(() => fakeBannerDocumentService.UpsertAsync(A<PageBannerContentItemModel>.Ignored)).Returns(HttpStatusCode.Created);
+
+            // Act
+            var result = await service.ProcessPageBannerContentAsync(url);
+
+            // Assert
+            A.CallTo(() => fakeCmsApiService.GetItemAsync<PageBannerContentItemApiDataModel>(A<Uri>.Ignored)).MustHaveHappenedOnceExactly();
+            A.CallTo(() => fakeMapper.Map<PageBannerContentItemModel>(A<PageBannerContentItemApiDataModel>.Ignored)).MustHaveHappenedOnceExactly();
+            A.CallTo(() => fakeBannerDocumentService.UpsertAsync(A<PageBannerContentItemModel>.Ignored)).MustHaveHappenedOnceExactly();
+            A.CallTo(() => fakeBannerDocumentService.DeleteAsync(A<Guid>.Ignored)).MustNotHaveHappened();
+
+            Assert.Equal(expectedResponse, result);
+        }
+
+        [Fact]
+        public async Task ProcessPageBannerContentAsyncForUpdateReturnsSuccess()
+        {
+            // Arrange
+            const HttpStatusCode expectedResponse = HttpStatusCode.OK;
+            var expectedValidContentItemApiDataModel = BuildValidContentItemApiDataModel();
+            var expectedValidContentItemModel = BuildValidContentItemModel();
+            var url = new Uri("https://somewhere.com");
+            var service = new BannersCacheReloadService(A.Fake<ILogger<BannersCacheReloadService>>(), fakeMapper, fakeBannerDocumentService, fakeContentTypeMappingService, fakeApiCacheService, fakeCmsApiService);
+
+            A.CallTo(() => fakeCmsApiService.GetItemAsync<PageBannerContentItemApiDataModel>(A<Uri>.Ignored)).Returns(expectedValidContentItemApiDataModel);
+            A.CallTo(() => fakeMapper.Map<PageBannerContentItemModel>(A<PageBannerContentItemApiDataModel>.Ignored)).Returns(expectedValidContentItemModel);
+            A.CallTo(() => fakeBannerDocumentService.GetByIdAsync(A<Guid>.Ignored, A<string>.Ignored)).Returns(expectedValidContentItemModel);
+            A.CallTo(() => fakeBannerDocumentService.UpsertAsync(A<PageBannerContentItemModel>.Ignored)).Returns(HttpStatusCode.OK);
+
+            // Act
+            var result = await service.ProcessPageBannerContentAsync(url);
+
+            // Assert
+            A.CallTo(() => fakeCmsApiService.GetItemAsync<PageBannerContentItemApiDataModel>(A<Uri>.Ignored)).MustHaveHappenedOnceExactly();
+            A.CallTo(() => fakeMapper.Map<PageBannerContentItemModel>(A<PageBannerContentItemApiDataModel>.Ignored)).MustHaveHappenedOnceExactly();
+            A.CallTo(() => fakeBannerDocumentService.UpsertAsync(A<PageBannerContentItemModel>.Ignored)).MustHaveHappenedOnceExactly();
+            A.CallTo(() => fakeBannerDocumentService.DeleteAsync(A<Guid>.Ignored)).MustNotHaveHappened();
+
+            Assert.Equal(expectedResponse, result);
+        }
+
+        [Fact]
+        public async Task ProcessPageBannerContentAsyncForUpdateReturnsNoContent()
+        {
+            // Arrange
+            const HttpStatusCode expectedResponse = HttpStatusCode.NoContent;
+            PageBannerContentItemApiDataModel? expectedValidContentItemApiDataModel = null;
+            PageBannerContentItemModel? expectedValidContentItemModel = default;
+            var url = new Uri("https://somewhere.com");
+            var service = new BannersCacheReloadService(A.Fake<ILogger<BannersCacheReloadService>>(), fakeMapper, fakeBannerDocumentService, fakeContentTypeMappingService, fakeApiCacheService, fakeCmsApiService);
+
+            A.CallTo(() => fakeCmsApiService.GetItemAsync<PageBannerContentItemApiDataModel>(A<Uri>.Ignored)).Returns(expectedValidContentItemApiDataModel);
+            A.CallTo(() => fakeMapper.Map<PageBannerContentItemModel?>(A<PageBannerContentItemApiDataModel>.Ignored)).Returns(expectedValidContentItemModel);
+
+            // Act
+            var result = await service.ProcessPageBannerContentAsync(url);
+
+            // Assert
+            A.CallTo(() => fakeCmsApiService.GetItemAsync<PageBannerContentItemApiDataModel>(A<Uri>.Ignored)).MustHaveHappenedOnceExactly();
+            A.CallTo(() => fakeMapper.Map<PageBannerContentItemModel>(A<PageBannerContentItemApiDataModel>.Ignored)).MustNotHaveHappened();
+            A.CallTo(() => fakeBannerDocumentService.GetByIdAsync(A<Guid>.Ignored, A<string>.Ignored)).MustNotHaveHappened();
+            A.CallTo(() => fakeBannerDocumentService.UpsertAsync(A<PageBannerContentItemModel>.Ignored)).MustNotHaveHappened();
+            A.CallTo(() => fakeBannerDocumentService.DeleteAsync(A<Guid>.Ignored)).MustNotHaveHappened();
+
+            Assert.Equal(expectedResponse, result);
+        }
+
+        private static PageBannerContentItemApiDataModel BuildValidContentItemApiDataModel()
+        {
+            var model = new PageBannerContentItemApiDataModel
+            {
+                Title = "an-article",
+                Url = new Uri("https://localhost"),
+                Published = DateTime.UtcNow,
+                CreatedDate = DateTime.UtcNow,
+            };
+
+            return model;
+        }
+
+        private PageBannerContentItemModel BuildValidContentItemModel()
+        {
+            var model = new PageBannerContentItemModel()
+            {
+                Id = contentIdForUpdate,
+                Etag = Guid.NewGuid().ToString(),
+                Url = new Uri("https://localhost"),
+                LastReviewed = DateTime.UtcNow,
+                CreatedDate = DateTime.UtcNow,
+                LastCached = DateTime.UtcNow,
+            };
+
+            return model;
         }
     }
 }
