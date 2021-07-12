@@ -1,7 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
+
 using DFC.App.Banners.Data.Contracts;
 using DFC.App.Banners.Data.Models.CmsApiModels;
 using DFC.App.Banners.Data.Models.ContentModels;
@@ -95,7 +95,6 @@ namespace DFC.App.Banners.Services.CacheContentService
                 else
                 {
                     var mappedContentItem = mapper.Map<PageBannerContentItemModel>(apiDataModel);
-                    mappedContentItem.Banners = mapper.Map<List<BannerContentItemModel>>(apiDataModel.ContentItems);
                     await documentService.UpsertAsync(mappedContentItem);
                 }
             }
