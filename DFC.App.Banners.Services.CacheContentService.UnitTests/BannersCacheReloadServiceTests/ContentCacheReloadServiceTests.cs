@@ -70,7 +70,7 @@ namespace DFC.App.Banners.Services.CacheContentService.UnitTests.BannersCacheRel
         {
             //Arrange
             var dummyContentItem = A.Dummy<PageBannerContentItemApiDataModel>();
-            var dummySummary1 = BuildCmsApiSummaryItemModel("https://sample1.com"); 
+            var dummySummary1 = BuildCmsApiSummaryItemModel("https://sample1.com");
             var dummySummary2 = BuildCmsApiSummaryItemModel("https://sample2.com");
             var dummySummary3 = BuildCmsApiSummaryItemModel("https://sample3.com");
 
