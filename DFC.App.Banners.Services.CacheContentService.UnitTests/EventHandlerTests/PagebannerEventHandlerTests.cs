@@ -43,7 +43,8 @@ namespace DFC.App.Banners.Services.CacheContentService.UnitTests.EventHandlerTes
 
             // Assert
             A.CallTo(() => fakeWebhookContentProcessor.ProcessContentAsync(A<Uri>.Ignored)).MustHaveHappenedOnceExactly();
-            A.CallTo(() => fakeBannerDocumentService.GetByIdAsync(A<Guid>.Ignored, A<string>.Ignored)).MustNotHaveHappened();
+            A.CallTo(() => fakeBannerDocumentService.GetByIdAsync(A<Guid>.Ignored, A<string>.Ignored)).MustHaveHappenedOnceExactly();
+            A.CallTo(() => fakeBannerDocumentService.DeleteAsync(A<Guid>.Ignored)).MustNotHaveHappened();
 
             Assert.Equal(expectedResponse, result);
         }
@@ -74,6 +75,7 @@ namespace DFC.App.Banners.Services.CacheContentService.UnitTests.EventHandlerTes
             // Assert
             A.CallTo(() => fakeWebhookContentProcessor.ProcessContentAsync(A<Uri>.Ignored)).MustHaveHappenedOnceExactly();
             A.CallTo(() => fakeBannerDocumentService.GetByIdAsync(A<Guid>.Ignored, A<string>.Ignored)).MustHaveHappenedOnceExactly();
+            A.CallTo(() => fakeBannerDocumentService.DeleteAsync(A<Guid>.Ignored)).MustHaveHappenedOnceExactly();
 
             Assert.Equal(expectedResponse, result);
         }
