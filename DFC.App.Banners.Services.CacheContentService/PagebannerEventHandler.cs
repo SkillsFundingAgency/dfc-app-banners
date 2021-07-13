@@ -9,16 +9,13 @@ namespace DFC.App.Banners.Services.CacheContentService
 {
     public class PagebannerEventHandler : IEventHandler
     {
-        private readonly IWebhookContentProcessor webhookContentProcessor;
         private readonly IBannerDocumentService bannerDocumentService;
-        private readonly ILogger<BannerEventHandler> logger;
+        private readonly ILogger<PagebannerEventHandler> logger;
         private readonly IBannersCacheReloadService bannersCacheReloadService;
 
-        public PagebannerEventHandler(IWebhookContentProcessor webhookContentProcessor, IBannerDocumentService bannerDocumentService, ILogger<BannerEventHandler> logger)
-        public PagebannerEventHandler(IBannersCacheReloadService bannersCacheReloadService)
+        public PagebannerEventHandler(IBannersCacheReloadService bannersCacheReloadService, IBannerDocumentService bannerDocumentService, ILogger<PagebannerEventHandler> logger)
         {
             this.bannersCacheReloadService = bannersCacheReloadService;
-            this.webhookContentProcessor = webhookContentProcessor;
             this.bannerDocumentService = bannerDocumentService;
             this.logger = logger;
         }
@@ -32,7 +29,6 @@ namespace DFC.App.Banners.Services.CacheContentService
 
         public async Task<HttpStatusCode> ProcessContentAsync(Guid contentId, Uri url)
         {
-            return await bannersCacheReloadService.ProcessPageBannerContentAsync(url);
             var pageBanner = await bannerDocumentService.GetByIdAsync(contentId);
 
             if (pageBanner != null)
@@ -41,7 +37,7 @@ namespace DFC.App.Banners.Services.CacheContentService
                 logger.LogInformation($"Page Banner contentItem Id: {contentId}, result {deleteResponse}: Deleted content for Page Banner");
             }
 
-            return await webhookContentProcessor.ProcessContentAsync(url);
+            return await bannersCacheReloadService.ProcessPageBannerContentAsync(url);
         }
     }
 }
