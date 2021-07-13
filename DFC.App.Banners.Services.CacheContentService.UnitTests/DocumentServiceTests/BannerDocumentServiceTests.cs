@@ -86,7 +86,7 @@ namespace DFC.App.Banners.Services.CacheContentService.UnitTests.DocumentService
             var service = BuildBannerDocumentService();
 
             // Act
-            IEnumerable<Uri>? result = await service.GetPagebannerUrlsAsync(ContentIdForUpdate.ToString(), partitionKey);
+            IEnumerable<Uri>? result = await service.GetPageBannerUrlsAsync(ContentIdForUpdate.ToString(), partitionKey);
 
             //Assert
             result.Should().NotBeEmpty()
@@ -114,7 +114,7 @@ namespace DFC.App.Banners.Services.CacheContentService.UnitTests.DocumentService
             var service = BuildBannerDocumentService();
 
             // Act
-            IEnumerable<Uri>? result = await service.GetPagebannerUrlsAsync(ContentIdForUpdate.ToString(), null);
+            IEnumerable<Uri>? result = await service.GetPageBannerUrlsAsync(ContentIdForUpdate.ToString(), null);
 
             //Assert
             result.Should().BeEmpty();

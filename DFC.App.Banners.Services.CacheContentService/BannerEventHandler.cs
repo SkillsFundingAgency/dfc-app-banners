@@ -35,7 +35,7 @@ namespace DFC.App.Banners.Services.CacheContentService
 
         private async Task<HttpStatusCode> ProcessBannerContent(Guid contentId, Uri url)
         {
-            var pagebannerUrls = await bannerDocumentService.GetPagebannerUrlsAsync(contentId.ToString());
+            var pagebannerUrls = await bannerDocumentService.GetPageBannerUrlsAsync(contentId.ToString());
 
             if (!pagebannerUrls.Any())
             {

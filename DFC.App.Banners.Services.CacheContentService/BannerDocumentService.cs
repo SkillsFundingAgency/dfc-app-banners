@@ -35,7 +35,7 @@ namespace DFC.App.Banners.Services.CacheContentService
             return documentService.GetByIdAsync(id, partitionKey);
         }
 
-        public async Task<IEnumerable<Uri>> GetPagebannerUrlsAsync(string bannerContentItemId, string? partitionKeyValue = null)
+        public async Task<IEnumerable<Uri>> GetPageBannerUrlsAsync(string bannerContentItemId, string? partitionKeyValue = null)
         {
             var urls = new List<Uri>();
             var feedOptions = new FeedOptions { MaxItemCount = 1, EnableCrossPartitionQuery = true };

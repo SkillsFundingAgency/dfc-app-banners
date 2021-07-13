@@ -35,7 +35,7 @@ namespace DFC.App.Banners.Services.CacheContentService.UnitTests.EventHandlerTes
             var contentId = Guid.NewGuid();
             var bannerEventHandler = new BannerEventHandler(fakeBannersCacheReloadService, fakeBannerDocumentService, logger);
 
-            A.CallTo(() => fakeBannerDocumentService.GetPagebannerUrlsAsync(A<string>.Ignored, A<string?>.Ignored)).Returns(pagebannerUrls);
+            A.CallTo(() => fakeBannerDocumentService.GetPageBannerUrlsAsync(A<string>.Ignored, A<string?>.Ignored)).Returns(pagebannerUrls);
 
             A.CallTo(() => fakeBannersCacheReloadService.ProcessPageBannerContentAsync(A<Uri>.Ignored)).Returns(expectedResponse);
 
@@ -59,7 +59,7 @@ namespace DFC.App.Banners.Services.CacheContentService.UnitTests.EventHandlerTes
             var contentId = Guid.NewGuid();
             var bannerEventHandler = new BannerEventHandler(fakeBannersCacheReloadService, fakeBannerDocumentService, logger);
 
-            A.CallTo(() => fakeBannerDocumentService.GetPagebannerUrlsAsync(A<string>.Ignored, A<string?>.Ignored)).Returns(pagebannerUrls);
+            A.CallTo(() => fakeBannerDocumentService.GetPageBannerUrlsAsync(A<string>.Ignored, A<string?>.Ignored)).Returns(pagebannerUrls);
 
             A.CallTo(() => fakeBannersCacheReloadService.ProcessPageBannerContentAsync(A<Uri>.Ignored)).Returns(expectedResponse);
 
@@ -83,7 +83,7 @@ namespace DFC.App.Banners.Services.CacheContentService.UnitTests.EventHandlerTes
             var contentId = Guid.NewGuid();
             var bannerEventHandler = new BannerEventHandler(fakeBannersCacheReloadService, fakeBannerDocumentService, logger);
 
-            A.CallTo(() => fakeBannerDocumentService.GetPagebannerUrlsAsync(A<string>.Ignored, A<string?>.Ignored)).Returns(pagebannerUrls);
+            A.CallTo(() => fakeBannerDocumentService.GetPageBannerUrlsAsync(A<string>.Ignored, A<string?>.Ignored)).Returns(pagebannerUrls);
 
             A.CallTo(() => fakeBannersCacheReloadService.ProcessPageBannerContentAsync(A<Uri>.Ignored)).Throws<AggregateException>();
 
@@ -107,7 +107,7 @@ namespace DFC.App.Banners.Services.CacheContentService.UnitTests.EventHandlerTes
             var contentId = Guid.NewGuid();
             var bannerEventHandler = new BannerEventHandler(fakeBannersCacheReloadService, fakeBannerDocumentService, logger);
 
-            A.CallTo(() => fakeBannerDocumentService.GetPagebannerUrlsAsync(A<string>.Ignored, A<string?>.Ignored)).Returns(pagebannerUrls);
+            A.CallTo(() => fakeBannerDocumentService.GetPageBannerUrlsAsync(A<string>.Ignored, A<string?>.Ignored)).Returns(pagebannerUrls);
 
             A.CallTo(() => fakeBannersCacheReloadService.ProcessPageBannerContentAsync(A<Uri>.Ignored)).Returns(expectedResponse);
 
@@ -131,7 +131,7 @@ namespace DFC.App.Banners.Services.CacheContentService.UnitTests.EventHandlerTes
             var contentId = Guid.NewGuid();
             var bannerEventHandler = new BannerEventHandler(fakeBannersCacheReloadService, fakeBannerDocumentService, logger);
 
-            A.CallTo(() => fakeBannerDocumentService.GetPagebannerUrlsAsync(A<string>.Ignored, A<string?>.Ignored)).Returns(pagebannerUrls);
+            A.CallTo(() => fakeBannerDocumentService.GetPageBannerUrlsAsync(A<string>.Ignored, A<string?>.Ignored)).Returns(pagebannerUrls);
 
             A.CallTo(() => fakeBannersCacheReloadService.ProcessPageBannerContentAsync(A<Uri>.Ignored)).ReturnsNextFromSequence(HttpStatusCode.BadRequest, HttpStatusCode.OK);
 
@@ -155,7 +155,7 @@ namespace DFC.App.Banners.Services.CacheContentService.UnitTests.EventHandlerTes
             var contentId = Guid.NewGuid();
             var bannerEventHandler = new BannerEventHandler(fakeBannersCacheReloadService, fakeBannerDocumentService, logger);
 
-            A.CallTo(() => fakeBannerDocumentService.GetPagebannerUrlsAsync(A<string>.Ignored, A<string?>.Ignored)).Returns(pagebannerUrls);
+            A.CallTo(() => fakeBannerDocumentService.GetPageBannerUrlsAsync(A<string>.Ignored, A<string?>.Ignored)).Returns(pagebannerUrls);
 
             A.CallTo(() => fakeBannersCacheReloadService.ProcessPageBannerContentAsync(A<Uri>.Ignored)).Returns(expectedResponse);
 
