@@ -23,17 +23,17 @@ namespace DFC.App.Banners.Services.CacheContentService
 
         public string ProcessType => CmsContentKeyHelper.BannerTag;
 
-        public async Task<HttpStatusCode> DeleteContentAsync(Guid contentId, Uri url)
+        public async Task<HttpStatusCode> DeleteContentAsync(Guid contentId)
         {
-            return await ProcessBannerContent(contentId, url);
+            return await ProcessBannerContent(contentId);
         }
 
         public async Task<HttpStatusCode> ProcessContentAsync(Guid contentId, Uri url)
         {
-            return await ProcessBannerContent(contentId, url);
+            return await ProcessBannerContent(contentId);
         }
 
-        private async Task<HttpStatusCode> ProcessBannerContent(Guid contentId, Uri url)
+        private async Task<HttpStatusCode> ProcessBannerContent(Guid contentId)
         {
             var pagebannerUrls = await bannerDocumentService.GetPagebannerUrlsAsync(contentId.ToString());
 
@@ -49,13 +49,13 @@ namespace DFC.App.Banners.Services.CacheContentService
 
                 var renVal = result.Any(x => x == HttpStatusCode.BadRequest) ? HttpStatusCode.BadRequest : HttpStatusCode.OK;
 
-                logger.LogInformation($"Banner content item Id: {contentId}, Url {url} Id: Updated page banners: {string.Join(",", pagebannerUrls)}");
+                logger.LogInformation($"Banner content item Id: {contentId} : Updated page banners: {string.Join(",", pagebannerUrls)}");
 
                 return renVal;
             }
             catch (AggregateException exception)
             {
-                exception.Flatten().InnerExceptions.ToList().ForEach(x => logger.LogError($"Failed to refresh cache for {url} : {exception.Flatten().Message}"));
+                exception.Flatten().InnerExceptions.ToList().ForEach(x => logger.LogError($"Failed to refresh cache for {contentId} : {exception.Flatten().Message}"));
                 return HttpStatusCode.BadRequest;
             }
         }

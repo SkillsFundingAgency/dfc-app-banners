@@ -11,9 +11,9 @@ namespace DFC.App.Banners.Services.CacheContentService
     {
         private readonly IWebhookContentProcessor webhookContentProcessor;
         private readonly IBannerDocumentService bannerDocumentService;
-        private readonly ILogger<BannerEventHandler> logger;
+        private readonly ILogger<PagebannerEventHandler> logger;
 
-        public PagebannerEventHandler(IWebhookContentProcessor webhookContentProcessor, IBannerDocumentService bannerDocumentService, ILogger<BannerEventHandler> logger)
+        public PagebannerEventHandler(IWebhookContentProcessor webhookContentProcessor, IBannerDocumentService bannerDocumentService, ILogger<PagebannerEventHandler> logger)
         {
             this.webhookContentProcessor = webhookContentProcessor;
             this.bannerDocumentService = bannerDocumentService;
@@ -22,7 +22,7 @@ namespace DFC.App.Banners.Services.CacheContentService
 
         public string ProcessType => CmsContentKeyHelper.PageBannerTag;
 
-        public async Task<HttpStatusCode> DeleteContentAsync(Guid contentId, Uri url)
+        public async Task<HttpStatusCode> DeleteContentAsync(Guid contentId)
         {
             return await webhookContentProcessor.DeleteContentAsync(contentId);
         }
