@@ -94,6 +94,9 @@
         },
         "CPUPercentageThreshold": {
             "value": "0"
+        },
+        "LoggingLogLevelDefault": {
+            "value": "TraceLog"
         }
     }
 }
