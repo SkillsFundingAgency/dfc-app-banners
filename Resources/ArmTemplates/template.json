@@ -102,6 +102,12 @@
         },
         "MemoryPercentageThreshold": {
             "type": "string"
+        },
+        "LoggingLogLevelDefault": {
+            "type": "string",
+            "metadata": {
+                "description": "Logging__LogLevel__Default"
+            }
         }
     },
     "variables": {
@@ -343,6 +349,10 @@
                         {
                           "name": "SubscriptionSettings__Filter__PropertyContainsFilters__0__Values__1",
                           "value": "[parameters('SubscriptionSettingsFilterPropertyContainsFilters0Values1')]"
+                        },
+                        {
+                          "name": "Logging__LogLevel__Default",
+                          "value": "[parameters('LoggingLogLevelDefault')]"
                         }
                       ]
                     }
