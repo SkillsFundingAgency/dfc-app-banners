@@ -1,0 +1,77 @@
+﻿@model PageBannerViewModel
+@{
+    Layout = "_LocalLayout";
+}
+
+<div class="govuk-tabs" data-module="govuk-tabs">
+    <h2 class="govuk-tabs__title">
+        Contents
+    </h2>
+    <ul class="govuk-tabs__list">
+        <li class="govuk-tabs__list-item govuk-tabs__list-item--selected">
+            <a class="govuk-tabs__tab" href="#tab-content">
+                Content
+            </a>
+        </li>
+        <li class="govuk-tabs__list-item">
+            <a class="govuk-tabs__tab" href="#tab-metadata">
+                Metadata
+            </a>
+        </li>
+    </ul>
+    <div class="govuk-tabs__panel" id="tab-content">
+        <partial name="Body" model="Model.Banners" />
+    </div>
+    <div class="govuk-tabs__panel govuk-tabs__panel--hidden" id="tab-metadata">
+        <div class="govuk-summary-list">
+            <dl class="govuk-summary-list__row">
+                <dt class="govuk-summary-list__key">
+                    @Html.DisplayNameFor(model => model.Id)
+                </dt>
+                <dd class="govuk-summary-list__value">
+                    @Html.DisplayFor(model => model.Id)
+                </dd>
+            </dl>
+            <dl class="govuk-summary-list__row">
+                <dt class="govuk-summary-list__key">
+                    @Html.DisplayNameFor(model => model.PartitionKey)
+                </dt>
+                <dd class="govuk-summary-list__value">
+                    @Html.DisplayFor(model => model.PartitionKey)
+                </dd>
+            </dl>
+            <dl class="govuk-summary-list__row">
+                <dt class="govuk-summary-list__key">
+                    @Html.DisplayNameFor(model => model.Url)
+                </dt>
+                <dd class="govuk-summary-list__value">
+                    @Html.DisplayFor(model => model.Url)
+                </dd>
+            </dl>
+            <dl class="govuk-summary-list__row">
+                <dt class="govuk-summary-list__key">
+                    @Html.DisplayNameFor(model => model.CreatedDate)
+                </dt>
+                <dd class="govuk-summary-list__value">
+                    @Html.DisplayFor(model => model.CreatedDate)
+                </dd>
+            </dl>
+            <dl class="govuk-summary-list__row">
+                <dt class="govuk-summary-list__key">
+                    @Html.DisplayNameFor(model => model.LastCached)
+                </dt>
+                <dd class="govuk-summary-list__value">
+                    @Html.DisplayFor(model => model.LastCached)
+                </dd>
+            </dl>
+            <dl class="govuk-summary-list__row">
+                <dt class="govuk-summary-list__key">
+                    @Html.DisplayNameFor(model => model.LastReviewed)
+                </dt>
+                <dd class="govuk-summary-list__value">
+                    @Html.DisplayFor(model => model.LastReviewed)
+                </dd>
+            </dl>
+        </div>
+    </div>
+</div>
