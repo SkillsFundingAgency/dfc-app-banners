@@ -76,7 +76,6 @@ stages:
 
 - stage: DeployToLabAppBanners
   condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/dev'))
-  #condition: and(succeeded(), ne(variables['Build.Reason'], 'PullRequest'))
   displayName: Deploy to LAB_AppBanners
   variables:
   - group: dfc-shared-all
@@ -153,7 +152,7 @@ stages:
       SpecificationPath: "$(Pipeline.Workspace)/${{ variables.SolutionBaseName }}.OpenApiDocs"
 
 - stage: DeployToDevAppBanners
-  condition: succeeded()
+  condition:  and(eq(dependencies.Build.result,'Succeeded'), or(eq(variables['Build.SourceBranch'], 'refs/heads/dev'), eq(variables['Build.SourceBranch'], 'refs/heads/master')))
   displayName: Deploy to DEV_AppBanners
   variables:
   - group: dfc-shared-all
@@ -191,7 +190,7 @@ stages:
       SpecificationPath: "$(Pipeline.Workspace)/${{ variables.SolutionBaseName }}.OpenApiDocs"
 
 - stage: DeployToDevDraftAppBanners
-  condition: succeeded()
+  condition:  and(eq(dependencies.DeployToDevAppBanners.result,'Succeeded'), or(eq(variables['Build.SourceBranch'], 'refs/heads/dev'), eq(variables['Build.SourceBranch'], 'refs/heads/master')))
   displayName: Deploy to DEV-DRAFT_AppBanners
   variables:
   - group: dfc-shared-all
@@ -230,7 +229,7 @@ stages:
       SpecificationPath: "$(Pipeline.Workspace)/${{ variables.SolutionBaseName }}.OpenApiDocs"
 
 - stage: DeployToSitAppBanners
-  condition: succeeded()
+  condition:  and(eq(dependencies.DeployToDevDraftAppBanners.result,'Succeeded'), or(eq(variables['Build.SourceBranch'], 'refs/heads/dev'), eq(variables['Build.SourceBranch'], 'refs/heads/master')))
   displayName: Deploy to SIT_AppBanners
   variables:
   - group: dfc-shared-all
@@ -268,7 +267,7 @@ stages:
       SpecificationPath: "$(Pipeline.Workspace)/${{ variables.SolutionBaseName }}.OpenApiDocs"
 
 - stage: DeployToSitDraftAppBanners
-  condition: succeeded()
+  condition:  and(eq(dependencies.DeployToSitAppBanners.result,'Succeeded'), or(eq(variables['Build.SourceBranch'], 'refs/heads/dev'), eq(variables['Build.SourceBranch'], 'refs/heads/master')))
   displayName: Deploy to SIT-DRAFT_AppBanners
   variables:
   - group: dfc-shared-all
