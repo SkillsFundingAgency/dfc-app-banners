@@ -13,13 +13,13 @@ namespace DFC.App.Banners.Services.CacheContentService.UnitTests.EventHandlerTes
     [Trait("Category", "Pagebanner Event Handler Unit Tests")]
     public class PagebannerEventHandlerTests
     {
-        private readonly ILogger<BannerEventHandler> logger;
+        private readonly ILogger<PagebannerEventHandler> logger;
         private readonly IWebhookContentProcessor fakeWebhookContentProcessor;
         private readonly IBannerDocumentService fakeBannerDocumentService;
 
         public PagebannerEventHandlerTests()
         {
-            logger = A.Fake<ILogger<BannerEventHandler>>();
+            logger = A.Fake<ILogger<PagebannerEventHandler>>();
             fakeWebhookContentProcessor = A.Fake<IWebhookContentProcessor>();
             fakeBannerDocumentService = A.Fake<IBannerDocumentService>();
         }
@@ -92,7 +92,7 @@ namespace DFC.App.Banners.Services.CacheContentService.UnitTests.EventHandlerTes
             A.CallTo(() => fakeWebhookContentProcessor.DeleteContentAsync(A<Guid>.Ignored)).Returns(expectedResponse);
 
             // Act
-            var result = await pagebannerEventHandler.DeleteContentAsync(contentId, url);
+            var result = await pagebannerEventHandler.DeleteContentAsync(contentId);
 
             // Assert
             A.CallTo(() => fakeWebhookContentProcessor.DeleteContentAsync(A<Guid>.Ignored)).MustHaveHappenedOnceExactly();

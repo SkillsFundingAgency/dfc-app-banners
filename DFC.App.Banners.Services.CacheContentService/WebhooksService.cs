@@ -23,18 +23,18 @@ namespace DFC.App.Banners.Services.CacheContentService
 
         public async Task<HttpStatusCode> ProcessMessageAsync(WebhookCacheOperation webhookCacheOperation, Guid eventId, Guid contentId, string apiEndpoint, string contentType)
         {
-            if (!Uri.TryCreate(apiEndpoint, UriKind.Absolute, out Uri? url))
-            {
-                throw new InvalidDataException($"Invalid Api url '{apiEndpoint}' received for Event Id: {eventId}");
-            }
-
             switch (webhookCacheOperation)
             {
                 case WebhookCacheOperation.Delete:
 
-                    return await GetEventMessageHandler(contentType).DeleteContentAsync(contentId, url);
+                    return await GetEventMessageHandler(contentType).DeleteContentAsync(contentId);
 
                 case WebhookCacheOperation.CreateOrUpdate:
+
+                    if (!Uri.TryCreate(apiEndpoint, UriKind.Absolute, out Uri? url))
+                    {
+                        throw new InvalidDataException($"Invalid Api url '{apiEndpoint}' received for Event Id: {eventId}");
+                    }
 
                     return await GetEventMessageHandler(contentType).ProcessContentAsync(contentId, url);
 
