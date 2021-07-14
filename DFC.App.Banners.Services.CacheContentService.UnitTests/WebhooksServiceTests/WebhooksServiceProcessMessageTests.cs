@@ -101,7 +101,6 @@ namespace DFC.App.Banners.Services.CacheContentService.UnitTests.WebhooksService
             Assert.Equal(expectedResponse, result);
         }
 
-
         [Theory]
         [InlineData(CmsContentKeyHelper.PageBannerTag)]
         [InlineData(CmsContentKeyHelper.BannerTag)]

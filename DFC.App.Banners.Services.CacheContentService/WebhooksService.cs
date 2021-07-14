@@ -23,7 +23,6 @@ namespace DFC.App.Banners.Services.CacheContentService
 
         public async Task<HttpStatusCode> ProcessMessageAsync(WebhookCacheOperation webhookCacheOperation, Guid eventId, Guid contentId, string apiEndpoint, string contentType)
         {
-
             switch (webhookCacheOperation)
             {
                 case WebhookCacheOperation.Delete:
