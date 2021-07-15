@@ -55,6 +55,8 @@ namespace DFC.App.Banners.AutoMapperProfiles
 
         private static string MapPageLocation(string pageLocation)
         {
+            pageLocation = pageLocation.TrimEnd('/');
+
             if (Uri.TryCreate(pageLocation, UriKind.Absolute, out var pageUrl))
             {
                 return pageUrl.LocalPath;
