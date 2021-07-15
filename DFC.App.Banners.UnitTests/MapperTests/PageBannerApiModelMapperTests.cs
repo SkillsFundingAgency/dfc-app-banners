@@ -17,6 +17,7 @@ namespace DFC.App.Banners.UnitTests.MapperTests
     {
         [Theory]
         [InlineData("", "/")]
+        [InlineData("/", "/")]
         [InlineData("randompage", "/randompage")]
         [InlineData("randompage/", "/randompage")]
         [InlineData("/randompage", "/randompage")]
