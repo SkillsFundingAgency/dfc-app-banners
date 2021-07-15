@@ -160,7 +160,7 @@ namespace DFC.App.Banners.Services.CacheContentService.UnitTests.EventHandlerTes
             A.CallTo(() => fakeWebhookContentProcessor.ProcessContentAsync(A<Uri>.Ignored)).Returns(expectedResponse);
 
             // Act
-            var result = await bannerEventHandler.DeleteContentAsync(contentId, url);
+            var result = await bannerEventHandler.DeleteContentAsync(contentId);
 
             // Assert
             A.CallTo(() => fakeWebhookContentProcessor.ProcessContentAsync(A<Uri>.Ignored)).MustHaveHappenedTwiceExactly();

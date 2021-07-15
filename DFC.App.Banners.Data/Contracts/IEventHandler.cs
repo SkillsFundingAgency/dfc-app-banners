@@ -10,6 +10,6 @@ namespace DFC.App.Banners.Data.Contracts
 
         Task<HttpStatusCode> ProcessContentAsync(Guid contentId, Uri url);
 
-        Task<HttpStatusCode> DeleteContentAsync(Guid contentId, Uri url);
+        Task<HttpStatusCode> DeleteContentAsync(Guid contentId);
     }
 }

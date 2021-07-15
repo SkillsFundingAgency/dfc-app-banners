@@ -105,9 +105,14 @@ namespace DFC.App.Banners.Controllers
                 path = $"/{path}";
             }
 
+            if (!path.Equals("/"))
+            {
+                path = path.TrimEnd('/');
+            }
+
             var banners = await documentService.GetAsync(a => a.PartitionKey == path);
 
-            if (banners?.Any() is true || path.Equals("/"))
+            if (banners?.Any() is true || string.IsNullOrWhiteSpace(path) || path.Equals("/"))
             {
                 return banners ?? Array.Empty<PageBannerContentItemModel>();
             }
