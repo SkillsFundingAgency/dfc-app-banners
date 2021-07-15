@@ -304,3 +304,80 @@ stages:
       APIMPolicyPath: "$(Pipeline.Workspace)/${{ variables.SolutionBaseName }}.ApimPolicies/"
       ApimImportScript: "$(Pipeline.Workspace)/${{ variables.SolutionBaseName }}.Scripts/Import-ApimOpenApiDefinitionFromFile.ps1"
       SpecificationPath: "$(Pipeline.Workspace)/${{ variables.SolutionBaseName }}.OpenApiDocs"
+
+- stage: DeployToPPAppBanners
+  condition:  and(eq(dependencies.DeployToSitDraftAppBanners.result,'Succeeded'), eq(variables['Build.SourceBranch'], 'refs/heads/master'))
+  displayName: Deploy to PP_AppBanners
+  variables:
+  - group: dfc-shared-all
+  - group: dfc-shared-pp
+  - group: dfc-app-shared-all
+  - group: dfc-app-shared-pp
+  - group: dfc-stax-shared-pp
+  - group: dfc-compositeui-all
+  - template: VariableTemplates\PPEnvironmentVariables.yml
+
+  jobs:
+  - template: JobTemplates/deploy-environment.yml
+    parameters:
+      AzureSubscription: 'SFA-DIG-PreProd (931bc9f6-359c-4f65-a753-1ee191a1fd6c)'
+      EnvironmentTag: '$(EnvironmentTag)'
+      ParentBusiness: '$(ParentBusiness)'
+      ServiceOffering: '$(ServiceOffering)'
+      ResourceGroup: $(ResourceGroup)
+      DfCDevopsPath: '$(Agent.BuildDirectory)/s/dfc-devops'
+      PackageFile:  "$(Pipeline.Workspace)/${{ variables.SolutionBaseName }}.DeploymentPackages/${{ variables.SolutionBaseName }}.zip"
+      ArmTemplateFolder: "$(Pipeline.Workspace)/${{ variables.SolutionBaseName }}.Resources.ArmTemplates/"
+      EnvironmentName: PP_AppBanners
+      AppSharedResourceGroup: $(AppSharedResourceGroup)
+      appSharedCosmosDBName: $(appSharedCosmosDBName)
+      AppServiceName: '$(AppServiceName)'
+      SharedResourceGroupName: $(SharedResourceGroupName)
+      ApimServiceName: $(ApimServiceName)
+      ApimProductInstanceName: $(ApimProductInstanceName)
+      ApiName: $(ApiName)
+      ApiId: $(ApiId)
+      FunctionAppDomain: $(FunctionAppDomain)
+      ApiDefinitionPath: $(ApiDefinitionPath)
+      APIMPolicyPath: "$(Pipeline.Workspace)/${{ variables.SolutionBaseName }}.ApimPolicies/"
+      ApimImportScript: "$(Pipeline.Workspace)/${{ variables.SolutionBaseName }}.Scripts/Import-ApimOpenApiDefinitionFromFile.ps1"
+      SpecificationPath: "$(Pipeline.Workspace)/${{ variables.SolutionBaseName }}.OpenApiDocs"
+
+- stage: DeployToPPDraftAppBanners
+  condition:  and(eq(dependencies.DeployToPPAppBanners.result,'Succeeded'), eq(variables['Build.SourceBranch'], 'refs/heads/master'))
+  displayName: Deploy to PP-DRAFT_AppBanners
+  variables:
+  - group: dfc-shared-all
+  - group: dfc-shared-pp
+  - group: dfc-app-shared-all
+  - group: dfc-app-shared-pp
+  - group: dfc-app-draft
+  - group: dfc-stax-shared-pp
+  - group: dfc-compositeui-all
+  - template: VariableTemplates\PPDraftEnvironmentVariables.yml
+
+  jobs:
+  - template: JobTemplates/deploy-environment.yml
+    parameters:
+      AzureSubscription: 'SFA-DIG-PreProd (931bc9f6-359c-4f65-a753-1ee191a1fd6c)'
+      EnvironmentTag: '$(EnvironmentTag)'
+      ParentBusiness: '$(ParentBusiness)'
+      ServiceOffering: '$(ServiceOffering)'
+      ResourceGroup: $(ResourceGroup)
+      DfCDevopsPath: '$(Agent.BuildDirectory)/s/dfc-devops'
+      PackageFile:  "$(Pipeline.Workspace)/${{ variables.SolutionBaseName }}.DeploymentPackages/${{ variables.SolutionBaseName }}.zip"
+      ArmTemplateFolder: "$(Pipeline.Workspace)/${{ variables.SolutionBaseName }}.Resources.ArmTemplates/"
+      EnvironmentName: PP-DRAFT_AppBanners
+      AppSharedResourceGroup: $(AppSharedResourceGroup)
+      appSharedCosmosDBName: $(appSharedCosmosDBName)
+      AppServiceName: '$(AppServiceName)'
+      SharedResourceGroupName: $(SharedResourceGroupName)
+      ApimServiceName: $(ApimServiceName)
+      ApimProductInstanceName: $(ApimProductInstanceName)
+      ApiName: $(ApiName)
+      ApiId: $(ApiId)
+      FunctionAppDomain: $(FunctionAppDomain)
+      ApiDefinitionPath: $(ApiDefinitionPath)
+      APIMPolicyPath: "$(Pipeline.Workspace)/${{ variables.SolutionBaseName }}.ApimPolicies/"
+      ApimImportScript: "$(Pipeline.Workspace)/${{ variables.SolutionBaseName }}.Scripts/Import-ApimOpenApiDefinitionFromFile.ps1"
+      SpecificationPath: "$(Pipeline.Workspace)/${{ variables.SolutionBaseName }}.OpenApiDocs"
