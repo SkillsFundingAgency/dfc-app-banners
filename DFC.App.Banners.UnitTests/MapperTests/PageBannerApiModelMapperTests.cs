@@ -18,10 +18,17 @@ namespace DFC.App.Banners.UnitTests.MapperTests
         [Theory]
         [InlineData("", "/")]
         [InlineData("randompage", "/randompage")]
+        [InlineData("randompage/", "/randompage")]
+        [InlineData("/randompage", "/randompage")]
+        [InlineData("/randompage/", "/randompage")]
         [InlineData("alerts/404", "/alerts/404")]
+        [InlineData("alerts/404/", "/alerts/404")]
         [InlineData("/alerts/404", "/alerts/404")]
+        [InlineData("/alerts/404/", "/alerts/404")]
+        [InlineData("https://nationalcareers.service.gov.uk", "/")]
         [InlineData("https://nationalcareers.service.gov.uk/", "/")]
         [InlineData("https://nationalcareers.service.gov.uk/alerts/404", "/alerts/404")]
+        [InlineData("https://nationalcareers.service.gov.uk/alerts/404/", "/alerts/404")]
         public void MapPageBannersPageLocation(string pageLocation, string expectedPartitionKey)
         {
             // Arrange
