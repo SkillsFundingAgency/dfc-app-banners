@@ -310,7 +310,7 @@ stages:
   displayName: Deploy to PP_AppBanners
   variables:
   - group: dfc-shared-all
-  - group: dfc-shared-sit
+  - group: dfc-shared-pp
   - group: dfc-app-shared-all
   - group: dfc-app-shared-pp
   - group: dfc-stax-shared-pp
