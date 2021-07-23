@@ -458,4 +458,3 @@ stages:
       APIMPolicyPath: "$(Pipeline.Workspace)/${{ variables.SolutionBaseName }}.ApimPolicies/"
       ApimImportScript: "$(Pipeline.Workspace)/${{ variables.SolutionBaseName }}.Scripts/Import-ApimOpenApiDefinitionFromFile.ps1"
       SpecificationPath: "$(Pipeline.Workspace)/${{ variables.SolutionBaseName }}.OpenApiDocs"
-
