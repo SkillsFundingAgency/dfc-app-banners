@@ -56,4 +56,4 @@ variables:
 - name: SubscriptionPosturi
   value: https://$(AppServiceName).$(AppServiceDomain)/subscription/
 - name: LoggingLogLevelDefault
-  value: Trace
+  value: Warning
