@@ -46,7 +46,7 @@ variables:
 - name: clientAffinity
   value: false
 - name: appDatabaseThroughput
-  value: 400
+  value: 2500
 - name: ExceptionCountThreshold
   value: 10
 - name: MemoryPercentageThreshold
@@ -56,4 +56,4 @@ variables:
 - name: SubscriptionPosturi
   value: https://$(AppServiceName).$(AppServiceDomain)/subscription/
 - name: LoggingLogLevelDefault
-  value: Trace
+  value: Warning

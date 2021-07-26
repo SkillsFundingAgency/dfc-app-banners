@@ -1,6 +1,6 @@
 variables:
 - name: ReleaseEnvironmentName
-  value: pp
+  value: prd
 - name: AppServiceName
   value: $(WebAppPrefix)-as
 - name: cosmosDBCollectionName
@@ -16,7 +16,7 @@ variables:
 - name: contentUrl
   value: $(ContentApiAddress)/api/execute
 - name: subscriptionUrl
-  value: https://dfc-pp-api-eventgridsubscriptions-fa.$(appServiceDomain)
+  value: https://dfc-prd-api-eventgridsubscriptions-fa.$(appServiceDomain)
 - name: SubscriptionSettingsEndpoint
   value: $(ApimProxyAddress)/composite-ui/banners
 - name: apiName
@@ -26,7 +26,7 @@ variables:
 - name: applicationUrl
   value: https://$(AppServiceName).$(appServiceDomain)
 - name: WebAppPrefix
-  value: dfc-pp-app-banners
+  value: dfc-prd-app-banners
 - name: SubscriptionSettingsFilterIncludeEventTypes3
   value:
 - name: SubscriptionSettingsFilterIncludeEventTypes4

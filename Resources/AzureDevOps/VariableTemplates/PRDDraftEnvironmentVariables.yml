@@ -1,10 +1,10 @@
 variables:
 - name: ReleaseEnvironmentName
-  value: pp
+  value: prd-draft
 - name: AppServiceName
   value: $(WebAppPrefix)-as
 - name: cosmosDBCollectionName
-  value: banners
+  value: banners-draft
 - name: ResourceGroup
   value: $(WebAppPrefix)-rg
 - name: WebAppProjectName
@@ -12,25 +12,25 @@ variables:
 - name: PageRegistrationFile
   value: registration.json
 - name: ApplicationName
-  value: dfc-app-banners
+  value: dfc-app-banners-draft
 - name: contentUrl
-  value: $(ContentApiAddress)/api/execute
+  value: $(ContentApiDraftAddress)/api/execute
 - name: subscriptionUrl
-  value: https://dfc-pp-api-eventgridsubscriptions-fa.$(appServiceDomain)
+  value: https://dfc-prd-api-eventgridsubscriptions-fa.$(appServiceDomain)
 - name: SubscriptionSettingsEndpoint
-  value: $(ApimProxyAddress)/composite-ui/banners
+  value: $(ApimProxyAddress)/composite-ui/banners-draft
 - name: apiName
-  value: banners
+  value: banners-draft
 - name: apiId
-  value: composite-ui-banners
+  value: composite-ui-banners-draft
 - name: applicationUrl
   value: https://$(AppServiceName).$(appServiceDomain)
 - name: WebAppPrefix
-  value: dfc-pp-app-banners
+  value: dfc-prd-draft-app-banners
 - name: SubscriptionSettingsFilterIncludeEventTypes3
-  value:
+  value: draft-discarded
 - name: SubscriptionSettingsFilterIncludeEventTypes4
-  value:
+  value: draft
 - name: SubscriptionSettingsFilterPropertyContainsFilters0Values0
   value: /content/banner/
 - name: SubscriptionSettingsFilterPropertyContainsFilters0Values1
