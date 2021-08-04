@@ -11,18 +11,29 @@ using FakeItEasy;
 
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
 using Microsoft.Net.Http.Headers;
 
 namespace DFC.App.Banners.UnitTests.ControllerTests.BannersControllerTests
 {
     public abstract class BaseBannersControllerTests
     {
+        private readonly IMemoryCache memoryCache;
+
         protected BaseBannersControllerTests()
         {
             Logger = A.Fake<ILogger<BannersController>>();
             FakeDocumentService = A.Fake<IDocumentService<PageBannerContentItemModel>>();
             FakeMapper = A.Fake<IMapper>();
+
+            memoryCache = new MemoryCache(Options.Create(new MemoryCacheOptions()));
+        }
+
+        ~BaseBannersControllerTests()
+        {
+            memoryCache.Dispose();
         }
 
         public static IEnumerable<object[]> HtmlMediaTypes => new List<object[]>
@@ -53,7 +64,7 @@ namespace DFC.App.Banners.UnitTests.ControllerTests.BannersControllerTests
 
             httpContext.Request.Headers[HeaderNames.Accept] = mediaTypeName;
 
-            var controller = new BannersController(Logger, FakeMapper, FakeDocumentService)
+            var controller = new BannersController(Logger, FakeMapper, FakeDocumentService, memoryCache)
             {
                 ControllerContext = new ControllerContext()
                 {
