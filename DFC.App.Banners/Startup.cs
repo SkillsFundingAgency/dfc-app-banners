@@ -67,6 +67,7 @@ namespace DFC.App.Banners
             };
             services.AddDocumentServices<PageBannerContentItemModel>(cosmosDbConnectionSharedContent, env.IsDevelopment(), cosmosRetryOptions);
 
+            services.AddMemoryCache();
             services.AddApplicationInsightsTelemetry();
             services.AddHttpContextAccessor();
             services.AddTransient<ICacheReloadService, BannersCacheReloadService>();

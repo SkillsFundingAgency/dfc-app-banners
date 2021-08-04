@@ -11,6 +11,7 @@ using DFC.App.Banners.ViewModels;
 using DFC.Compui.Cosmos.Contracts;
 
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Logging;
 
 namespace DFC.App.Banners.Controllers
@@ -19,18 +20,23 @@ namespace DFC.App.Banners.Controllers
     public class BannersController : Controller
     {
         public const string RegistrationPath = "banners";
+        private const int CacheDurationInSeconds = 10;
+
         private readonly ILogger<BannersController> logger;
         private readonly IMapper mapper;
         private readonly IDocumentService<PageBannerContentItemModel> documentService;
+        private readonly IMemoryCache memoryCache;
 
         public BannersController(
             ILogger<BannersController> logger,
             IMapper mapper,
-            IDocumentService<PageBannerContentItemModel> documentService)
+            IDocumentService<PageBannerContentItemModel> documentService,
+            IMemoryCache memoryCache)
         {
             this.logger = logger;
             this.mapper = mapper;
             this.documentService = documentService;
+            this.memoryCache = memoryCache;
         }
 
         [HttpGet]
@@ -43,7 +49,7 @@ namespace DFC.App.Banners.Controllers
                 Documents = new List<IndexDocumentViewModel>(),
             };
 
-            var documents = await documentService.GetAllAsync();
+            var documents = await GetAllDocuments();
 
             if (documents?.Any() == true)
             {
@@ -98,6 +104,37 @@ namespace DFC.App.Banners.Controllers
             return NoContent();
         }
 
+        private static string BuildCacheKey(string path)
+        {
+            return $"{nameof(BannersController)}_{path}";
+        }
+
+        private async Task<IEnumerable<PageBannerContentItemModel>?> GetAllDocuments()
+        {
+            var cacheKey = BuildCacheKey(nameof(GetAllDocuments));
+
+            if (!memoryCache.TryGetValue(cacheKey, out IEnumerable<PageBannerContentItemModel>? content))
+            {
+                content = await documentService.GetAllAsync();
+                memoryCache.Set(cacheKey, content, TimeSpan.FromSeconds(CacheDurationInSeconds));
+            }
+
+            return content;
+        }
+
+        private async Task<IEnumerable<PageBannerContentItemModel>?> GetDocuments(string partitionKey)
+        {
+            var cacheKey = BuildCacheKey(partitionKey);
+
+            if (!memoryCache.TryGetValue(cacheKey, out IEnumerable<PageBannerContentItemModel>? content))
+            {
+                content = await documentService.GetAllAsync(partitionKey);
+                memoryCache.Set(cacheKey, content, TimeSpan.FromSeconds(CacheDurationInSeconds));
+            }
+
+            return content;
+        }
+
         private async Task<IEnumerable<PageBannerContentItemModel>> GetBannersAsync(string path)
         {
             if (!path.StartsWith('/'))
@@ -110,7 +147,7 @@ namespace DFC.App.Banners.Controllers
                 path = path.TrimEnd('/');
             }
 
-            var banners = await documentService.GetAsync(a => a.PartitionKey == path);
+            var banners = await GetDocuments(path);
 
             if (banners?.Any() is true || string.IsNullOrWhiteSpace(path) || path.Equals("/"))
             {

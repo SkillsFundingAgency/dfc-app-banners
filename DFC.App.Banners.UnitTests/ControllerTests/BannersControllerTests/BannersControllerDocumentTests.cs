@@ -39,7 +39,7 @@ namespace DFC.App.Banners.UnitTests.ControllerTests.BannersControllerTests
             // Arrange
             var expectedResults = A.CollectionOfDummy<PageBannerContentItemModel>(1);
             var controller = BuildBannersController(mediaTypeName);
-            A.CallTo(() => FakeDocumentService.GetAsync(A<Expression<Func<PageBannerContentItemModel, bool>>>.Ignored))
+            A.CallTo(() => FakeDocumentService.GetAllAsync(A<string>.Ignored))
                 .Returns(expectedResults);
 
             // Act
@@ -76,7 +76,7 @@ namespace DFC.App.Banners.UnitTests.ControllerTests.BannersControllerTests
             var expectedResults = A.CollectionOfDummy<PageBannerContentItemModel>(1);
             expectedResults[0].Banners = new List<BannerContentItemModel>(A.CollectionOfDummy<BannerContentItemModel>(1));
             var controller = BuildBannersController(mediaTypeName);
-            A.CallTo(() => FakeDocumentService.GetAsync(A<Expression<Func<PageBannerContentItemModel, bool>>>.Ignored))
+            A.CallTo(() => FakeDocumentService.GetAllAsync(A<string>.Ignored))
                 .Returns(expectedResults);
 
             // Act
@@ -98,7 +98,7 @@ namespace DFC.App.Banners.UnitTests.ControllerTests.BannersControllerTests
             var expectedResults = A.CollectionOfDummy<PageBannerContentItemModel>(1);
             expectedResults[0].Banners = new List<BannerContentItemModel>(A.CollectionOfDummy<BannerContentItemModel>(1));
             var controller = BuildBannersController(mediaTypeName);
-            A.CallTo(() => FakeDocumentService.GetAsync(A<Expression<Func<PageBannerContentItemModel, bool>>>.Ignored))
+            A.CallTo(() => FakeDocumentService.GetAllAsync(A<string>.Ignored))
                 .Returns(Array.Empty<PageBannerContentItemModel>()).Once()
                 .Then
                 .Returns(expectedResults);
@@ -109,7 +109,8 @@ namespace DFC.App.Banners.UnitTests.ControllerTests.BannersControllerTests
             // Assert
             var viewResult = Assert.IsType<ViewResult>(result);
             _ = Assert.IsAssignableFrom<List<BannerViewModel>>(viewResult.ViewData.Model);
-            A.CallTo(() => FakeDocumentService.GetAsync(A<Expression<Func<PageBannerContentItemModel, bool>>>.Ignored)).MustHaveHappenedTwiceExactly();
+            A.CallTo(() => FakeDocumentService.GetAllAsync(path)).MustHaveHappenedOnceExactly();
+            A.CallTo(() => FakeDocumentService.GetAllAsync("/careers-advice")).MustHaveHappenedOnceExactly();
 
             controller.Dispose();
         }
