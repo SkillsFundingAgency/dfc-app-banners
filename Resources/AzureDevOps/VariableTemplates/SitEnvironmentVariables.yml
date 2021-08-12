@@ -42,7 +42,7 @@ variables:
 - name: aspInstances
   value: 2
 - name: aspSize
-  value: 2
+  value: 1
 - name: clientAffinity
   value: false
 - name: appDatabaseThroughput
