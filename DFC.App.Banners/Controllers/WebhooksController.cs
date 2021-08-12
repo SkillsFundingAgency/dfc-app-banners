@@ -3,16 +3,13 @@ using System.Collections.Generic;
 using System.IO;
 using System.Text;
 using System.Threading.Tasks;
-
+using Microsoft.Extensions.Logging;
 using DFC.App.Banners.Data.Contracts;
 using DFC.App.Banners.Data.Enums;
 using DFC.App.Banners.Models;
-
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Azure.EventGrid;
 using Microsoft.Azure.EventGrid.Models;
-using Microsoft.Extensions.Logging;
 
 namespace DFC.App.Banners.Controllers
 {
@@ -90,9 +87,7 @@ namespace DFC.App.Banners.Controllers
                 }
                 else
                 {
-                    string error = $"Invalid event type '{eventGridEvent.EventType}' received for Event Id: {eventId}, should be one of '{string.Join(",", acceptedEventTypes.Keys)}'";
-                    logger.LogWarning(error);
-                    return new ObjectResult(error) { StatusCode = StatusCodes.Status500InternalServerError };
+                    throw new InvalidDataException($"Invalid event type '{eventGridEvent.EventType}' received for Event Id: {eventId}, should be one of '{string.Join(",", acceptedEventTypes.Keys)}'");
                 }
             }
 

@@ -1,12 +1,10 @@
-﻿using System;
+﻿using DFC.App.Banners.Data.Contracts;
+using DFC.App.Banners.Data.Helpers;
+using Microsoft.Extensions.Logging;
+using System;
 using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
-
-using DFC.App.Banners.Data.Contracts;
-using DFC.App.Banners.Data.Helpers;
-
-using Microsoft.Extensions.Logging;
 
 namespace DFC.App.Banners.Services.CacheContentService
 {
@@ -25,19 +23,18 @@ namespace DFC.App.Banners.Services.CacheContentService
 
         public string ProcessType => CmsContentKeyHelper.BannerTag;
 
-        public Task<HttpStatusCode> DeleteContentAsync(Guid contentId)
+        public async Task<HttpStatusCode> DeleteContentAsync(Guid contentId)
         {
-            return ProcessBannerContent(contentId);
+            return await ProcessBannerContent(contentId);
         }
 
-        public Task<HttpStatusCode> ProcessContentAsync(Guid contentId, Uri url)
+        public async Task<HttpStatusCode> ProcessContentAsync(Guid contentId, Uri url)
         {
-            return ProcessBannerContent(contentId);
+            return await ProcessBannerContent(contentId);
         }
 
         private async Task<HttpStatusCode> ProcessBannerContent(Guid contentId)
         {
-            // TODO: Fetch all page banners and see if this banner is referenced, update all page banners which are referencing it.
             var pagebannerUrls = await bannerDocumentService.GetPagebannerUrlsAsync(contentId.ToString());
 
             if (!pagebannerUrls.Any())
@@ -48,15 +45,17 @@ namespace DFC.App.Banners.Services.CacheContentService
 
             try
             {
-                var result = await Task.WhenAll(pagebannerUrls.Select(webhookContentProcessor.ProcessContentAsync));
+                var result = await Task.WhenAll(pagebannerUrls.Select(x => webhookContentProcessor.ProcessContentAsync(x)));
+
+                var renVal = result.Any(x => x == HttpStatusCode.BadRequest) ? HttpStatusCode.BadRequest : HttpStatusCode.OK;
 
                 logger.LogInformation($"Banner content item Id: {contentId} : Updated page banners: {string.Join(",", pagebannerUrls)}");
 
-                return result.Any(x => x == HttpStatusCode.BadRequest) ? HttpStatusCode.BadRequest : HttpStatusCode.OK;
+                return renVal;
             }
             catch (AggregateException exception)
             {
-                exception.Flatten().InnerExceptions.ToList().ForEach(x => logger.LogError(x, $"Failed to refresh cache for {contentId} : {x.Message}"));
+                exception.Flatten().InnerExceptions.ToList().ForEach(x => logger.LogError($"Failed to refresh cache for {contentId} : {exception.Flatten().Message}"));
                 return HttpStatusCode.BadRequest;
             }
         }

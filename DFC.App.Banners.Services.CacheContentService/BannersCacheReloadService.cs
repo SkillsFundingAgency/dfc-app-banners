@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -72,14 +70,13 @@ namespace DFC.App.Banners.Services.CacheContentService
 
         public async Task ReloadContent(CancellationToken stoppingToken)
         {
+            await documentService.PurgeAsync();
             var pageBanners = await cmsApiService.GetSummaryAsync<CmsApiSummaryItemModel>();
-            if (pageBanners is null || pageBanners.Count < 1)
+            if (pageBanners == null || pageBanners.Count < 1)
             {
-                await documentService.PurgeAsync();
                 return;
             }
 
-            var pageBannersContentItems = new List<PageBannerContentItemModel>(pageBanners.Count);
             foreach (var pageBanner in pageBanners)
             {
                 if (stoppingToken.IsCancellationRequested)
@@ -90,6 +87,7 @@ namespace DFC.App.Banners.Services.CacheContentService
                 }
 
                 var apiDataModel = await cmsApiService.GetItemAsync<PageBannerContentItemApiDataModel>(pageBanner.Url!);
+
                 if (apiDataModel == null)
                 {
                     logger.LogError($"banners content: {pageBanner} not found in API response");
@@ -97,17 +95,9 @@ namespace DFC.App.Banners.Services.CacheContentService
                 else
                 {
                     var mappedContentItem = mapper.Map<PageBannerContentItemModel>(apiDataModel);
-                    pageBannersContentItems.Add(mappedContentItem);
                     await documentService.UpsertAsync(mappedContentItem);
                 }
             }
-
-            var cachedDocuments = await documentService.GetAllAsync();
-            var docsToDeletetasks = cachedDocuments
-                            .Where(pb => !pageBannersContentItems.Select(x => x.PageLocation).Contains(pb.PageLocation))
-                            .Select(pb => documentService.DeleteAsync(pb.Id));
-
-            await Task.WhenAll(docsToDeletetasks);
         }
     }
 }
