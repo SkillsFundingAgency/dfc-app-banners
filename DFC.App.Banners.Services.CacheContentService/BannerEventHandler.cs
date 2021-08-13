@@ -1,10 +1,12 @@
-﻿using DFC.App.Banners.Data.Contracts;
-using DFC.App.Banners.Data.Helpers;
-using Microsoft.Extensions.Logging;
-using System;
+﻿using System;
 using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
+
+using DFC.App.Banners.Data.Contracts;
+using DFC.App.Banners.Data.Helpers;
+
+using Microsoft.Extensions.Logging;
 
 namespace DFC.App.Banners.Services.CacheContentService
 {
@@ -23,15 +25,11 @@ namespace DFC.App.Banners.Services.CacheContentService
 
         public string ProcessType => CmsContentKeyHelper.BannerTag;
 
-        public async Task<HttpStatusCode> DeleteContentAsync(Guid contentId)
-        {
-            return await ProcessBannerContent(contentId);
-        }
+        public Task<HttpStatusCode> DeleteContentAsync(Guid contentId) =>
+            ProcessBannerContent(contentId);
 
-        public async Task<HttpStatusCode> ProcessContentAsync(Guid contentId, Uri url)
-        {
-            return await ProcessBannerContent(contentId);
-        }
+        public Task<HttpStatusCode> ProcessContentAsync(Guid contentId, Uri url) =>
+            ProcessBannerContent(contentId);
 
         private async Task<HttpStatusCode> ProcessBannerContent(Guid contentId)
         {
@@ -47,15 +45,13 @@ namespace DFC.App.Banners.Services.CacheContentService
             {
                 var result = await Task.WhenAll(pagebannerUrls.Select(x => bannersCacheReloadService.ProcessPageBannerContentAsync(x)));
 
-                var renVal = result.Any(x => x == HttpStatusCode.BadRequest) ? HttpStatusCode.BadRequest : HttpStatusCode.OK;
-
                 logger.LogInformation($"Banner content item Id: {contentId} : Updated page banners: {string.Join(",", pagebannerUrls)}");
 
-                return renVal;
+                return result.Any(x => x == HttpStatusCode.BadRequest) ? HttpStatusCode.BadRequest : HttpStatusCode.OK;
             }
             catch (AggregateException exception)
             {
-                exception.Flatten().InnerExceptions.ToList().ForEach(x => logger.LogError($"Failed to refresh cache for {contentId} : {exception.Flatten().Message}"));
+                exception.Flatten().InnerExceptions.ToList().ForEach(x => logger.LogError(x, $"Failed to refresh cache for {contentId} : {x.Message}"));
                 return HttpStatusCode.BadRequest;
             }
         }

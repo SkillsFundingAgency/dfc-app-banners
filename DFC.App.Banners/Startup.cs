@@ -74,7 +74,7 @@ namespace DFC.App.Banners
             services.AddTransient<IWebhooksService, WebhooksService>();
             services.AddTransient<IBannerDocumentService, BannerDocumentService>();
             services.AddTransient<IEventHandler, BannerEventHandler>();
-            services.AddTransient<IEventHandler, PagebannerEventHandler>();
+            services.AddTransient<IEventHandler, PageBannerEventHandler>();
 
             services.AddAutoMapper(typeof(Startup).Assembly);
             CmsApiClientOptions cmsApiClientOptions = configuration.GetSection(nameof(CmsApiClientOptions)).Get<CmsApiClientOptions>();

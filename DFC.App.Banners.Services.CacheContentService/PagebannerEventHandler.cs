@@ -1,19 +1,21 @@
-﻿using DFC.App.Banners.Data.Contracts;
-using DFC.App.Banners.Data.Helpers;
-using Microsoft.Extensions.Logging;
-using System;
+﻿using System;
 using System.Net;
 using System.Threading.Tasks;
 
+using DFC.App.Banners.Data.Contracts;
+using DFC.App.Banners.Data.Helpers;
+
+using Microsoft.Extensions.Logging;
+
 namespace DFC.App.Banners.Services.CacheContentService
 {
-    public class PagebannerEventHandler : IEventHandler
+    public class PageBannerEventHandler : IEventHandler
     {
         private readonly IBannerDocumentService bannerDocumentService;
-        private readonly ILogger<PagebannerEventHandler> logger;
+        private readonly ILogger<PageBannerEventHandler> logger;
         private readonly IBannersCacheReloadService bannersCacheReloadService;
 
-        public PagebannerEventHandler(IBannersCacheReloadService bannersCacheReloadService, IBannerDocumentService bannerDocumentService, ILogger<PagebannerEventHandler> logger)
+        public PageBannerEventHandler(IBannersCacheReloadService bannersCacheReloadService, IBannerDocumentService bannerDocumentService, ILogger<PageBannerEventHandler> logger)
         {
             this.bannersCacheReloadService = bannersCacheReloadService;
             this.bannerDocumentService = bannerDocumentService;
@@ -22,10 +24,8 @@ namespace DFC.App.Banners.Services.CacheContentService
 
         public string ProcessType => CmsContentKeyHelper.PageBannerTag;
 
-        public async Task<HttpStatusCode> DeleteContentAsync(Guid contentId)
-        {
-            return await bannersCacheReloadService.DeletePageBannerContentAsync(contentId);
-        }
+        public Task<HttpStatusCode> DeleteContentAsync(Guid contentId) =>
+            bannersCacheReloadService.DeletePageBannerContentAsync(contentId);
 
         public async Task<HttpStatusCode> ProcessContentAsync(Guid contentId, Uri url)
         {

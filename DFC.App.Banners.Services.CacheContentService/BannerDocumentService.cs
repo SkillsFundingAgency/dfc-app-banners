@@ -1,14 +1,16 @@
-﻿using DFC.App.Banners.Data.Contracts;
-using DFC.App.Banners.Data.Models.ContentModels;
-using DFC.Compui.Cosmos.Contracts;
-using Microsoft.Azure.Documents;
-using Microsoft.Azure.Documents.Client;
-using Microsoft.Azure.Documents.Linq;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
+
+using DFC.App.Banners.Data.Contracts;
+using DFC.App.Banners.Data.Models.ContentModels;
+using DFC.Compui.Cosmos.Contracts;
+
+using Microsoft.Azure.Documents;
+using Microsoft.Azure.Documents.Client;
+using Microsoft.Azure.Documents.Linq;
 
 namespace DFC.App.Banners.Services.CacheContentService
 {
@@ -25,15 +27,11 @@ namespace DFC.App.Banners.Services.CacheContentService
             this.documentClient = documentClient;
         }
 
-        public Task<bool> DeleteAsync(Guid id)
-        {
-            return documentService.DeleteAsync(id);
-        }
+        public Task<bool> DeleteAsync(Guid id) =>
+            documentService.DeleteAsync(id);
 
-        public Task<PageBannerContentItemModel?> GetByIdAsync(Guid id, string? partitionKey = null)
-        {
-            return documentService.GetByIdAsync(id, partitionKey);
-        }
+        public Task<PageBannerContentItemModel?> GetByIdAsync(Guid id, string? partitionKey = null) =>
+            documentService.GetByIdAsync(id, partitionKey);
 
         public async Task<IEnumerable<Uri>> GetPageBannerUrlsAsync(string bannerContentItemId, string? partitionKeyValue = null)
         {
@@ -46,10 +44,8 @@ namespace DFC.App.Banners.Services.CacheContentService
                 feedOptions.PartitionKey = new PartitionKey(partitionKeyValue);
             }
 
-            Uri documentCollectionUri = UriFactory.CreateDocumentCollectionUri(cosmosDbConnection.DatabaseId, cosmosDbConnection.CollectionId);
-
             IDocumentQuery<IEnumerable<string>>? query = documentClient.CreateDocumentQuery<IEnumerable<string>>(
-                documentCollectionUri,
+                UriFactory.CreateDocumentCollectionUri(cosmosDbConnection.DatabaseId, cosmosDbConnection.CollectionId),
                 new SqlQuerySpec($"SELECT DISTINCT c.Url FROM c JOIN b IN c.Banners WHERE b.ItemId = @itemId")
                 {
                     Parameters = new SqlParameterCollection(new[]
@@ -61,17 +57,15 @@ namespace DFC.App.Banners.Services.CacheContentService
 
             while (query.HasMoreResults)
             {
-                var result = await query.ExecuteNextAsync<PageBannerContentItemModel>().ConfigureAwait(false);
+                var result = await query.ExecuteNextAsync<PageBannerContentItemModel>();
                 urls.AddRange(result.Select(x => x.Url!));
             }
 
             return urls.Any() ? urls : new List<Uri>();
         }
 
-        public Task<HttpStatusCode> UpsertAsync(PageBannerContentItemModel pageBannerContentItemModel)
-        {
-            return documentService.UpsertAsync(pageBannerContentItemModel);
-        }
+        public Task<HttpStatusCode> UpsertAsync(PageBannerContentItemModel pageBannerContentItemModel) =>
+            documentService.UpsertAsync(pageBannerContentItemModel);
 
         public Task<bool> PurgeAsync()
         {
