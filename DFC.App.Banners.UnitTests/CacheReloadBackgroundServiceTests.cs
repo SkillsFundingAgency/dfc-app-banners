@@ -16,7 +16,7 @@ namespace DFC.App.Banners.UnitTests
 {
     public class CacheReloadBackgroundServiceTests
     {
-        private readonly ICacheReloadService cacheReloadService = A.Fake<ICacheReloadService>();
+        private readonly IBannersCacheReloadService cacheReloadService = A.Fake<IBannersCacheReloadService>();
         private readonly ILogger<CacheReloadBackgroundService> logger = A.Fake<ILogger<CacheReloadBackgroundService>>();
         private readonly IHostedServiceTelemetryWrapper wrapper = A.Fake<IHostedServiceTelemetryWrapper>();
 

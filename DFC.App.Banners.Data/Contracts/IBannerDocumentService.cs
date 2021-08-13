@@ -8,9 +8,11 @@ namespace DFC.App.Banners.Data.Contracts
 {
     public interface IBannerDocumentService
     {
-        Task<IEnumerable<Uri>> GetPagebannerUrlsAsync(string bannerContentItemId, string? partitionKeyValue = null);
+        Task<IEnumerable<Uri>> GetPageBannerUrlsAsync(string bannerContentItemId, string? partitionKeyValue = null);
 
         Task<bool> DeleteAsync(Guid id);
+
+        Task<bool> PurgeAsync();
 
         Task<HttpStatusCode> UpsertAsync(PageBannerContentItemModel pageBannerContentItemModel);
 

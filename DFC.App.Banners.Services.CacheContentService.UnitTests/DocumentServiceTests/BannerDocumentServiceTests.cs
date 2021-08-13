@@ -17,6 +17,7 @@ namespace DFC.App.Banners.Services.CacheContentService.UnitTests.DocumentService
     {
         [Theory]
         [InlineData(true)]
+        [InlineData(false)]
         public async Task BannerDocumentServiceDeleteAsyncDeleteByGuidId(bool documentServiceResponse)
         {
             // Arrage
@@ -73,6 +74,7 @@ namespace DFC.App.Banners.Services.CacheContentService.UnitTests.DocumentService
                 "http://localhost:1234/api/execute/pagebanner/4a3fff39-0efb-450e-8893-80370656696z",
             };
 
+            var partitionKey = "/careers-advice";
             var response = new FeedResponse<PageBannerContentItemModel>(BuildValidPageBannerContentItemModels(expectedResult));
 
             A.CallTo(() => FakeDocumentQuery.HasMoreResults).Returns(true).Once().Then.Returns(false);
@@ -84,7 +86,7 @@ namespace DFC.App.Banners.Services.CacheContentService.UnitTests.DocumentService
             var service = BuildBannerDocumentService();
 
             // Act
-            IEnumerable<Uri>? result = await service.GetPagebannerUrlsAsync(ContentIdForUpdate.ToString(), null);
+            IEnumerable<Uri>? result = await service.GetPageBannerUrlsAsync(ContentIdForUpdate.ToString(), partitionKey);
 
             //Assert
             result.Should().NotBeEmpty()
@@ -112,10 +114,27 @@ namespace DFC.App.Banners.Services.CacheContentService.UnitTests.DocumentService
             var service = BuildBannerDocumentService();
 
             // Act
-            IEnumerable<Uri>? result = await service.GetPagebannerUrlsAsync(ContentIdForUpdate.ToString(), null);
+            IEnumerable<Uri>? result = await service.GetPageBannerUrlsAsync(ContentIdForUpdate.ToString(), null);
 
             //Assert
             result.Should().BeEmpty();
+        }
+
+        [Theory]
+        [InlineData(true)]
+        [InlineData(false)]
+        public async Task BannerDocumentServicePurgeAsyncPurgePageBanners(bool serviceResponse)
+        {
+            // Arrage
+            A.CallTo(() => FakeDocumentService.PurgeAsync()).Returns(serviceResponse);
+            var service = BuildBannerDocumentService();
+
+            // Act
+            var result = await service.PurgeAsync();
+
+            //Assert
+            A.CallTo(() => FakeDocumentService.PurgeAsync()).MustHaveHappenedOnceExactly();
+            Assert.Equal(result, serviceResponse);
         }
     }
 }

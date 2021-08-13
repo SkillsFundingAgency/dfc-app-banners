@@ -6,17 +6,18 @@ using FakeItEasy;
 using Microsoft.Extensions.Logging;
 using System;
 
-namespace DFC.App.Banners.Services.CacheContentService.UnitTests.WebhooksContentProcessorTests
+namespace DFC.App.Banners.Services.CacheContentService.UnitTests.BannersCacheReloadServiceTests
 {
-    public abstract class BaseWebhooksContentProcessorTests
+    public abstract class BaseBannersCacheReloadServiceTests
     {
-        public BaseWebhooksContentProcessorTests()
+        public BaseBannersCacheReloadServiceTests()
         {
-            Logger = A.Fake<ILogger<WebhooksContentProcessor>>();
+            Logger = A.Fake<ILogger<BannersCacheReloadService>>();
             FakeMapper = A.Fake<AutoMapper.IMapper>();
             FakeCmsApiService = A.Fake<ICmsApiService>();
             FakeContentTypeMappingService = A.Fake<IContentTypeMappingService>();
             FakeBannerDocumentService = A.Fake<IBannerDocumentService>();
+            FakeApiCacheService = A.Fake<IApiCacheService>();
         }
 
         protected Guid ContentIdForCreate { get; } = Guid.NewGuid();
@@ -25,7 +26,7 @@ namespace DFC.App.Banners.Services.CacheContentService.UnitTests.WebhooksContent
 
         protected Guid ContentIdForDelete { get; } = Guid.NewGuid();
 
-        protected ILogger<WebhooksContentProcessor> Logger { get; }
+        protected ILogger<BannersCacheReloadService> Logger { get; }
 
         protected AutoMapper.IMapper FakeMapper { get; }
 
@@ -35,7 +36,14 @@ namespace DFC.App.Banners.Services.CacheContentService.UnitTests.WebhooksContent
 
         protected IContentTypeMappingService FakeContentTypeMappingService { get; }
 
-        protected static PageBannerContentItemApiDataModel BuildValidContentItemApiDataModel()
+        protected IApiCacheService FakeApiCacheService { get; }
+
+        protected CmsApiSummaryItemModel BuildCmsApiSummaryItemModel(string uriString = "https://sample.com")
+        {
+            return new CmsApiSummaryItemModel { Url = new Uri(uriString) };
+        }
+
+        protected PageBannerContentItemApiDataModel BuildValidContentItemApiDataModel()
         {
             var model = new PageBannerContentItemApiDataModel
             {
@@ -63,9 +71,9 @@ namespace DFC.App.Banners.Services.CacheContentService.UnitTests.WebhooksContent
             return model;
         }
 
-        protected WebhooksContentProcessor BuildWebhooksContentProcessor()
+        protected BannersCacheReloadService BuildBannersCacheReloadService()
         {
-            return new WebhooksContentProcessor(Logger, FakeMapper, FakeCmsApiService, FakeContentTypeMappingService, FakeBannerDocumentService);
+            return new BannersCacheReloadService(Logger, FakeMapper, FakeBannerDocumentService, FakeContentTypeMappingService, FakeApiCacheService, FakeCmsApiService);
         }
     }
 }

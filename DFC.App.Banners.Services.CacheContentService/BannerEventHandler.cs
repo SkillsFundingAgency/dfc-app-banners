@@ -10,13 +10,13 @@ namespace DFC.App.Banners.Services.CacheContentService
 {
     public class BannerEventHandler : IEventHandler
     {
-        private readonly IWebhookContentProcessor webhookContentProcessor;
+        private readonly IBannersCacheReloadService bannersCacheReloadService;
         private readonly IBannerDocumentService bannerDocumentService;
         private readonly ILogger<BannerEventHandler> logger;
 
-        public BannerEventHandler(IWebhookContentProcessor webhookContentProcessor, IBannerDocumentService bannerDocumentService, ILogger<BannerEventHandler> logger)
+        public BannerEventHandler(IBannersCacheReloadService bannersCacheReloadService, IBannerDocumentService bannerDocumentService, ILogger<BannerEventHandler> logger)
         {
-            this.webhookContentProcessor = webhookContentProcessor;
+            this.bannersCacheReloadService = bannersCacheReloadService;
             this.bannerDocumentService = bannerDocumentService;
             this.logger = logger;
         }
@@ -35,7 +35,7 @@ namespace DFC.App.Banners.Services.CacheContentService
 
         private async Task<HttpStatusCode> ProcessBannerContent(Guid contentId)
         {
-            var pagebannerUrls = await bannerDocumentService.GetPagebannerUrlsAsync(contentId.ToString());
+            var pagebannerUrls = await bannerDocumentService.GetPageBannerUrlsAsync(contentId.ToString());
 
             if (!pagebannerUrls.Any())
             {
@@ -45,7 +45,7 @@ namespace DFC.App.Banners.Services.CacheContentService
 
             try
             {
-                var result = await Task.WhenAll(pagebannerUrls.Select(x => webhookContentProcessor.ProcessContentAsync(x)));
+                var result = await Task.WhenAll(pagebannerUrls.Select(x => bannersCacheReloadService.ProcessPageBannerContentAsync(x)));
 
                 var renVal = result.Any(x => x == HttpStatusCode.BadRequest) ? HttpStatusCode.BadRequest : HttpStatusCode.OK;
 
