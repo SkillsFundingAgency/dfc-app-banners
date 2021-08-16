@@ -27,6 +27,12 @@ namespace DFC.App.Banners.Services.CacheContentService
             this.documentClient = documentClient;
         }
 
+        public Task<IEnumerable<PageBannerContentItemModel>?> GetAllAsync() =>
+            documentService.GetAllAsync();
+
+        public Task<bool> PurgeAsync() =>
+            documentService.PurgeAsync();
+
         public Task<bool> DeleteAsync(Guid id) =>
             documentService.DeleteAsync(id);
 
@@ -66,10 +72,5 @@ namespace DFC.App.Banners.Services.CacheContentService
 
         public Task<HttpStatusCode> UpsertAsync(PageBannerContentItemModel pageBannerContentItemModel) =>
             documentService.UpsertAsync(pageBannerContentItemModel);
-
-        public Task<bool> PurgeAsync()
-        {
-            return documentService.PurgeAsync();
-        }
     }
 }

@@ -1,12 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Net;
 using System.Threading;
 using System.Threading.Tasks;
+
 using DFC.App.Banners.Data.Contracts;
 using DFC.App.Banners.Data.Models.CmsApiModels;
 using DFC.App.Banners.Data.Models.ContentModels;
 using DFC.Content.Pkg.Netcore.Data.Contracts;
+
 using Microsoft.Extensions.Logging;
 
 namespace DFC.App.Banners.Services.CacheContentService
@@ -68,15 +71,14 @@ namespace DFC.App.Banners.Services.CacheContentService
 
         public async Task ReloadContent(CancellationToken stoppingToken)
         {
-            await bannerDocumentService.PurgeAsync();
-
             var pageBanners = await cmsApiService.GetSummaryAsync<CmsApiSummaryItemModel>();
-
-            if (pageBanners == null || pageBanners.Count < 1)
+            if (pageBanners is null || pageBanners.Count < 1)
             {
+                await bannerDocumentService.PurgeAsync();
                 return;
             }
 
+            var pageBannersContentItems = new List<PageBannerContentItemModel>(pageBanners.Count);
             foreach (var pageBanner in pageBanners)
             {
                 if (stoppingToken.IsCancellationRequested)
@@ -86,37 +88,53 @@ namespace DFC.App.Banners.Services.CacheContentService
                     return;
                 }
 
-                await ProcessPageBannerContentAsync(pageBanner.Url!);
+                var contentItem = await GetPageBannerContentItemAsync(pageBanner.Url!);
+                if (contentItem != null)
+                {
+                    pageBannersContentItems.Add(contentItem);
+                }
             }
+
+            var cachedDocuments = await bannerDocumentService.GetAllAsync();
+            var docsToDeletetasks = cachedDocuments
+                            .Where(pb => !pageBannersContentItems.Select(x => x.PageLocation).Contains(pb.PageLocation))
+                            .Select(pb => bannerDocumentService.DeleteAsync(pb.Id));
+
+            await Task.WhenAll(docsToDeletetasks);
         }
 
-        public async Task<HttpStatusCode> ProcessPageBannerContentAsync(Uri url)
+        public async Task<bool> ProcessPageBannerContentAsync(Uri url)
         {
-            var apiDataModel = await cmsApiService.GetItemAsync<PageBannerContentItemApiDataModel>(url);
-            if (apiDataModel == null)
-            {
-                logger.LogInformation($"Page Banner Url: {url}, result {HttpStatusCode.NoContent}: No content found");
-                return HttpStatusCode.NoContent;
-            }
-            else
-            {
-                var mappedContentItem = mapper.Map<PageBannerContentItemModel>(apiDataModel);
-                mappedContentItem.Banners = mapper.Map<List<BannerContentItemModel>>(apiDataModel.ContentItems);
-                var result = await bannerDocumentService.UpsertAsync(mappedContentItem);
-
-                logger.LogInformation($"Page Banner Url: {url}, result {result}: Updated content for Page Banner");
-
-                return result;
-            }
+            var item = await GetPageBannerContentItemAsync(url);
+            return item != null;
         }
 
-        public async Task<HttpStatusCode> DeletePageBannerContentAsync(Guid contentId)
+        public async Task<bool> DeletePageBannerContentAsync(Guid contentId)
         {
             var result = await bannerDocumentService.DeleteAsync(contentId);
 
             logger.LogInformation($"Page Banner event Id: {contentId}, result {result}: Deleted content for Page Banner");
 
-            return result ? HttpStatusCode.OK : HttpStatusCode.NoContent;
+            return result;
+        }
+
+        private async Task<PageBannerContentItemModel?> GetPageBannerContentItemAsync(Uri url)
+        {
+            var apiDataModel = await cmsApiService.GetItemAsync<PageBannerContentItemApiDataModel>(url);
+            if (apiDataModel == null)
+            {
+                logger.LogInformation($"Page Banner Url: {url}, result {HttpStatusCode.NoContent}: No content found");
+                return null;
+            }
+            else
+            {
+                var mappedContentItem = mapper.Map<PageBannerContentItemModel>(apiDataModel);
+                var result = await bannerDocumentService.UpsertAsync(mappedContentItem);
+
+                logger.LogInformation($"Page Banner Url: {url}, result {result}: Updated content for Page Banner");
+
+                return mappedContentItem;
+            }
         }
 
         private void AddMapSettings()

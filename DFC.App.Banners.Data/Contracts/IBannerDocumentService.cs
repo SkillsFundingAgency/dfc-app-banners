@@ -1,8 +1,9 @@
-﻿using DFC.App.Banners.Data.Models.ContentModels;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Net;
 using System.Threading.Tasks;
+
+using DFC.App.Banners.Data.Models.ContentModels;
 
 namespace DFC.App.Banners.Data.Contracts
 {
@@ -17,5 +18,7 @@ namespace DFC.App.Banners.Data.Contracts
         Task<HttpStatusCode> UpsertAsync(PageBannerContentItemModel pageBannerContentItemModel);
 
         Task<PageBannerContentItemModel?> GetByIdAsync(Guid id, string? partitionKey = null);
+
+        Task<IEnumerable<PageBannerContentItemModel>?> GetAllAsync();
     }
 }

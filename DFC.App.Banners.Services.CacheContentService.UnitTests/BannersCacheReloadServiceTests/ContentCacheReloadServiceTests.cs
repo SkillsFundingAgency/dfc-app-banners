@@ -2,9 +2,12 @@
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
+
 using DFC.App.Banners.Data.Models.CmsApiModels;
 using DFC.App.Banners.Data.Models.ContentModels;
+
 using FakeItEasy;
+
 using Xunit;
 
 namespace DFC.App.Banners.Services.CacheContentService.UnitTests.BannersCacheReloadServiceTests
@@ -60,9 +63,28 @@ namespace DFC.App.Banners.Services.CacheContentService.UnitTests.BannersCacheRel
             await cacheReloadService.Reload(CancellationToken.None);
 
             //Assert
-            A.CallTo(() => FakeBannerDocumentService.PurgeAsync()).MustHaveHappenedOnceExactly();
+            A.CallTo(() => FakeBannerDocumentService.PurgeAsync()).MustNotHaveHappened();
             A.CallTo(() => FakeCmsApiService.GetItemAsync<PageBannerContentItemApiDataModel>(A<Uri>.Ignored)).MustHaveHappenedOnceExactly();
             A.CallTo(() => FakeBannerDocumentService.UpsertAsync(A<PageBannerContentItemModel>.Ignored)).MustHaveHappenedOnceExactly();
+        }
+
+        [Fact]
+        public async Task ReloadWhenContentApiReturnsNothingThenPurgeCache()
+        {
+            //Arrange
+            var dummyContentItem = new PageBannerContentItemApiDataModel();
+
+            A.CallTo(() => FakeCmsApiService.GetSummaryAsync<CmsApiSummaryItemModel>()).Returns(new List<CmsApiSummaryItemModel>() { });
+            A.CallTo(() => FakeCmsApiService.GetItemAsync<PageBannerContentItemApiDataModel>(A<string>.Ignored, A<Guid>.Ignored)).Returns(dummyContentItem);
+            var cacheReloadService = BuildBannersCacheReloadService();
+
+            //Act
+            await cacheReloadService.Reload(CancellationToken.None);
+
+            //Assert
+            A.CallTo(() => FakeBannerDocumentService.PurgeAsync()).MustHaveHappenedOnceExactly();
+            A.CallTo(() => FakeCmsApiService.GetItemAsync<PageBannerContentItemApiDataModel>(A<Uri>.Ignored)).MustNotHaveHappened();
+            A.CallTo(() => FakeBannerDocumentService.UpsertAsync(A<PageBannerContentItemModel>.Ignored)).MustNotHaveHappened();
         }
 
         [Fact]

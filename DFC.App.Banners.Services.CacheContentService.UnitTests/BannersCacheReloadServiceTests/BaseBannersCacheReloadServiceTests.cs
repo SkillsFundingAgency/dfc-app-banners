@@ -1,16 +1,19 @@
-﻿using DFC.App.Banners.Data.Contracts;
+﻿using System;
+
+using DFC.App.Banners.Data.Contracts;
 using DFC.App.Banners.Data.Models.CmsApiModels;
 using DFC.App.Banners.Data.Models.ContentModels;
 using DFC.Content.Pkg.Netcore.Data.Contracts;
+
 using FakeItEasy;
+
 using Microsoft.Extensions.Logging;
-using System;
 
 namespace DFC.App.Banners.Services.CacheContentService.UnitTests.BannersCacheReloadServiceTests
 {
     public abstract class BaseBannersCacheReloadServiceTests
     {
-        public BaseBannersCacheReloadServiceTests()
+        protected BaseBannersCacheReloadServiceTests()
         {
             Logger = A.Fake<ILogger<BannersCacheReloadService>>();
             FakeMapper = A.Fake<AutoMapper.IMapper>();

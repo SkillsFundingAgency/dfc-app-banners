@@ -1,7 +1,8 @@
-﻿using FakeItEasy;
-using System;
-using System.Net;
+﻿using System;
 using System.Threading.Tasks;
+
+using FakeItEasy;
+
 using Xunit;
 
 namespace DFC.App.Banners.Services.CacheContentService.UnitTests.BannersCacheReloadServiceTests
@@ -14,7 +15,6 @@ namespace DFC.App.Banners.Services.CacheContentService.UnitTests.BannersCacheRel
         {
             // Arrange
             const bool expectedResponse = false;
-            const HttpStatusCode expectedResult = HttpStatusCode.NoContent;
             var service = BuildBannersCacheReloadService();
 
             A.CallTo(() => FakeBannerDocumentService.DeleteAsync(A<Guid>.Ignored)).Returns(expectedResponse);
@@ -25,15 +25,14 @@ namespace DFC.App.Banners.Services.CacheContentService.UnitTests.BannersCacheRel
             // Assert
             A.CallTo(() => FakeBannerDocumentService.DeleteAsync(A<Guid>.Ignored)).MustHaveHappenedOnceExactly();
 
-            Assert.Equal(expectedResult, result);
+            Assert.Equal(expectedResponse, result);
         }
 
         [Fact]
         public async Task DeletePageBannerContentAsyncForDeleteReturnsSuccess()
         {
             // Arrange
-            const bool expectedResponse = true;
-            const HttpStatusCode expectedResult = HttpStatusCode.OK;
+            bool expectedResponse = true;
             var service = BuildBannersCacheReloadService();
 
             A.CallTo(() => FakeBannerDocumentService.DeleteAsync(A<Guid>.Ignored)).Returns(expectedResponse);
@@ -44,7 +43,7 @@ namespace DFC.App.Banners.Services.CacheContentService.UnitTests.BannersCacheRel
             // Assert
             A.CallTo(() => FakeBannerDocumentService.DeleteAsync(A<Guid>.Ignored)).MustHaveHappenedOnceExactly();
 
-            Assert.Equal(expectedResult, result);
+            Assert.Equal(expectedResponse, result);
         }
     }
 }

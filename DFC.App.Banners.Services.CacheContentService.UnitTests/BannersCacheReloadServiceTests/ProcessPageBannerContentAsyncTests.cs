@@ -1,9 +1,12 @@
-﻿using DFC.App.Banners.Data.Models.CmsApiModels;
-using DFC.App.Banners.Data.Models.ContentModels;
-using FakeItEasy;
-using System;
+﻿using System;
 using System.Net;
 using System.Threading.Tasks;
+
+using DFC.App.Banners.Data.Models.CmsApiModels;
+using DFC.App.Banners.Data.Models.ContentModels;
+
+using FakeItEasy;
+
 using Xunit;
 
 namespace DFC.App.Banners.Services.CacheContentService.UnitTests.BannersCacheReloadServiceTests
@@ -15,7 +18,7 @@ namespace DFC.App.Banners.Services.CacheContentService.UnitTests.BannersCacheRel
         public async Task ProcessPageBannerContentAsyncForCreateReturnsSuccess()
         {
             // Arrange
-            const HttpStatusCode expectedResponse = HttpStatusCode.Created;
+            var expectedResponse = true;
             var expectedValidContentItemApiDataModel = BuildValidContentItemApiDataModel();
             var expectedValidContentItemModel = BuildValidContentItemModel();
             var url = new Uri("https://somewhere.com");
@@ -42,7 +45,7 @@ namespace DFC.App.Banners.Services.CacheContentService.UnitTests.BannersCacheRel
         public async Task ProcessPageBannerContentAsyncForUpdateReturnsSuccess()
         {
             // Arrange
-            const HttpStatusCode expectedResponse = HttpStatusCode.OK;
+            var expectedResponse = true;
             var expectedValidContentItemApiDataModel = BuildValidContentItemApiDataModel();
             var expectedValidContentItemModel = BuildValidContentItemModel();
             var url = new Uri("https://somewhere.com");
@@ -69,7 +72,7 @@ namespace DFC.App.Banners.Services.CacheContentService.UnitTests.BannersCacheRel
         public async Task ProcessPageBannerContentAsyncForUpdateReturnsNoContent()
         {
             // Arrange
-            const HttpStatusCode expectedResponse = HttpStatusCode.NoContent;
+            var expectedResponse = false;
             PageBannerContentItemApiDataModel? expectedValidContentItemApiDataModel = null;
             PageBannerContentItemModel? expectedValidContentItemModel = default;
             var url = new Uri("https://somewhere.com");

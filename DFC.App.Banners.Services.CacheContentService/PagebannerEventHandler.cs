@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Net;
 using System.Threading.Tasks;
 
 using DFC.App.Banners.Data.Contracts;
@@ -24,10 +23,10 @@ namespace DFC.App.Banners.Services.CacheContentService
 
         public string ProcessType => CmsContentKeyHelper.PageBannerTag;
 
-        public Task<HttpStatusCode> DeleteContentAsync(Guid contentId) =>
+        public Task<bool> DeleteContentAsync(Guid contentId) =>
             bannersCacheReloadService.DeletePageBannerContentAsync(contentId);
 
-        public async Task<HttpStatusCode> ProcessContentAsync(Guid contentId, Uri url)
+        public async Task<bool> ProcessContentAsync(Guid contentId, Uri url)
         {
             var pageBanner = await bannerDocumentService.GetByIdAsync(contentId);
 

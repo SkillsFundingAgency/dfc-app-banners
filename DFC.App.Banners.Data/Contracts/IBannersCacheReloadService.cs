@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Net;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -11,8 +10,8 @@ namespace DFC.App.Banners.Data.Contracts
 
         Task ReloadContent(CancellationToken stoppingToken);
 
-        Task<HttpStatusCode> ProcessPageBannerContentAsync(Uri url);
+        Task<bool> ProcessPageBannerContentAsync(Uri url);
 
-        Task<HttpStatusCode> DeletePageBannerContentAsync(Guid contentId);
+        Task<bool> DeletePageBannerContentAsync(Guid contentId);
     }
 }

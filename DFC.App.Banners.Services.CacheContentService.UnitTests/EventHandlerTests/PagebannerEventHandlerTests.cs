@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Net;
 using System.Threading.Tasks;
 
 using DFC.App.Banners.Data.Contracts;
@@ -32,7 +31,7 @@ namespace DFC.App.Banners.Services.CacheContentService.UnitTests.EventHandlerTes
         public async Task PagebannerEventHandlerProcessContentAsyncForCreateReturnsSuccess()
         {
             // Arrange
-            const HttpStatusCode expectedResponse = HttpStatusCode.Created;
+            var expectedResponse = true;
             var url = new Uri("https://somewhere.com");
             var contentId = Guid.NewGuid();
             PageBannerContentItemModel? pageBannerContentItemModel = null;
@@ -54,7 +53,7 @@ namespace DFC.App.Banners.Services.CacheContentService.UnitTests.EventHandlerTes
         public async Task PagebannerEventHandlerProcessContentAsyncCallDeleteAsyncForUpdateReturnsSuccess()
         {
             // Arrange
-            const HttpStatusCode expectedResponse = HttpStatusCode.Created;
+            var expectedResponse = true;
             var url = new Uri("https://somewhere.com");
             var contentId = Guid.NewGuid();
             PageBannerContentItemModel? pageBannerContentItemModel = new PageBannerContentItemModel()
@@ -85,7 +84,7 @@ namespace DFC.App.Banners.Services.CacheContentService.UnitTests.EventHandlerTes
         public async Task PagebannerEventHandlerDeleteContentAsyncForDeleteReturnsSuccess()
         {
             // Arrange
-            const HttpStatusCode expectedResponse = HttpStatusCode.Created;
+            var expectedResponse = true;
             var contentId = Guid.NewGuid();
 
             var pagebannerEventHandler = new PageBannerEventHandler(fakeBannersCacheReloadService, fakeBannerDocumentService, logger);

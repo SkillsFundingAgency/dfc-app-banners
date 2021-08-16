@@ -5,11 +5,15 @@ using System.Linq;
 using System.Net;
 using System.Net.Mime;
 using System.Threading.Tasks;
+
 using DFC.App.Banners.Data.Enums;
 using DFC.App.Banners.Models;
+
 using FakeItEasy;
+
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Azure.EventGrid.Models;
+
 using Xunit;
 
 namespace DFC.App.Banners.UnitTests.ControllerTests.WebhookControllerTests
@@ -41,12 +45,11 @@ namespace DFC.App.Banners.UnitTests.ControllerTests.WebhookControllerTests
         public async Task WebhooksControllerPublishCreatePostReturnsOkForCreate(string mediaTypeName, string eventType)
         {
             // Arrange
-            const HttpStatusCode expectedResponse = HttpStatusCode.OK;
             var eventGridEvents = BuildValidEventGridEvent(eventType, new EventGridEventData { ItemId = ItemIdForCreate.ToString(), Api = "https://somewhere.com", });
             using var controller = BuildWebhooksController(mediaTypeName);
             controller.HttpContext.Request.Body = BuildStreamFromModel(eventGridEvents);
 
-            A.CallTo(() => FakeWebhooksService.ProcessMessageAsync(A<WebhookCacheOperation>.Ignored, A<Guid>.Ignored, A<Guid>.Ignored, A<string>.Ignored, A<string>.Ignored)).Returns(HttpStatusCode.Created);
+            A.CallTo(() => FakeWebhooksService.ProcessMessageAsync(A<WebhookCacheOperation>.Ignored, A<Guid>.Ignored, A<Guid>.Ignored, A<string>.Ignored, A<string>.Ignored)).Returns(true);
 
             // Act
             var result = await controller.ReceiveEvents();
@@ -55,20 +58,19 @@ namespace DFC.App.Banners.UnitTests.ControllerTests.WebhookControllerTests
             A.CallTo(() => FakeWebhooksService.ProcessMessageAsync(A<WebhookCacheOperation>.Ignored, A<Guid>.Ignored, A<Guid>.Ignored, A<string>.Ignored, A<string>.Ignored)).MustHaveHappenedOnceExactly();
             var okResult = Assert.IsType<OkResult>(result);
 
-            Assert.Equal((int)expectedResponse, okResult.StatusCode);
+            Assert.Equal((int)HttpStatusCode.OK, okResult.StatusCode);
         }
 
         [Theory]
         [MemberData(nameof(PublishedEvents))]
-        public async Task WebhooksControllerPublishUpdatePostReturnsOk(string mediaTypeName, string eventType)
+        public async Task WebhooksControllerPublishCreateOrUpdatePostReturnsOk(string mediaTypeName, string eventType)
         {
             // Arrange
-            const HttpStatusCode expectedResponse = HttpStatusCode.OK;
             var eventGridEvents = BuildValidEventGridEvent(eventType, new EventGridEventData { ItemId = ItemIdForUpdate.ToString(), Api = "https://somewhere.com", });
             using var controller = BuildWebhooksController(mediaTypeName);
             controller.HttpContext.Request.Body = BuildStreamFromModel(eventGridEvents);
 
-            A.CallTo(() => FakeWebhooksService.ProcessMessageAsync(A<WebhookCacheOperation>.Ignored, A<Guid>.Ignored, A<Guid>.Ignored, A<string>.Ignored, A<string>.Ignored)).Returns(expectedResponse);
+            A.CallTo(() => FakeWebhooksService.ProcessMessageAsync(A<WebhookCacheOperation>.Ignored, A<Guid>.Ignored, A<Guid>.Ignored, A<string>.Ignored, A<string>.Ignored)).Returns(true);
 
             // Act
             var result = await controller.ReceiveEvents();
@@ -77,7 +79,7 @@ namespace DFC.App.Banners.UnitTests.ControllerTests.WebhookControllerTests
             A.CallTo(() => FakeWebhooksService.ProcessMessageAsync(A<WebhookCacheOperation>.Ignored, A<Guid>.Ignored, A<Guid>.Ignored, A<string>.Ignored, A<string>.Ignored)).MustHaveHappenedOnceExactly();
             var okResult = Assert.IsType<OkResult>(result);
 
-            Assert.Equal((int)expectedResponse, okResult.StatusCode);
+            Assert.Equal((int)HttpStatusCode.OK, okResult.StatusCode);
         }
 
         [Theory]
@@ -85,12 +87,11 @@ namespace DFC.App.Banners.UnitTests.ControllerTests.WebhookControllerTests
         public async Task WebhooksControllerDeletePostReturnsSuccess(string mediaTypeName, string eventType)
         {
             // Arrange
-            const HttpStatusCode expectedResponse = HttpStatusCode.OK;
             var eventGridEvents = BuildValidEventGridEvent(eventType, new EventGridEventData { ItemId = ItemIdForDelete.ToString(), Api = "https://somewhere.com", });
             using var controller = BuildWebhooksController(mediaTypeName);
             controller.HttpContext.Request.Body = BuildStreamFromModel(eventGridEvents);
 
-            A.CallTo(() => FakeWebhooksService.ProcessMessageAsync(A<WebhookCacheOperation>.Ignored, A<Guid>.Ignored, A<Guid>.Ignored, A<string>.Ignored, A<string>.Ignored)).Returns(expectedResponse);
+            A.CallTo(() => FakeWebhooksService.ProcessMessageAsync(A<WebhookCacheOperation>.Ignored, A<Guid>.Ignored, A<Guid>.Ignored, A<string>.Ignored, A<string>.Ignored)).Returns(true);
 
             // Act
             var result = await controller.ReceiveEvents();
@@ -99,29 +100,7 @@ namespace DFC.App.Banners.UnitTests.ControllerTests.WebhookControllerTests
             A.CallTo(() => FakeWebhooksService.ProcessMessageAsync(A<WebhookCacheOperation>.Ignored, A<Guid>.Ignored, A<Guid>.Ignored, A<string>.Ignored, A<string>.Ignored)).MustHaveHappenedOnceExactly();
             var okResult = Assert.IsType<OkResult>(result);
 
-            Assert.Equal((int)expectedResponse, okResult.StatusCode);
-        }
-
-        [Theory]
-        [MemberData(nameof(PublishedEvents))]
-        public async Task WebhooksControllerPublishCreatePostReturnsOkForAlreadyReported(string mediaTypeName, string eventType)
-        {
-            // Arrange
-            const HttpStatusCode expectedResponse = HttpStatusCode.OK;
-            var eventGridEvents = BuildValidEventGridEvent(eventType, new EventGridEventData { ItemId = ItemIdForCreate.ToString(), Api = "https://somewhere.com", });
-            using var controller = BuildWebhooksController(mediaTypeName);
-            controller.HttpContext.Request.Body = BuildStreamFromModel(eventGridEvents);
-
-            A.CallTo(() => FakeWebhooksService.ProcessMessageAsync(A<WebhookCacheOperation>.Ignored, A<Guid>.Ignored, A<Guid>.Ignored, A<string>.Ignored, A<string>.Ignored)).Returns(HttpStatusCode.AlreadyReported);
-
-            // Act
-            var result = await controller.ReceiveEvents();
-
-            // Assert
-            A.CallTo(() => FakeWebhooksService.ProcessMessageAsync(A<WebhookCacheOperation>.Ignored, A<Guid>.Ignored, A<Guid>.Ignored, A<string>.Ignored, A<string>.Ignored)).MustHaveHappenedOnceExactly();
-            var okResult = Assert.IsType<OkResult>(result);
-
-            Assert.Equal((int)expectedResponse, okResult.StatusCode);
+            Assert.Equal((int)HttpStatusCode.OK, okResult.StatusCode);
         }
 
         [Theory]
