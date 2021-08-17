@@ -69,12 +69,11 @@ namespace DFC.App.Banners
 
             services.AddApplicationInsightsTelemetry();
             services.AddHttpContextAccessor();
-            services.AddTransient<ICacheReloadService, BannersCacheReloadService>();
+            services.AddTransient<IBannersCacheReloadService, BannersCacheReloadService>();
             services.AddTransient<IWebhooksService, WebhooksService>();
             services.AddTransient<IBannerDocumentService, BannerDocumentService>();
             services.AddTransient<IEventHandler, BannerEventHandler>();
-            services.AddTransient<IEventHandler, PagebannerEventHandler>();
-            services.AddTransient<IWebhookContentProcessor, WebhooksContentProcessor>();
+            services.AddTransient<IEventHandler, PageBannerEventHandler>();
 
             services.AddAutoMapper(typeof(Startup).Assembly);
             CmsApiClientOptions cmsApiClientOptions = configuration.GetSection(nameof(CmsApiClientOptions)).Get<CmsApiClientOptions>();
