@@ -1,14 +1,19 @@
-﻿using DFC.App.Banners.Data.Models.ContentModels;
-using FakeItEasy;
-using Microsoft.Azure.Documents;
-using Microsoft.Azure.Documents.Client;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Net;
 using System.Threading;
 using System.Threading.Tasks;
-using Xunit;
+
+using DFC.App.Banners.Data.Models.ContentModels;
+
+using FakeItEasy;
+
 using FluentAssertions;
+
+using Microsoft.Azure.Documents;
+using Microsoft.Azure.Documents.Client;
+
+using Xunit;
 
 namespace DFC.App.Banners.Services.CacheContentService.UnitTests.DocumentServiceTests
 {
@@ -30,6 +35,22 @@ namespace DFC.App.Banners.Services.CacheContentService.UnitTests.DocumentService
             //Assert
             A.CallTo(() => FakeDocumentService.DeleteAsync(A<Guid>.Ignored)).MustHaveHappenedOnceExactly();
             Assert.Equal(result, documentServiceResponse);
+        }
+
+        [Fact]
+        public async Task BannerDocumentServiceGetAllAsyncReturnsPageBannerContentItemModels()
+        {
+            // Arrage
+            var expectedPageBannerContentItemModel = BuildValidPageBannerContentItemModel();
+            A.CallTo(() => FakeDocumentService.GetAllAsync(A<string>.Ignored)).Returns(new List<PageBannerContentItemModel> { expectedPageBannerContentItemModel });
+            var service = BuildBannerDocumentService();
+
+            // Act
+            var result = await service.GetAllAsync();
+
+            //Assert
+            A.CallTo(() => FakeDocumentService.GetAllAsync(A<string>.Ignored)).MustHaveHappenedOnceExactly();
+            result.Should().HaveCount(1);
         }
 
         [Fact]
@@ -99,8 +120,6 @@ namespace DFC.App.Banners.Services.CacheContentService.UnitTests.DocumentService
         public async Task BannerDocumentServiceGetPagebannerUrlsAsyncReturnsEmptyList()
         {
             // Arrage
-            var expectedResult = new List<string>();
-
             var response = new FeedResponse<PageBannerContentItemModel>(new List<PageBannerContentItemModel>());
 
             A.CallTo(() => FakeDocumentQuery.HasMoreResults).Returns(true).Once().Then.Returns(false);

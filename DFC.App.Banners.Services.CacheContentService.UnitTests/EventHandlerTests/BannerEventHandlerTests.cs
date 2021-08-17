@@ -140,6 +140,49 @@ namespace DFC.App.Banners.Services.CacheContentService.UnitTests.EventHandlerTes
         }
 
         [Fact]
+        public async Task BannerEventHandlerProcessContentAsyncForDeleteWhenBannerCacehReloadServiceThrowsReturnsFalse()
+        {
+            // Arrange
+            var expectedResponse = false;
+            var pagebannerUrls = new List<Uri> { new Uri("https://pagebanner1.com"), new Uri("https://pagebanner2.com") };
+
+            var contentId = Guid.NewGuid();
+            var bannerEventHandler = new BannerEventHandler(fakeBannersCacheReloadService, fakeBannerDocumentService, logger);
+
+            A.CallTo(() => fakeBannerDocumentService.GetPageBannerUrlsAsync(A<string>.Ignored, A<string?>.Ignored)).Returns(pagebannerUrls);
+
+            A.CallTo(() => fakeBannersCacheReloadService.ProcessPageBannerContentAsync(A<Uri>.Ignored)).Throws(() => new AggregateException("Something went wrong."));
+
+            // Act
+            var result = await bannerEventHandler.DeleteContentAsync(contentId);
+
+            // Assert
+            A.CallTo(() => fakeBannersCacheReloadService.ProcessPageBannerContentAsync(A<Uri>.Ignored)).MustHaveHappenedOnceExactly();
+
+            result.Should().Be(expectedResponse);
+        }
+
+        [Fact]
+        public async Task BannerEventHandlerProcessContentAsyncForDeleteWhenNoPageBannerUrlsFoundReturnsTrue()
+        {
+            // Arrange
+            var expectedResponse = true;
+            var contentId = Guid.NewGuid();
+            var bannerEventHandler = new BannerEventHandler(fakeBannersCacheReloadService, fakeBannerDocumentService, logger);
+
+            A.CallTo(() => fakeBannerDocumentService.GetPageBannerUrlsAsync(A<string>.Ignored, A<string?>.Ignored)).Returns(new List<Uri>());
+
+            A.CallTo(() => fakeBannersCacheReloadService.ProcessPageBannerContentAsync(A<Uri>.Ignored)).Returns(expectedResponse);
+
+            // Act
+            var result = await bannerEventHandler.DeleteContentAsync(contentId);
+
+            // Assert
+            A.CallTo(() => fakeBannersCacheReloadService.ProcessPageBannerContentAsync(A<Uri>.Ignored)).MustNotHaveHappened();
+            result.Should().Be(expectedResponse);
+        }
+
+        [Fact]
         public async Task BannerEventHandlerProcessContentAsyncForDeleteReturnsFalse()
         {
             // Arrange
