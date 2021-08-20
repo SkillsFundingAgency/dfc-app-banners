@@ -1,10 +1,12 @@
 ﻿using System;
 using System.IO;
-using System.Net;
 using System.Threading.Tasks;
+
 using DFC.App.Banners.Data.Enums;
 using DFC.App.Banners.Data.Helpers;
+
 using FakeItEasy;
+
 using Xunit;
 
 namespace DFC.App.Banners.Services.CacheContentService.UnitTests.WebhooksServiceTests
@@ -18,7 +20,7 @@ namespace DFC.App.Banners.Services.CacheContentService.UnitTests.WebhooksService
         public async Task WebhooksServiceProcessMessageAsyncNoneOptionReturnsSuccess(string contentType)
         {
             // Arrange
-            const HttpStatusCode expectedResponse = HttpStatusCode.BadRequest;
+            var expectedResponse = false;
             var url = "https://somewhere.com";
             var eventHandler = AddEventHandler(contentType);
             var service = BuildWebhooksService();
@@ -50,10 +52,10 @@ namespace DFC.App.Banners.Services.CacheContentService.UnitTests.WebhooksService
         public async Task WebhooksServiceProcessMessageAsyncContentCreateReturnsSuccess(string contentType)
         {
             // Arrange
-            const HttpStatusCode expectedResponse = HttpStatusCode.Created;
+            var expectedResponse = true;
             var url = "https://somewhere.com";
             var eventHandler = AddEventHandler(contentType);
-            A.CallTo(() => eventHandler!.ProcessContentAsync(A<Guid>.Ignored, A<Uri>.Ignored)).Returns(HttpStatusCode.Created);
+            A.CallTo(() => eventHandler!.ProcessContentAsync(A<Guid>.Ignored, A<Uri>.Ignored)).Returns(expectedResponse);
             var service = BuildWebhooksService();
 
             // Act
@@ -73,7 +75,7 @@ namespace DFC.App.Banners.Services.CacheContentService.UnitTests.WebhooksService
         {
             // Arrange
             var url = "https://somewhere.com";
-            var eventHandler = AddEventHandler(contentType);
+            AddEventHandler(contentType);
             var service = BuildWebhooksService();
 
             // Act
@@ -86,10 +88,10 @@ namespace DFC.App.Banners.Services.CacheContentService.UnitTests.WebhooksService
         public async Task WebhooksServiceProcessMessageAsyncContentUpdateReturnsSuccess(string contentType)
         {
             // Arrange
-            const HttpStatusCode expectedResponse = HttpStatusCode.OK;
+            var expectedResponse = true;
             var url = "https://somewhere.com";
             var eventHandler = AddEventHandler(contentType);
-            A.CallTo(() => eventHandler!.ProcessContentAsync(A<Guid>.Ignored, A<Uri>.Ignored)).Returns(HttpStatusCode.OK);
+            A.CallTo(() => eventHandler!.ProcessContentAsync(A<Guid>.Ignored, A<Uri>.Ignored)).Returns(expectedResponse);
             var service = BuildWebhooksService();
 
             // Act
@@ -109,7 +111,7 @@ namespace DFC.App.Banners.Services.CacheContentService.UnitTests.WebhooksService
             // Arrange
             var url = "/pagebanner/290762a7-32e4-46c6-a2bb-6efa7bb6d4c7";
             var eventHandler = AddEventHandler(contentType);
-            A.CallTo(() => eventHandler!.ProcessContentAsync(A<Guid>.Ignored, A<Uri>.Ignored)).Returns(HttpStatusCode.OK);
+            A.CallTo(() => eventHandler!.ProcessContentAsync(A<Guid>.Ignored, A<Uri>.Ignored)).Returns(true);
             var service = BuildWebhooksService();
 
             // Act
@@ -122,10 +124,10 @@ namespace DFC.App.Banners.Services.CacheContentService.UnitTests.WebhooksService
         public async Task WebhooksServiceProcessMessageAsyncContentDeleteReturnsSuccess(string contentType)
         {
             // Arrange
-            const HttpStatusCode expectedResponse = HttpStatusCode.OK;
+            var expectedResponse = true;
             var url = "https://somewhere.com";
             var eventHandler = AddEventHandler(contentType);
-            A.CallTo(() => eventHandler!.DeleteContentAsync(A<Guid>.Ignored)).Returns(HttpStatusCode.OK);
+            A.CallTo(() => eventHandler!.DeleteContentAsync(A<Guid>.Ignored)).Returns(expectedResponse);
             var service = BuildWebhooksService();
 
             // Act

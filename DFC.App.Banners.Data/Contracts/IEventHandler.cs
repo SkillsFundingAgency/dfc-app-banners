@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Net;
 using System.Threading.Tasks;
 
 namespace DFC.App.Banners.Data.Contracts
@@ -8,8 +7,8 @@ namespace DFC.App.Banners.Data.Contracts
     {
         public string ProcessType { get; }
 
-        Task<HttpStatusCode> ProcessContentAsync(Guid contentId, Uri url);
+        Task<bool> ProcessContentAsync(Guid contentId, Uri url);
 
-        Task<HttpStatusCode> DeleteContentAsync(Guid contentId);
+        Task<bool> DeleteContentAsync(Guid contentId);
     }
 }

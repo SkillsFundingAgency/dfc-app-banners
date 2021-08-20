@@ -40,13 +40,13 @@ variables:
 - name: aspTier
   value: Standard
 - name: aspInstances
-  value: 2
+  value: 4
 - name: aspSize
   value: 1
 - name: clientAffinity
   value: false
 - name: appDatabaseThroughput
-  value: 2500
+  value: 5000
 - name: ExceptionCountThreshold
   value: 10
 - name: MemoryPercentageThreshold
