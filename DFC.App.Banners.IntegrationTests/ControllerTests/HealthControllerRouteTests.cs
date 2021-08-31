@@ -1,9 +1,9 @@
-﻿using System;
+﻿using FakeItEasy;
+using System;
 using System.Collections.Generic;
 using System.Net.Mime;
 using System.Text;
 using System.Threading.Tasks;
-
 using Xunit;
 
 namespace DFC.App.Banners.IntegrationTests.ControllerTests
@@ -20,6 +20,7 @@ namespace DFC.App.Banners.IntegrationTests.ControllerTests
 
         public static IEnumerable<object[]> HealthContentRouteData => new List<object[]>
         {
+            new object[] { "/banners/health" },
             new object[] { "/health" },
         };
 
@@ -34,12 +35,13 @@ namespace DFC.App.Banners.IntegrationTests.ControllerTests
         {
             // Arrange
             var uri = new Uri(path, UriKind.Relative);
-            var client = this.factory.CreateClient();
+            var client = this.factory.CreateClientWithWebHostBuilder();
             client.DefaultRequestHeaders.Accept.Clear();
             client.DefaultRequestHeaders.Accept.Add(new System.Net.Http.Headers.MediaTypeWithQualityHeaderValue(MediaTypeNames.Text.Html));
+            A.CallTo(() => this.factory.MockCosmosRepo.PingAsync()).Returns(true);
 
             // Act
-            var response = await client.GetAsync(uri);
+            var response = await client.GetAsync(uri).ConfigureAwait(false);
 
             // Assert
             response.EnsureSuccessStatusCode();
@@ -52,12 +54,13 @@ namespace DFC.App.Banners.IntegrationTests.ControllerTests
         {
             // Arrange
             var uri = new Uri(path, UriKind.Relative);
-            var client = this.factory.CreateClient();
+            var client = this.factory.CreateClientWithWebHostBuilder();
             client.DefaultRequestHeaders.Accept.Clear();
             client.DefaultRequestHeaders.Accept.Add(new System.Net.Http.Headers.MediaTypeWithQualityHeaderValue(MediaTypeNames.Application.Json));
+            A.CallTo(() => this.factory.MockCosmosRepo.PingAsync()).Returns(true);
 
             // Act
-            var response = await client.GetAsync(uri);
+            var response = await client.GetAsync(uri).ConfigureAwait(false);
 
             // Assert
             response.EnsureSuccessStatusCode();
@@ -70,11 +73,11 @@ namespace DFC.App.Banners.IntegrationTests.ControllerTests
         {
             // Arrange
             var uri = new Uri(path, UriKind.Relative);
-            var client = this.factory.CreateClient();
+            var client = this.factory.CreateClientWithWebHostBuilder();
             client.DefaultRequestHeaders.Accept.Clear();
 
             // Act
-            var response = await client.GetAsync(uri);
+            var response = await client.GetAsync(uri).ConfigureAwait(false);
 
             // Assert
             response.EnsureSuccessStatusCode();
