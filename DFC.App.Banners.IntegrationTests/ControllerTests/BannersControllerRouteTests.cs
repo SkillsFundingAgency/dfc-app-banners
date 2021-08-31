@@ -37,7 +37,7 @@ namespace DFC.App.Banners.IntegrationTests.ControllerTests
             client.DefaultRequestHeaders.Accept.Add(new System.Net.Http.Headers.MediaTypeWithQualityHeaderValue(MediaTypeNames.Text.Html));
 
             // Act
-            var response = await client.GetAsync(uri).ConfigureAwait(false);
+            var response = await client.GetAsync(uri);
 
             // Assert
             response.EnsureSuccessStatusCode();
@@ -55,7 +55,7 @@ namespace DFC.App.Banners.IntegrationTests.ControllerTests
             client.DefaultRequestHeaders.Accept.Add(new System.Net.Http.Headers.MediaTypeWithQualityHeaderValue(MediaTypeNames.Text.Html));
 
             // Act
-            var response = await client.GetAsync(uri).ConfigureAwait(false);
+            var response = await client.GetAsync(uri);
 
             // Assert
             response.EnsureSuccessStatusCode();
@@ -73,7 +73,7 @@ namespace DFC.App.Banners.IntegrationTests.ControllerTests
             client.DefaultRequestHeaders.Accept.Add(new System.Net.Http.Headers.MediaTypeWithQualityHeaderValue(MediaTypeNames.Text.Html));
 
             // Act
-            var response = await client.GetAsync(uri).ConfigureAwait(false);
+            var response = await client.GetAsync(uri);
 
             // Assert
             response.EnsureSuccessStatusCode();
