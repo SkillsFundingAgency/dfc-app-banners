@@ -31,7 +31,7 @@ namespace DFC.App.Banners.IntegrationTests.ControllerTests
             var eventId = Guid.NewGuid().ToString();
             var eventGridEvents = BuildValidEventGridEvent(eventId, EventTypes.EventGridSubscriptionValidationEvent, new SubscriptionValidationEventData(expectedValidationCode, "https://somewhere.com"));
             var uri = new Uri(WebhookApiUrl, UriKind.Relative);
-            var client = this.factory.CreateClient();
+            var client = this.factory.CreateClientWithWebHostBuilder();
             client.DefaultRequestHeaders.Accept.Clear();
             client.DefaultRequestHeaders.Accept.Add(new System.Net.Http.Headers.MediaTypeWithQualityHeaderValue(MediaTypeNames.Application.Json));
 
@@ -64,7 +64,7 @@ namespace DFC.App.Banners.IntegrationTests.ControllerTests
             var eventGridEvents = BuildValidEventGridEvent(eventId, eventTtype, eventgridEventData);
 
             var uri = new Uri(WebhookApiUrl, UriKind.Relative);
-            var client = this.factory.CreateClient();
+            var client = this.factory.CreateClientWithWebHostBuilder();
             client.DefaultRequestHeaders.Accept.Clear();
             client.DefaultRequestHeaders.Accept.Add(new System.Net.Http.Headers.MediaTypeWithQualityHeaderValue(MediaTypeNames.Application.Json));
 
@@ -87,7 +87,7 @@ namespace DFC.App.Banners.IntegrationTests.ControllerTests
             var eventGridEvents = BuildValidEventGridEvent(null, eventTtype, eventgridEventData);
 
             var uri = new Uri(WebhookApiUrl, UriKind.Relative);
-            var client = this.factory.CreateClient();
+            var client = this.factory.CreateClientWithWebHostBuilder();
             client.DefaultRequestHeaders.Accept.Clear();
             client.DefaultRequestHeaders.Accept.Add(new System.Net.Http.Headers.MediaTypeWithQualityHeaderValue(MediaTypeNames.Application.Json));
 
@@ -108,7 +108,7 @@ namespace DFC.App.Banners.IntegrationTests.ControllerTests
             var eventGridEvents = BuildValidEventGridEvent(null, eventTtype, eventgridEventData);
 
             var uri = new Uri(WebhookApiUrl, UriKind.Relative);
-            var client = this.factory.CreateClient();
+            var client = this.factory.CreateClientWithWebHostBuilder();
             client.DefaultRequestHeaders.Accept.Clear();
             client.DefaultRequestHeaders.Accept.Add(new System.Net.Http.Headers.MediaTypeWithQualityHeaderValue(MediaTypeNames.Application.Json));
 
