@@ -199,7 +199,7 @@ stages:
       ApimImportScript: "$(Pipeline.Workspace)/${{ variables.SolutionBaseName }}.Scripts/Import-ApimOpenApiDefinitionFromFile.ps1"
       SpecificationPath: "$(Pipeline.Workspace)/${{ variables.SolutionBaseName }}.OpenApiDocs"
       IntegrationTestEnabled: true
-      IntegrationTestPackage: "$(Pipeline.Workspace)/${{ variables.SolutionBaseName }}.IntegrationTests.DeploymentPackages/DFC.App.Pages.zip"
+      IntegrationTestPackage: "$(Pipeline.Workspace)/${{ variables.SolutionBaseName }}.IntegrationTests.DeploymentPackages/DFC.App.Banners.zip"
       IntegrationTestProjectFolder: "$(Pipeline.Workspace)/${{ variables.SolutionBaseName }}.IntegrationTests"
 
 # - stage: DeployToDevDraftAppBanners
