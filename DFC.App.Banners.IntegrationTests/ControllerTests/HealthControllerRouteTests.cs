@@ -41,7 +41,7 @@ namespace DFC.App.Banners.IntegrationTests.ControllerTests
             A.CallTo(() => this.factory.MockCosmosRepo.PingAsync()).Returns(true);
 
             // Act
-            var response = await client.GetAsync(uri).ConfigureAwait(false);
+            var response = await client.GetAsync(uri);
 
             // Assert
             response.EnsureSuccessStatusCode();
@@ -60,7 +60,7 @@ namespace DFC.App.Banners.IntegrationTests.ControllerTests
             A.CallTo(() => this.factory.MockCosmosRepo.PingAsync()).Returns(true);
 
             // Act
-            var response = await client.GetAsync(uri).ConfigureAwait(false);
+            var response = await client.GetAsync(uri);
 
             // Assert
             response.EnsureSuccessStatusCode();
@@ -77,7 +77,7 @@ namespace DFC.App.Banners.IntegrationTests.ControllerTests
             client.DefaultRequestHeaders.Accept.Clear();
 
             // Act
-            var response = await client.GetAsync(uri).ConfigureAwait(false);
+            var response = await client.GetAsync(uri);
 
             // Assert
             response.EnsureSuccessStatusCode();
