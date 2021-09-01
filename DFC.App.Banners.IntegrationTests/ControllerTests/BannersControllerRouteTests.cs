@@ -25,6 +25,10 @@ namespace DFC.App.Banners.IntegrationTests.ControllerTests
             new object[] { "/banners/document/reers-advice/career-choices-at-16-test" },
             new object[] { "/banners/document/action-plans-test" },
             new object[] { "/banners/document/contact-us-test" },
+            new object[] { "/banners/body/careers-advice-test" },
+            new object[] { "/banners/body/reers-advice/career-choices-at-16-test" },
+            new object[] { "/banners/body/action-plans-test" },
+            new object[] { "/banners/body/contact-us-test" },
         };
 
         [Fact]

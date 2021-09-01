@@ -36,7 +36,7 @@ namespace DFC.App.Banners.IntegrationTests.ControllerTests
             client.DefaultRequestHeaders.Accept.Add(new System.Net.Http.Headers.MediaTypeWithQualityHeaderValue(MediaTypeNames.Application.Json));
 
             // Act
-            var response = await client.PostAsJsonAsync(uri, eventGridEvents).ConfigureAwait(false);
+            var response = await client.PostAsJsonAsync(uri, eventGridEvents);
 
             // Assert
             response.EnsureSuccessStatusCode();
@@ -69,7 +69,7 @@ namespace DFC.App.Banners.IntegrationTests.ControllerTests
             client.DefaultRequestHeaders.Accept.Add(new System.Net.Http.Headers.MediaTypeWithQualityHeaderValue(MediaTypeNames.Application.Json));
 
             // Act
-            var response = await client.PostAsJsonAsync(uri, eventGridEvents).ConfigureAwait(false);
+            var response = await client.PostAsJsonAsync(uri, eventGridEvents);
 
             // Assert
             response.EnsureSuccessStatusCode();
@@ -92,7 +92,7 @@ namespace DFC.App.Banners.IntegrationTests.ControllerTests
             client.DefaultRequestHeaders.Accept.Add(new System.Net.Http.Headers.MediaTypeWithQualityHeaderValue(MediaTypeNames.Application.Json));
 
             // Act
-            var httpResponse = await client.PostAsJsonAsync(uri, eventGridEvents).ConfigureAwait(false);
+            var httpResponse = await client.PostAsJsonAsync(uri, eventGridEvents);
 
             Assert.Equal(httpResponse.StatusCode.ToString(), System.Net.HttpStatusCode.InternalServerError.ToString());
         }
@@ -113,7 +113,7 @@ namespace DFC.App.Banners.IntegrationTests.ControllerTests
             client.DefaultRequestHeaders.Accept.Add(new System.Net.Http.Headers.MediaTypeWithQualityHeaderValue(MediaTypeNames.Application.Json));
 
             // Act
-            var httpResponse = await client.PostAsJsonAsync(uri, eventGridEvents).ConfigureAwait(false);
+            var httpResponse = await client.PostAsJsonAsync(uri, eventGridEvents);
 
             Assert.Equal(httpResponse.StatusCode.ToString(), System.Net.HttpStatusCode.InternalServerError.ToString());
         }
