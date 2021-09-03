@@ -1,12 +1,10 @@
-﻿using System;
+﻿using FluentAssertions;
+using System;
 using System.Collections.Generic;
 using System.Net;
 using System.Net.Mime;
 using System.Text;
 using System.Threading.Tasks;
-
-using FluentAssertions;
-
 using Xunit;
 
 namespace DFC.App.Banners.IntegrationTests.ControllerTests
@@ -38,7 +36,7 @@ namespace DFC.App.Banners.IntegrationTests.ControllerTests
         {
             // Arrange
             var uri = new Uri("/", UriKind.Relative);
-            var client = this.factory.CreateClient();
+            var client = this.factory.CreateClientWithWebHostBuilder();
             client.DefaultRequestHeaders.Accept.Clear();
             client.DefaultRequestHeaders.Accept.Add(new System.Net.Http.Headers.MediaTypeWithQualityHeaderValue(MediaTypeNames.Text.Html));
 
@@ -56,7 +54,25 @@ namespace DFC.App.Banners.IntegrationTests.ControllerTests
         {
             // Arrange
             var uri = new Uri(path, UriKind.Relative);
-            var client = this.factory.CreateClient();
+            var client = this.factory.CreateClientWithWebHostBuilder();
+            client.DefaultRequestHeaders.Accept.Clear();
+            client.DefaultRequestHeaders.Accept.Add(new System.Net.Http.Headers.MediaTypeWithQualityHeaderValue(MediaTypeNames.Text.Html));
+
+            // Act
+            var response = await client.GetAsync(uri);
+
+            // Assert
+            response.EnsureSuccessStatusCode();
+            response.StatusCode.Should().Be(HttpStatusCode.NoContent);
+        }
+
+        [Theory]
+        [MemberData(nameof(BannersNoContentRouteData))]
+        public async Task GetBannersBodyReturnsSuccessAndNoContent(string path)
+        {
+            // Arrange
+            var uri = new Uri(path, UriKind.Relative);
+            var client = this.factory.CreateClientWithWebHostBuilder();
             client.DefaultRequestHeaders.Accept.Clear();
             client.DefaultRequestHeaders.Accept.Add(new System.Net.Http.Headers.MediaTypeWithQualityHeaderValue(MediaTypeNames.Text.Html));
 

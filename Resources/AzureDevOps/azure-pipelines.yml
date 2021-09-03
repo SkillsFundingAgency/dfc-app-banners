@@ -74,6 +74,16 @@ stages:
         PublishWebApp: true
         TestSuffix: UnitTests
 
+  - job: Buildintegrationtests
+    displayName: Build integration tests
+    steps:
+    - template: AzureDevOpsTemplates\Build\StepTemplates\dfc-dotnetcore-build-sonar.yml@dfc-devops
+      parameters:
+        SolutionBaseName: $(SolutionBaseName).IntegrationTests
+        BuildPlatform: $(BuildPlatform)
+        BuildConfiguration: $(BuildConfiguration)
+        DotNetCoreVersion: '3.1.100'
+
 - stage: DeployToLabAppBanners
   condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/dev'))
   displayName: Deploy to LAB_AppBanners
@@ -111,6 +121,9 @@ stages:
       APIMPolicyPath: "$(Pipeline.Workspace)/${{ variables.SolutionBaseName }}.ApimPolicies/"
       ApimImportScript: "$(Pipeline.Workspace)/${{ variables.SolutionBaseName }}.Scripts/Import-ApimOpenApiDefinitionFromFile.ps1"
       SpecificationPath: "$(Pipeline.Workspace)/${{ variables.SolutionBaseName }}.OpenApiDocs"
+      IntegrationTestEnabled: false
+      IntegrationTestPackage: "$(Pipeline.Workspace)/${{ variables.SolutionBaseName }}.IntegrationTests.DeploymentPackages/DFC.App.Banners.zip"
+      IntegrationTestProjectFolder: "$(Pipeline.Workspace)/${{ variables.SolutionBaseName }}.IntegrationTests"
 
 - stage: DeployToLabDraftAppBanners
   condition: succeeded()
@@ -150,6 +163,9 @@ stages:
       APIMPolicyPath: "$(Pipeline.Workspace)/${{ variables.SolutionBaseName }}.ApimPolicies/"
       ApimImportScript: "$(Pipeline.Workspace)/${{ variables.SolutionBaseName }}.Scripts/Import-ApimOpenApiDefinitionFromFile.ps1"
       SpecificationPath: "$(Pipeline.Workspace)/${{ variables.SolutionBaseName }}.OpenApiDocs"
+      IntegrationTestEnabled: false
+      IntegrationTestPackage: "$(Pipeline.Workspace)/${{ variables.SolutionBaseName }}.IntegrationTests.DeploymentPackages/DFC.App.Banners.zip"
+      IntegrationTestProjectFolder: "$(Pipeline.Workspace)/${{ variables.SolutionBaseName }}.IntegrationTests"
 
 - stage: DeployToDevAppBanners
   condition:  and(eq(dependencies.Build.result,'Succeeded'), or(eq(variables['Build.SourceBranch'], 'refs/heads/dev'), eq(variables['Build.SourceBranch'], 'refs/heads/master')))
@@ -188,6 +204,9 @@ stages:
       APIMPolicyPath: "$(Pipeline.Workspace)/${{ variables.SolutionBaseName }}.ApimPolicies/"
       ApimImportScript: "$(Pipeline.Workspace)/${{ variables.SolutionBaseName }}.Scripts/Import-ApimOpenApiDefinitionFromFile.ps1"
       SpecificationPath: "$(Pipeline.Workspace)/${{ variables.SolutionBaseName }}.OpenApiDocs"
+      IntegrationTestEnabled: true
+      IntegrationTestPackage: "$(Pipeline.Workspace)/${{ variables.SolutionBaseName }}.IntegrationTests.DeploymentPackages/DFC.App.Banners.zip"
+      IntegrationTestProjectFolder: "$(Pipeline.Workspace)/${{ variables.SolutionBaseName }}.IntegrationTests"
 
 - stage: DeployToDevDraftAppBanners
   condition:  and(eq(dependencies.DeployToDevAppBanners.result,'Succeeded'), or(eq(variables['Build.SourceBranch'], 'refs/heads/dev'), eq(variables['Build.SourceBranch'], 'refs/heads/master')))
@@ -227,6 +246,9 @@ stages:
       APIMPolicyPath: "$(Pipeline.Workspace)/${{ variables.SolutionBaseName }}.ApimPolicies/"
       ApimImportScript: "$(Pipeline.Workspace)/${{ variables.SolutionBaseName }}.Scripts/Import-ApimOpenApiDefinitionFromFile.ps1"
       SpecificationPath: "$(Pipeline.Workspace)/${{ variables.SolutionBaseName }}.OpenApiDocs"
+      IntegrationTestEnabled: true
+      IntegrationTestPackage: "$(Pipeline.Workspace)/${{ variables.SolutionBaseName }}.IntegrationTests.DeploymentPackages/DFC.App.Banners.zip"
+      IntegrationTestProjectFolder: "$(Pipeline.Workspace)/${{ variables.SolutionBaseName }}.IntegrationTests"
 
 - stage: DeployToSitAppBanners
   condition:  and(eq(dependencies.DeployToDevDraftAppBanners.result,'Succeeded'), or(eq(variables['Build.SourceBranch'], 'refs/heads/dev'), eq(variables['Build.SourceBranch'], 'refs/heads/master')))
@@ -265,6 +287,9 @@ stages:
       APIMPolicyPath: "$(Pipeline.Workspace)/${{ variables.SolutionBaseName }}.ApimPolicies/"
       ApimImportScript: "$(Pipeline.Workspace)/${{ variables.SolutionBaseName }}.Scripts/Import-ApimOpenApiDefinitionFromFile.ps1"
       SpecificationPath: "$(Pipeline.Workspace)/${{ variables.SolutionBaseName }}.OpenApiDocs"
+      IntegrationTestEnabled: true
+      IntegrationTestPackage: "$(Pipeline.Workspace)/${{ variables.SolutionBaseName }}.IntegrationTests.DeploymentPackages/DFC.App.Banners.zip"
+      IntegrationTestProjectFolder: "$(Pipeline.Workspace)/${{ variables.SolutionBaseName }}.IntegrationTests"
 
 - stage: DeployToSitDraftAppBanners
   condition:  and(eq(dependencies.DeployToSitAppBanners.result,'Succeeded'), or(eq(variables['Build.SourceBranch'], 'refs/heads/dev'), eq(variables['Build.SourceBranch'], 'refs/heads/master')))
@@ -304,6 +329,9 @@ stages:
       APIMPolicyPath: "$(Pipeline.Workspace)/${{ variables.SolutionBaseName }}.ApimPolicies/"
       ApimImportScript: "$(Pipeline.Workspace)/${{ variables.SolutionBaseName }}.Scripts/Import-ApimOpenApiDefinitionFromFile.ps1"
       SpecificationPath: "$(Pipeline.Workspace)/${{ variables.SolutionBaseName }}.OpenApiDocs"
+      IntegrationTestEnabled: true
+      IntegrationTestPackage: "$(Pipeline.Workspace)/${{ variables.SolutionBaseName }}.IntegrationTests.DeploymentPackages/DFC.App.Banners.zip"
+      IntegrationTestProjectFolder: "$(Pipeline.Workspace)/${{ variables.SolutionBaseName }}.IntegrationTests"
 
 - stage: DeployToPPAppBanners
   condition:  and(eq(dependencies.DeployToSitDraftAppBanners.result,'Succeeded'), eq(variables['Build.SourceBranch'], 'refs/heads/master'))
@@ -342,6 +370,9 @@ stages:
       APIMPolicyPath: "$(Pipeline.Workspace)/${{ variables.SolutionBaseName }}.ApimPolicies/"
       ApimImportScript: "$(Pipeline.Workspace)/${{ variables.SolutionBaseName }}.Scripts/Import-ApimOpenApiDefinitionFromFile.ps1"
       SpecificationPath: "$(Pipeline.Workspace)/${{ variables.SolutionBaseName }}.OpenApiDocs"
+      IntegrationTestEnabled: false
+      IntegrationTestPackage: "$(Pipeline.Workspace)/${{ variables.SolutionBaseName }}.IntegrationTests.DeploymentPackages/DFC.App.Banners.zip"
+      IntegrationTestProjectFolder: "$(Pipeline.Workspace)/${{ variables.SolutionBaseName }}.IntegrationTests"
 
 - stage: DeployToPPDraftAppBanners
   condition:  and(eq(dependencies.DeployToPPAppBanners.result,'Succeeded'), eq(variables['Build.SourceBranch'], 'refs/heads/master'))
@@ -381,6 +412,9 @@ stages:
       APIMPolicyPath: "$(Pipeline.Workspace)/${{ variables.SolutionBaseName }}.ApimPolicies/"
       ApimImportScript: "$(Pipeline.Workspace)/${{ variables.SolutionBaseName }}.Scripts/Import-ApimOpenApiDefinitionFromFile.ps1"
       SpecificationPath: "$(Pipeline.Workspace)/${{ variables.SolutionBaseName }}.OpenApiDocs"
+      IntegrationTestEnabled: false
+      IntegrationTestPackage: "$(Pipeline.Workspace)/${{ variables.SolutionBaseName }}.IntegrationTests.DeploymentPackages/DFC.App.Banners.zip"
+      IntegrationTestProjectFolder: "$(Pipeline.Workspace)/${{ variables.SolutionBaseName }}.IntegrationTests"
 
 - stage: DeployToPRDAppBanners
   condition:  and(eq(dependencies.DeployToPPDraftAppBanners.result,'Succeeded'), eq(variables['Build.SourceBranch'], 'refs/heads/master'))
@@ -419,6 +453,9 @@ stages:
       APIMPolicyPath: "$(Pipeline.Workspace)/${{ variables.SolutionBaseName }}.ApimPolicies/"
       ApimImportScript: "$(Pipeline.Workspace)/${{ variables.SolutionBaseName }}.Scripts/Import-ApimOpenApiDefinitionFromFile.ps1"
       SpecificationPath: "$(Pipeline.Workspace)/${{ variables.SolutionBaseName }}.OpenApiDocs"
+      IntegrationTestEnabled: false
+      IntegrationTestPackage: "$(Pipeline.Workspace)/${{ variables.SolutionBaseName }}.IntegrationTests.DeploymentPackages/DFC.App.Banners.zip"
+      IntegrationTestProjectFolder: "$(Pipeline.Workspace)/${{ variables.SolutionBaseName }}.IntegrationTests"
 
 - stage: DeployToPRDDraftAppBanners
   condition:  and(eq(dependencies.DeployToPRDAppBanners.result,'Succeeded'), eq(variables['Build.SourceBranch'], 'refs/heads/master'))
@@ -458,3 +495,6 @@ stages:
       APIMPolicyPath: "$(Pipeline.Workspace)/${{ variables.SolutionBaseName }}.ApimPolicies/"
       ApimImportScript: "$(Pipeline.Workspace)/${{ variables.SolutionBaseName }}.Scripts/Import-ApimOpenApiDefinitionFromFile.ps1"
       SpecificationPath: "$(Pipeline.Workspace)/${{ variables.SolutionBaseName }}.OpenApiDocs"
+      IntegrationTestEnabled: false
+      IntegrationTestPackage: "$(Pipeline.Workspace)/${{ variables.SolutionBaseName }}.IntegrationTests.DeploymentPackages/DFC.App.Banners.zip"
+      IntegrationTestProjectFolder: "$(Pipeline.Workspace)/${{ variables.SolutionBaseName }}.IntegrationTests"
