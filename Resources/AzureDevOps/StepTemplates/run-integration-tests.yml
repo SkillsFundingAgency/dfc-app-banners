@@ -33,6 +33,7 @@ steps:
      !**\*TestAdapter.dll
      !**\obj\**
     searchFolder: '${{ parameters.IntegrationTestProjectFolder }}'
+  continueOnError: true
 
 - task: DeleteFiles@1
   displayName: 'Delete appsettings.json'
