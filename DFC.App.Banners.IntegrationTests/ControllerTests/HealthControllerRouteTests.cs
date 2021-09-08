@@ -35,7 +35,7 @@ namespace DFC.App.Banners.IntegrationTests.ControllerTests
         {
             // Arrange
             var uri = new Uri(path, UriKind.Relative);
-            var client = this.factory.CreateClientWithWebHostBuilder();
+            var client = this.factory.CreateClient();
             client.DefaultRequestHeaders.Accept.Clear();
             client.DefaultRequestHeaders.Accept.Add(new System.Net.Http.Headers.MediaTypeWithQualityHeaderValue(MediaTypeNames.Text.Html));
             A.CallTo(() => this.factory.MockCosmosRepo.PingAsync()).Returns(true);
@@ -54,7 +54,7 @@ namespace DFC.App.Banners.IntegrationTests.ControllerTests
         {
             // Arrange
             var uri = new Uri(path, UriKind.Relative);
-            var client = this.factory.CreateClientWithWebHostBuilder();
+            var client = this.factory.CreateClient();
             client.DefaultRequestHeaders.Accept.Clear();
             client.DefaultRequestHeaders.Accept.Add(new System.Net.Http.Headers.MediaTypeWithQualityHeaderValue(MediaTypeNames.Application.Json));
             A.CallTo(() => this.factory.MockCosmosRepo.PingAsync()).Returns(true);
@@ -73,7 +73,7 @@ namespace DFC.App.Banners.IntegrationTests.ControllerTests
         {
             // Arrange
             var uri = new Uri(path, UriKind.Relative);
-            var client = this.factory.CreateClientWithWebHostBuilder();
+            var client = this.factory.CreateClient();
             client.DefaultRequestHeaders.Accept.Clear();
 
             // Act
