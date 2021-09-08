@@ -34,4 +34,11 @@
   <ItemGroup>
     <ProjectReference Include="..\DFC.App.Banners\DFC.App.Banners.csproj" />
   </ItemGroup>
+  
+  <ItemGroup>
+    <None Update="appsettings.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+  
 </Project>
