@@ -42,14 +42,17 @@ namespace DFC.App.Banners.IntegrationTests
 
         protected override void ConfigureWebHost(IWebHostBuilder builder)
         {
-            builder.ConfigureTestServices(services =>
+            builder?.ConfigureServices(services =>
             {
                 var configuration = new ConfigurationBuilder()
                     .AddJsonFile("appsettings.json", optional: true, reloadOnChange: true)
                     .Build();
 
                 services.AddSingleton<IConfiguration>(configuration);
+            });
 
+            builder.ConfigureTestServices(services =>
+            {
                 services.AddTransient(sp => MockCosmosRepo);
                 services.AddTransient<IWebhooksService, FakeWebhooksService>();
             });
