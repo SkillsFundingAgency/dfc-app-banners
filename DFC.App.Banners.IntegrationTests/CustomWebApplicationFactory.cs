@@ -1,14 +1,15 @@
-﻿using DFC.App.Banners.Data.Models.ContentModels;
-using DFC.App.Banners.IntegrationTests.Extensions;
+﻿using DFC.App.Banners.Data.Contracts;
+using DFC.App.Banners.Data.Models.ContentModels;
+using DFC.App.Banners.IntegrationTests.Fakes;
 using DFC.Compui.Cosmos.Contracts;
 using FakeItEasy;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc.Testing;
+using Microsoft.AspNetCore.TestHost;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Collections.Generic;
-using System.Net.Http;
 
 namespace DFC.App.Banners.IntegrationTests
 {
@@ -21,14 +22,6 @@ namespace DFC.App.Banners.IntegrationTests
         }
 
         internal ICosmosRepository<PageBannerContentItemModel> MockCosmosRepo { get; set; }
-
-        public HttpClient CreateClientWithWebHostBuilder()
-        {
-            return this.WithWebHostBuilder(builder =>
-            {
-                builder.RegisterServices(this.MockCosmosRepo);
-            }).CreateClient();
-        }
 
         internal static IEnumerable<PageBannerContentItemModel> GetContentPageModels()
         {
@@ -56,6 +49,12 @@ namespace DFC.App.Banners.IntegrationTests
                     .Build();
 
                 services.AddSingleton<IConfiguration>(configuration);
+            });
+
+            builder.ConfigureTestServices(services =>
+            {
+                services.AddTransient(sp => MockCosmosRepo);
+                services.AddTransient<IWebhooksService, FakeWebhooksService>();
             });
         }
     }
