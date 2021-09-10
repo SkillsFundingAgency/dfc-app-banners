@@ -89,7 +89,6 @@ stages:
     steps:
     - template: ../StepTemplates/run-integration-tests.yml
       parameters:
-        environment: ${{ parameters.EnvironmentName }}
         IntegrationTestEnabled: true
         IntegrationTestPackage: "$(Pipeline.Workspace)/${{ variables.SolutionBaseName }}.IntegrationTests.DeploymentPackages/DFC.App.Banners.zip"
         IntegrationTestProjectFolder: "$(Pipeline.Workspace)/${{ variables.SolutionBaseName }}.IntegrationTests"
