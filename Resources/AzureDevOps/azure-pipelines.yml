@@ -87,7 +87,7 @@ stages:
   - job: RunIntegrationTests
     displayName: "Run integration tests"
     steps:
-    - template: ../StepTemplates/run-integration-tests.yml
+    - template: StepTemplates/run-integration-tests.yml
       parameters:
         IntegrationTestEnabled: true
         IntegrationTestPackage: "$(Pipeline.Workspace)/${{ variables.SolutionBaseName }}.IntegrationTests.DeploymentPackages/DFC.App.Banners.zip"
