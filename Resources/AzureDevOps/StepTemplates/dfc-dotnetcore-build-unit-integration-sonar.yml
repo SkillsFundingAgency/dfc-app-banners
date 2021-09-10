@@ -7,7 +7,7 @@ parameters:
   GitVersionConfigFilePath: Resources/AzureDevOps/GitVersion.yml
   IncludePreviewVersions: false
   PublishWebApp: 'false'
-  UnitTestSuffix: ''
+  TestSuffix: ''
   IntegrationTestSuffix: ''
   TestBranchFeaturesScriptUrl: https://raw.githubusercontent.com/SkillsFundingAgency/dfc-devops/master/PSScripts/Test-BranchFeatures.ps1
   TestBranchFeaturesScriptFilePath: $(System.DefaultWorkingDirectory)\Test-BranchFeatures.ps1
@@ -85,7 +85,7 @@ steps:
     displayName: 'dotnet Unit Tests'
     inputs:
       command: test
-      projects: '${{ parameters.SolutionBaseName }}*${{ parameters.UnitTestSuffix }}\${{ parameters.SolutionBaseName }}*${{ parameters.UnitTestSuffix }}.csproj'
+      projects: '${{ parameters.SolutionBaseName }}*${{ parameters.TestSuffix }}\${{ parameters.SolutionBaseName }}*${{ parameters.TestSuffix }}.csproj'
       arguments: '--configuration ${{ parameters.BuildConfiguration }} --collect "Code coverage"'
 
   - task: DotNetCoreCLI@2
