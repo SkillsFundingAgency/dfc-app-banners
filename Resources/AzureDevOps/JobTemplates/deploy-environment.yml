@@ -22,9 +22,6 @@ parameters:
   APIMPolicyPath: ''
   ApimImportScript: ''
   SpecificationPath: ''
-  IntegrationTestEnabled: ''
-  IntegrationTestPackage: ''
-  IntegrationTestProjectFolder: ''
 
 jobs:
 - deployment: DeployTemplate
@@ -73,19 +70,3 @@ jobs:
             APIMPolicyPath: '${{ parameters.APIMPolicyPath }}'
             ApimImportScript: '${{ parameters.ApimImportScript }}'
             SpecificationPath:  '${{ parameters.SpecificationPath }}'
-
-- deployment: DeployIntegrationTests
-  displayName: "Deploy integration tests"
-  environment: ${{ parameters.EnvironmentName }}
-  dependsOn:
-  - DeployApplication
-  strategy:
-    runOnce:
-      deploy:
-        steps:
-        - template: ../StepTemplates/run-integration-tests.yml
-          parameters:
-            environment: ${{ parameters.EnvironmentName }}
-            IntegrationTestEnabled: '${{ parameters.IntegrationTestEnabled }}'
-            IntegrationTestPackage: '${{ parameters.IntegrationTestPackage }}'
-            IntegrationTestProjectFolder: '${{ parameters.IntegrationTestProjectFolder }}'
