@@ -90,8 +90,8 @@ stages:
     - template: StepTemplates/run-integration-tests.yml
       parameters:
         IntegrationTestEnabled: true
-        IntegrationTestPackage: "$(Pipeline.Workspace)/${{ variables.SolutionBaseName }}.IntegrationTests.DeploymentPackages/DFC.App.Banners.zip"
-        IntegrationTestProjectFolder: "$(Pipeline.Workspace)/${{ variables.SolutionBaseName }}.IntegrationTests"
+        IntegrationTestPackage: "$(build.artifactstagingdirectory)/Artifact/${{ parameters.SolutionBaseName }}/DeploymentPackages/DFC.App.Banners.zip"
+        IntegrationTestProjectFolder: "$(build.artifactstagingdirectory)/Artifact/${{ parameters.SolutionBaseName }}.IntegrationTests"
 
 - stage: DeployToLabAppBanners
   condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/dev'))
