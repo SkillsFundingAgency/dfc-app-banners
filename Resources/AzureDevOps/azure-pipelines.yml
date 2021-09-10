@@ -65,50 +65,15 @@ stages:
   - job: BuildDotNetCore
     displayName: Build-DotNetCore
     steps:
-    - template: AzureDevOpsTemplates\Build\StepTemplates\dfc-dotnetcore-build-sonar.yml@dfc-devops
+    - template: StepTemplates\dfc-dotnetcore-build-unit-integration-sonar.yml
       parameters:
         SolutionBaseName: $(SolutionBaseName)
         BuildPlatform: $(BuildPlatform)
         BuildConfiguration: $(BuildConfiguration)
         DotNetCoreVersion: '3.1.100'
         PublishWebApp: true
-        TestSuffix: UnitTests
-
-  - job: Buildintegrationtests
-    displayName: Build integration tests
-    steps:
-    - template: AzureDevOpsTemplates\Build\StepTemplates\dfc-dotnetcore-build-sonar.yml@dfc-devops
-      parameters:
-        SolutionBaseName: $(SolutionBaseName).IntegrationTests
-        BuildPlatform: $(BuildPlatform)
-        BuildConfiguration: $(BuildConfiguration)
-        DotNetCoreVersion: '3.1.100'
-
-  - job: RunIntegrationTests
-    displayName: "Run integration tests"
-    steps:
-    - task: ExtractFiles@1
-      displayName: Extract files
-      inputs:
-        archiveFilePatterns: $(build.artifactstagingdirectory)/Artifact/$(SolutionBaseName).IntegrationTests/DeploymentPackages/DFC.App.Banners.zip
-        destinationFolder: $(build.artifactstagingdirectory)/Artifact/$(SolutionBaseName).IntegrationTests
-
-    - task: VSTest@2
-      displayName: 'VsTest - run IntegrationTests'
-      inputs:
-        testAssemblyVer2: |
-          **\*Tests.dll
-          !**\*TestAdapter.dll
-          !**\obj\**
-          searchFolder: $(build.artifactstagingdirectory)/Artifact/$(SolutionBaseName).IntegrationTests
-      continueOnError: true
-
-    - task: DeleteFiles@1
-      displayName: 'Delete appsettings.json'
-      inputs:
-        SourceFolder: $(build.artifactstagingdirectory)/Artifact/$(SolutionBaseName).IntegrationTests
-        Contents: appsettings.json
-      condition: always()
+        UnitTestSuffix: UnitTests
+        IntegrationTestSuffix: IntegrationTests
 
 - stage: DeployToLabAppBanners
   condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/dev'))
