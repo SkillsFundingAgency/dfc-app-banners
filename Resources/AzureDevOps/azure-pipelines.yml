@@ -89,9 +89,10 @@ stages:
     steps:
     - template: StepTemplates/run-integration-tests.yml
       parameters:
+        SolutionBaseName: $(SolutionBaseName).IntegrationTests
         IntegrationTestEnabled: true
         IntegrationTestPackage: "$(build.artifactstagingdirectory)/Artifact/${{ parameters.SolutionBaseName }}/DeploymentPackages/DFC.App.Banners.zip"
-        IntegrationTestProjectFolder: "$(build.artifactstagingdirectory)/Artifact/${{ parameters.SolutionBaseName }}.IntegrationTests"
+        IntegrationTestProjectFolder: "$(build.artifactstagingdirectory)/Artifact/${{ parameters.SolutionBaseName }}"
 
 - stage: DeployToLabAppBanners
   condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/dev'))
