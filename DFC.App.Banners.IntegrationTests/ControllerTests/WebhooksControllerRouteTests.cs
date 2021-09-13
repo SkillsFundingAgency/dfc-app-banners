@@ -1,17 +1,12 @@
-﻿using System;
+﻿using DFC.App.Banners.Data.Helpers;
+using DFC.App.Banners.Models;
+using Microsoft.Azure.EventGrid;
+using Microsoft.Azure.EventGrid.Models;
+using System;
 using System.Net.Http;
 using System.Net.Mime;
 using System.Text;
 using System.Threading.Tasks;
-
-using DFC.App.Banners.Data.Helpers;
-using DFC.App.Banners.Models;
-
-using FluentAssertions;
-
-using Microsoft.Azure.EventGrid;
-using Microsoft.Azure.EventGrid.Models;
-
 using Xunit;
 
 namespace DFC.App.Banners.IntegrationTests.ControllerTests
@@ -77,7 +72,7 @@ namespace DFC.App.Banners.IntegrationTests.ControllerTests
             var response = await client.PostAsJsonAsync(uri, eventGridEvents);
 
             // Assert
-            response.IsSuccessStatusCode.Should().BeTrue();
+            response.EnsureSuccessStatusCode();
         }
 
         [Theory]

@@ -65,7 +65,7 @@ stages:
   - job: BuildDotNetCore
     displayName: Build-DotNetCore
     steps:
-    - template: AzureDevOpsTemplates\Build\StepTemplates\dfc-dotnetcore-build-sonar.yml@dfc-devops
+    - template: AzureDevOpsTemplates\Build\StepTemplates\dfc-dotnetcore-build-unit-integration-sonar.yml@dfc-devops
       parameters:
         SolutionBaseName: $(SolutionBaseName)
         BuildPlatform: $(BuildPlatform)
@@ -73,6 +73,7 @@ stages:
         DotNetCoreVersion: '3.1.100'
         PublishWebApp: true
         TestSuffix: UnitTests
+        IntegrationTestSuffix: IntegrationTests
 
 - stage: DeployToLabAppBanners
   condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/dev'))
