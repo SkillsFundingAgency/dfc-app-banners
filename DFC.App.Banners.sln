@@ -45,12 +45,18 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Integration Tests", "Integr
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Web", "Web", "{5677352E-7A4F-4BE2-BFD9-62F41BA5854F}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DFC.App.Banners.IntegrationTests", "DFC.App.Banners.IntegrationTests\DFC.App.Banners.IntegrationTests.csproj", "{328726B1-7266-44D6-84A2-CBF2B1E9AC4C}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DFC.App.Banners.IntegrationTests", "DFC.App.Banners.IntegrationTests\DFC.App.Banners.IntegrationTests.csproj", "{328726B1-7266-44D6-84A2-CBF2B1E9AC4C}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{E03AEF86-38D8-4A20-B587-BDB09B292C33}"
 	ProjectSection(SolutionItems) = preProject
 		.editorconfig = .editorconfig
 	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "FunctionalTests", "FunctionalTests", "{898F1293-30BF-4F3C-8065-90825E914DCA}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "UI", "UI", "{C7CF5645-864E-431D-9C6C-D3FBF58B80A3}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DFC.App.Banners.UI.FunctionalTests", "DFC.App.Banners.UI.FunctionalTests\DFC.App.Banners.UI.FunctionalTests.csproj", "{6926461B-0774-4F94-AB0F-9100DD738DA3}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -86,6 +92,10 @@ Global
 		{328726B1-7266-44D6-84A2-CBF2B1E9AC4C}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{328726B1-7266-44D6-84A2-CBF2B1E9AC4C}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{328726B1-7266-44D6-84A2-CBF2B1E9AC4C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6926461B-0774-4F94-AB0F-9100DD738DA3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6926461B-0774-4F94-AB0F-9100DD738DA3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6926461B-0774-4F94-AB0F-9100DD738DA3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6926461B-0774-4F94-AB0F-9100DD738DA3}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -103,6 +113,9 @@ Global
 		{275A203A-1DEE-47E0-9473-B5CFCF154518} = {9F8A4B3A-E615-4D8E-A1A4-FB0BD3201551}
 		{5677352E-7A4F-4BE2-BFD9-62F41BA5854F} = {275A203A-1DEE-47E0-9473-B5CFCF154518}
 		{328726B1-7266-44D6-84A2-CBF2B1E9AC4C} = {5677352E-7A4F-4BE2-BFD9-62F41BA5854F}
+		{898F1293-30BF-4F3C-8065-90825E914DCA} = {9F8A4B3A-E615-4D8E-A1A4-FB0BD3201551}
+		{C7CF5645-864E-431D-9C6C-D3FBF58B80A3} = {898F1293-30BF-4F3C-8065-90825E914DCA}
+		{6926461B-0774-4F94-AB0F-9100DD738DA3} = {C7CF5645-864E-431D-9C6C-D3FBF58B80A3}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {510453BE-8B53-4279-8C8A-42A38319B978}
