@@ -1,6 +1,5 @@
-﻿// <copyright file="NavigationSteps.cs" company="National Careers Service">
-// Copyright (c) National Careers Service. All rights reserved.
-// Licensed under the MIT license. See LICENSE file in the project root for full license information.
+﻿// <copyright file="NavigationSteps.cs" company="PlaceholderCompany">
+// Copyright (c) PlaceholderCompany. All rights reserved.
 // </copyright>
 
 using DFC.App.Banners.Model;
@@ -23,16 +22,17 @@ namespace DFC.App.Banners.UI.FunctionalTests.StepDefinitions
 
         private ScenarioContext Context { get; set; }
 
-        [Given(@"I am on the (.*) job profile page")]
+        [Given(@"I am on the (.*) page")]
         public void GivenIAmOnThePage(string pageName)
         {
+            var pageHeadingLocator = By.ClassName("govuk-heading-xl");
+
             switch (pageName.ToLower(CultureInfo.CurrentCulture))
             {
-                case "nurse":
-                    var BannersPage = new Homepage(this.Context);
-                    BannersPage.NavigateToBannersPage();
-                    var pageHeadingLocator = By.CssSelector("h1");
-                    this.Context.GetHelperLibrary<AppSettings>().WebDriverWaitHelper.WaitForElementToContainText(pageHeadingLocator, "Nurse");
+                case "home":
+                    var bannerspage = new BannersPage(this.Context);
+                    bannerspage.NavigateToBannersPage();
+                    this.Context.GetHelperLibrary<AppSettings>().WebDriverWaitHelper.WaitForElementToContainText(pageHeadingLocator, "National Careers Service");
                     break;
 
                 default:

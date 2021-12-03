@@ -1,6 +1,5 @@
-﻿// <copyright file="BeforeScenario.cs" company="National Careers Service">
-// Copyright (c) National Careers Service. All rights reserved.
-// Licensed under the MIT license. See LICENSE file in the project root for full license information.
+﻿// <copyright file="BeforeScenario.cs" company="PlaceholderCompany">
+// Copyright (c) PlaceholderCompany. All rights reserved.
 // </copyright>
 
 using DFC.App.Banners.Model;
@@ -45,14 +44,13 @@ namespace DFC.App.Banners
         public void SetApplicationUrl()
         {
             string appBaseUrl = this.Context.GetSettingsLibrary<AppSettings>().AppSettings.AppBaseUrl.ToString();
-            this.Context.GetSettingsLibrary<AppSettings>().AppSettings.AppBaseUrl = new Uri($"{appBaseUrl}job-profiles/nurse");
         }
 
         [BeforeScenario(Order = 3)]
         public void ConfigureBrowserStack()
         {
             this.Context.GetSettingsLibrary<AppSettings>().BrowserStackSettings.Name = this.Context.ScenarioInfo.Title;
-            this.Context.GetSettingsLibrary<AppSettings>().BrowserStackSettings.Build = "Contact us";
+            this.Context.GetSettingsLibrary<AppSettings>().BrowserStackSettings.Build = "Banners";
         }
 
         [BeforeScenario(Order = 4)]

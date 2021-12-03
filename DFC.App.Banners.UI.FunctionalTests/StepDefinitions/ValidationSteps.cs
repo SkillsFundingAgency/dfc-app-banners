@@ -1,6 +1,5 @@
-﻿// <copyright file="ValidationSteps.cs" company="National Careers Service">
-// Copyright (c) National Careers Service. All rights reserved.
-// Licensed under the MIT license. See LICENSE file in the project root for full license information.
+﻿// <copyright file="ValidationSteps.cs" company="PlaceholderCompany">
+// Copyright (c) PlaceholderCompany. All rights reserved.
 // </copyright>
 
 using DFC.App.Banners.Model;
@@ -24,51 +23,21 @@ namespace DFC.App.Banners.UI.FunctionalTests.StepDefinitions
         [Then(@"I am on the (.*) page")]
         public void ThenIAmOnThePage(string pageName)
         {
-            By locator = null;
+            this.Context.GetWebDriver().SwitchTo().Window(this.Context.GetWebDriver().WindowHandles[1]);
 
             switch (pageName.ToLower(CultureInfo.CurrentCulture))
             {
-                case "job group: nurses":
-                    locator = By.CssSelector("h1");
-                    break;
+                case "Ipsos Mori sruvey page":
+                   if (this.Context.GetWebDriver().Title.ToString() != "Ipsos MORI Surveys")
+                    {
+                        throw new NotFoundException($"Unable to perform the step: {this.Context.StepContext.StepInfo.Text}. The expected page is not displayed");
+                    }
+
+                   break;
 
                 default:
-                    locator = By.CssSelector("h1");
-                    break;
+                   break;
             }
-
-            this.Context.GetHelperLibrary<AppSettings>().WebDriverWaitHelper.WaitForElementToContainText(locator, pageName);
-        }
-
-        [Then(@"the (.*) information is displayed")]
-        public void ThenTheJobGrowthInformationIsDisplayed(string lMI)
-        {
-            By locator = null;
-
-            switch (lMI.ToLower(CultureInfo.CurrentCulture))
-            {
-                case "job growth":
-                    locator = By.CssSelector(".dfc-app-lmi-panel.panel-green");
-                    break;
-
-                case "qualifications":
-                    locator = By.CssSelector(".dfc-app-lmi-panel.panel-green.panel-qualifications");
-                    break;
-
-                case "regional":
-                    locator = By.XPath("//*[@id='main-content']/div/div/div/div[1]/div/table[2]/thead/tr/th[1]");
-                    break;
-
-                case "industry":
-                    locator = By.XPath("//*[@id='main-content']/div/div/div/div[1]/div/table[1]/thead/tr/th[1]");
-                    break;
-
-                default:
-                    locator = By.CssSelector("h1");
-                    break;
-            }
-
-            this.Context.GetHelperLibrary<AppSettings>().WebDriverWaitHelper.WaitForElementToBeDisplayed(locator);
         }
     }
 }
