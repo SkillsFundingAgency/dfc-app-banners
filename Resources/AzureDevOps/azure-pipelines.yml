@@ -1,3 +1,11 @@
+parameters:
+  - name: RunInfrastructureDeployment
+    type: string
+    default: false
+    values:
+      - true
+      - false
+
 variables:
   ArmTemplateRoot: '$(Build.SourcesDirectory)\Resources\ArmTemplates'
   SolutionBaseName: 'DFC.App.Banners'
@@ -75,6 +83,17 @@ stages:
         TestSuffix: UnitTests
         IntegrationTestSuffix: IntegrationTests
 
+  # Build all UI Functional Tests that ends with UI.FunctionalTests
+  - job: Builduifunctionaltests
+    displayName: Build UI functional tests
+    steps:
+    - template: AzureDevOpsTemplates\Build\StepTemplates\dfc-dotnetcore-build-sonar.yml@dfc-devops
+      parameters:
+        SolutionBaseName: $(SolutionBaseName).UI.FunctionalTests
+        BuildPlatform: $(BuildPlatform)
+        BuildConfiguration: $(BuildConfiguration)
+        DotNetCoreVersion: '3.1.100'
+
 - stage: DeployToLabAppBanners
   condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/dev'))
   displayName: Deploy to LAB_AppBanners
@@ -85,6 +104,14 @@ stages:
   - group: dfc-app-shared-lab
   - group: dfc-stax-shared-lab
   - group: dfc-compositeui-all
+  - group: dfc-app-uiautomation-browser-all
+  - group: dfc-app-uiautomation-browser-arguments-all
+  - group: dfc-app-uiautomation-browserstack-all
+  - group: dfc-app-uiautomation-browserstack-lab
+  - group: dfc-app-uiautomation-testexecution-timeout-all
+  - group: dfc-app-uiautomation-testexecution-retry-all
+  - group: dfc-browserstack
+  - group: dfc-app-uiautomation-lab
   - template: VariableTemplates\LabEnvironmentVariables.yml
 
   jobs:
@@ -112,6 +139,11 @@ stages:
       APIMPolicyPath: "$(Pipeline.Workspace)/${{ variables.SolutionBaseName }}.ApimPolicies/"
       ApimImportScript: "$(Pipeline.Workspace)/${{ variables.SolutionBaseName }}.Scripts/Import-ApimOpenApiDefinitionFromFile.ps1"
       SpecificationPath: "$(Pipeline.Workspace)/${{ variables.SolutionBaseName }}.OpenApiDocs"
+      RunInfrastructureDeployment: ${{ parameters.RunInfrastructureDeployment }}
+      UIFunctionalTestEnabled: false
+      UIFunctionalTestPackage: "$(Pipeline.Workspace)/${{ variables.SolutionBaseName }}.UI.FunctionalTests.DeploymentPackages/DFC.App.Banners.zip"
+      UIFunctionalTestProjectFolder: "$(Pipeline.Workspace)/${{ variables.SolutionBaseName }}.UI.FunctionalTests"
+      UIFunctionalTestCategory: Banners
 
 - stage: DeployToLabDraftAppBanners
   condition: succeeded()
@@ -124,6 +156,14 @@ stages:
   - group: dfc-app-draft
   - group: dfc-stax-shared-lab
   - group: dfc-compositeui-all
+  - group: dfc-app-uiautomation-browser-all
+  - group: dfc-app-uiautomation-browser-arguments-all
+  - group: dfc-app-uiautomation-browserstack-all
+  - group: dfc-app-uiautomation-browserstack-lab
+  - group: dfc-app-uiautomation-testexecution-timeout-all
+  - group: dfc-app-uiautomation-testexecution-retry-all
+  - group: dfc-browserstack
+  - group: dfc-app-uiautomation-lab
   - template: VariableTemplates\LabDraftEnvironmentVariables.yml
 
   jobs:
@@ -151,6 +191,11 @@ stages:
       APIMPolicyPath: "$(Pipeline.Workspace)/${{ variables.SolutionBaseName }}.ApimPolicies/"
       ApimImportScript: "$(Pipeline.Workspace)/${{ variables.SolutionBaseName }}.Scripts/Import-ApimOpenApiDefinitionFromFile.ps1"
       SpecificationPath: "$(Pipeline.Workspace)/${{ variables.SolutionBaseName }}.OpenApiDocs"
+      RunInfrastructureDeployment: ${{ parameters.RunInfrastructureDeployment }}
+      UIFunctionalTestEnabled: false
+      UIFunctionalTestPackage: "$(Pipeline.Workspace)/${{ variables.SolutionBaseName }}.UI.FunctionalTests.DeploymentPackages/DFC.App.Banners.zip"
+      UIFunctionalTestProjectFolder: "$(Pipeline.Workspace)/${{ variables.SolutionBaseName }}.UI.FunctionalTests"
+      UIFunctionalTestCategory: Banners
 
 - stage: DeployToDevAppBanners
   condition:  and(eq(dependencies.Build.result,'Succeeded'), or(eq(variables['Build.SourceBranch'], 'refs/heads/dev'), eq(variables['Build.SourceBranch'], 'refs/heads/master')))
@@ -162,6 +207,14 @@ stages:
   - group: dfc-app-shared-dev
   - group: dfc-stax-shared-dev
   - group: dfc-compositeui-all
+  - group: dfc-app-uiautomation-browser-all
+  - group: dfc-app-uiautomation-browser-arguments-all
+  - group: dfc-app-uiautomation-browserstack-all
+  - group: dfc-app-uiautomation-browserstack-dev
+  - group: dfc-app-uiautomation-testexecution-timeout-all
+  - group: dfc-app-uiautomation-testexecution-retry-all
+  - group: dfc-browserstack
+  - group: dfc-app-uiautomation-dev
   - template: VariableTemplates\DevEnvironmentVariables.yml
 
   jobs:
@@ -189,6 +242,12 @@ stages:
       APIMPolicyPath: "$(Pipeline.Workspace)/${{ variables.SolutionBaseName }}.ApimPolicies/"
       ApimImportScript: "$(Pipeline.Workspace)/${{ variables.SolutionBaseName }}.Scripts/Import-ApimOpenApiDefinitionFromFile.ps1"
       SpecificationPath: "$(Pipeline.Workspace)/${{ variables.SolutionBaseName }}.OpenApiDocs"
+      RunInfrastructureDeployment: ${{ parameters.RunInfrastructureDeployment }}
+      UIFunctionalTestEnabled: false
+      UIFunctionalTestPackage: "$(Pipeline.Workspace)/${{ variables.SolutionBaseName }}.UI.FunctionalTests.DeploymentPackages/DFC.App.Banners.zip"
+      UIFunctionalTestProjectFolder: "$(Pipeline.Workspace)/${{ variables.SolutionBaseName }}.UI.FunctionalTests"
+      UIFunctionalTestCategory: Banners
+
 
 - stage: DeployToDevDraftAppBanners
   condition:  and(eq(dependencies.DeployToDevAppBanners.result,'Succeeded'), or(eq(variables['Build.SourceBranch'], 'refs/heads/dev'), eq(variables['Build.SourceBranch'], 'refs/heads/master')))
@@ -201,6 +260,14 @@ stages:
   - group: dfc-app-draft
   - group: dfc-stax-shared-dev
   - group: dfc-compositeui-all
+  - group: dfc-app-uiautomation-browser-all
+  - group: dfc-app-uiautomation-browser-arguments-all
+  - group: dfc-app-uiautomation-browserstack-all
+  - group: dfc-app-uiautomation-browserstack-dev
+  - group: dfc-app-uiautomation-testexecution-timeout-all
+  - group: dfc-app-uiautomation-testexecution-retry-all
+  - group: dfc-browserstack
+  - group: dfc-app-uiautomation-dev
   - template: VariableTemplates\DevDraftEnvironmentVariables.yml
 
   jobs:
@@ -228,6 +295,12 @@ stages:
       APIMPolicyPath: "$(Pipeline.Workspace)/${{ variables.SolutionBaseName }}.ApimPolicies/"
       ApimImportScript: "$(Pipeline.Workspace)/${{ variables.SolutionBaseName }}.Scripts/Import-ApimOpenApiDefinitionFromFile.ps1"
       SpecificationPath: "$(Pipeline.Workspace)/${{ variables.SolutionBaseName }}.OpenApiDocs"
+      RunInfrastructureDeployment: ${{ parameters.RunInfrastructureDeployment }}
+      UIFunctionalTestEnabled: false
+      UIFunctionalTestPackage: "$(Pipeline.Workspace)/${{ variables.SolutionBaseName }}.UI.FunctionalTests.DeploymentPackages/DFC.App.Banners.zip"
+      UIFunctionalTestProjectFolder: "$(Pipeline.Workspace)/${{ variables.SolutionBaseName }}.UI.FunctionalTests"
+      UIFunctionalTestCategory: Banners
+
 
 - stage: DeployToSitAppBanners
   condition:  and(eq(dependencies.DeployToDevDraftAppBanners.result,'Succeeded'), or(eq(variables['Build.SourceBranch'], 'refs/heads/dev'), eq(variables['Build.SourceBranch'], 'refs/heads/master')))
@@ -239,6 +312,14 @@ stages:
   - group: dfc-app-shared-sit
   - group: dfc-stax-shared-sit
   - group: dfc-compositeui-all
+  - group: dfc-app-uiautomation-browser-all
+  - group: dfc-app-uiautomation-browser-arguments-all
+  - group: dfc-app-uiautomation-browserstack-all
+  - group: dfc-app-uiautomation-browserstack-sit
+  - group: dfc-app-uiautomation-testexecution-timeout-all
+  - group: dfc-app-uiautomation-testexecution-retry-all
+  - group: dfc-browserstack
+  - group: dfc-app-uiautomation-sit
   - template: VariableTemplates\SitEnvironmentVariables.yml
 
   jobs:
@@ -266,6 +347,11 @@ stages:
       APIMPolicyPath: "$(Pipeline.Workspace)/${{ variables.SolutionBaseName }}.ApimPolicies/"
       ApimImportScript: "$(Pipeline.Workspace)/${{ variables.SolutionBaseName }}.Scripts/Import-ApimOpenApiDefinitionFromFile.ps1"
       SpecificationPath: "$(Pipeline.Workspace)/${{ variables.SolutionBaseName }}.OpenApiDocs"
+      RunInfrastructureDeployment: ${{ parameters.RunInfrastructureDeployment }}
+      UIFunctionalTestEnabled: true
+      UIFunctionalTestPackage: "$(Pipeline.Workspace)/${{ variables.SolutionBaseName }}.UI.FunctionalTests.DeploymentPackages/DFC.App.Banners.zip"
+      UIFunctionalTestProjectFolder: "$(Pipeline.Workspace)/${{ variables.SolutionBaseName }}.UI.FunctionalTests"
+      UIFunctionalTestCategory: Banners
 
 - stage: DeployToSitDraftAppBanners
   condition:  and(eq(dependencies.DeployToSitAppBanners.result,'Succeeded'), or(eq(variables['Build.SourceBranch'], 'refs/heads/dev'), eq(variables['Build.SourceBranch'], 'refs/heads/master')))
@@ -278,6 +364,14 @@ stages:
   - group: dfc-app-draft
   - group: dfc-stax-shared-sit
   - group: dfc-compositeui-all
+  - group: dfc-app-uiautomation-browser-all
+  - group: dfc-app-uiautomation-browser-arguments-all
+  - group: dfc-app-uiautomation-browserstack-all
+  - group: dfc-app-uiautomation-browserstack-sit
+  - group: dfc-app-uiautomation-testexecution-timeout-all
+  - group: dfc-app-uiautomation-testexecution-retry-all
+  - group: dfc-browserstack
+  - group: dfc-app-uiautomation-sit
   - template: VariableTemplates\SitDraftEnvironmentVariables.yml
 
   jobs:
@@ -305,6 +399,12 @@ stages:
       APIMPolicyPath: "$(Pipeline.Workspace)/${{ variables.SolutionBaseName }}.ApimPolicies/"
       ApimImportScript: "$(Pipeline.Workspace)/${{ variables.SolutionBaseName }}.Scripts/Import-ApimOpenApiDefinitionFromFile.ps1"
       SpecificationPath: "$(Pipeline.Workspace)/${{ variables.SolutionBaseName }}.OpenApiDocs"
+      RunInfrastructureDeployment: ${{ parameters.RunInfrastructureDeployment }}
+      UIFunctionalTestEnabled: false
+      UIFunctionalTestPackage: "$(Pipeline.Workspace)/${{ variables.SolutionBaseName }}.UI.FunctionalTests.DeploymentPackages/DFC.App.Banners.zip"
+      UIFunctionalTestProjectFolder: "$(Pipeline.Workspace)/${{ variables.SolutionBaseName }}.UI.FunctionalTests"
+      UIFunctionalTestCategory: Banners
+
 
 - stage: DeployToPPAppBanners
   condition:  and(eq(dependencies.DeployToSitDraftAppBanners.result,'Succeeded'), eq(variables['Build.SourceBranch'], 'refs/heads/master'))
@@ -316,6 +416,14 @@ stages:
   - group: dfc-app-shared-pp
   - group: dfc-stax-shared-pp
   - group: dfc-compositeui-all
+  - group: dfc-app-uiautomation-browser-all
+  - group: dfc-app-uiautomation-browser-arguments-all
+  - group: dfc-app-uiautomation-browserstack-all
+  - group: dfc-app-uiautomation-browserstack-pp
+  - group: dfc-app-uiautomation-testexecution-timeout-all
+  - group: dfc-app-uiautomation-testexecution-retry-all
+  - group: dfc-browserstack
+  - group: dfc-app-uiautomation-pp
   - template: VariableTemplates\PPEnvironmentVariables.yml
 
   jobs:
@@ -343,6 +451,12 @@ stages:
       APIMPolicyPath: "$(Pipeline.Workspace)/${{ variables.SolutionBaseName }}.ApimPolicies/"
       ApimImportScript: "$(Pipeline.Workspace)/${{ variables.SolutionBaseName }}.Scripts/Import-ApimOpenApiDefinitionFromFile.ps1"
       SpecificationPath: "$(Pipeline.Workspace)/${{ variables.SolutionBaseName }}.OpenApiDocs"
+      RunInfrastructureDeployment: ${{ parameters.RunInfrastructureDeployment }}
+      UIFunctionalTestEnabled: false
+      UIFunctionalTestPackage: "$(Pipeline.Workspace)/${{ variables.SolutionBaseName }}.UI.FunctionalTests.DeploymentPackages/DFC.App.Banners.zip"
+      UIFunctionalTestProjectFolder: "$(Pipeline.Workspace)/${{ variables.SolutionBaseName }}.UI.FunctionalTests"
+      UIFunctionalTestCategory: Banners
+
 
 - stage: DeployToPPDraftAppBanners
   condition:  and(eq(dependencies.DeployToPPAppBanners.result,'Succeeded'), eq(variables['Build.SourceBranch'], 'refs/heads/master'))
@@ -355,6 +469,14 @@ stages:
   - group: dfc-app-draft
   - group: dfc-stax-shared-pp
   - group: dfc-compositeui-all
+  - group: dfc-app-uiautomation-browser-all
+  - group: dfc-app-uiautomation-browser-arguments-all
+  - group: dfc-app-uiautomation-browserstack-all
+  - group: dfc-app-uiautomation-browserstack-pp
+  - group: dfc-app-uiautomation-testexecution-timeout-all
+  - group: dfc-app-uiautomation-testexecution-retry-all
+  - group: dfc-browserstack
+  - group: dfc-app-uiautomation-pp
   - template: VariableTemplates\PPDraftEnvironmentVariables.yml
 
   jobs:
@@ -382,6 +504,12 @@ stages:
       APIMPolicyPath: "$(Pipeline.Workspace)/${{ variables.SolutionBaseName }}.ApimPolicies/"
       ApimImportScript: "$(Pipeline.Workspace)/${{ variables.SolutionBaseName }}.Scripts/Import-ApimOpenApiDefinitionFromFile.ps1"
       SpecificationPath: "$(Pipeline.Workspace)/${{ variables.SolutionBaseName }}.OpenApiDocs"
+      RunInfrastructureDeployment: ${{ parameters.RunInfrastructureDeployment }}
+      UIFunctionalTestEnabled: false
+      UIFunctionalTestPackage: "$(Pipeline.Workspace)/${{ variables.SolutionBaseName }}.UI.FunctionalTests.DeploymentPackages/DFC.App.Banners.zip"
+      UIFunctionalTestProjectFolder: "$(Pipeline.Workspace)/${{ variables.SolutionBaseName }}.UI.FunctionalTests"
+      UIFunctionalTestCategory: Banners
+
 
 - stage: DeployToPRDAppBanners
   condition:  and(eq(dependencies.DeployToPPDraftAppBanners.result,'Succeeded'), eq(variables['Build.SourceBranch'], 'refs/heads/master'))
@@ -393,6 +521,14 @@ stages:
   - group: dfc-app-shared-prd
   - group: dfc-stax-shared-prd
   - group: dfc-compositeui-all
+  - group: dfc-app-uiautomation-browser-all
+  - group: dfc-app-uiautomation-browser-arguments-all
+  - group: dfc-app-uiautomation-browserstack-all
+  - group: dfc-app-uiautomation-browserstack-prd
+  - group: dfc-app-uiautomation-testexecution-timeout-all
+  - group: dfc-app-uiautomation-testexecution-retry-all
+  - group: dfc-browserstack
+  - group: dfc-app-uiautomation-prd
   - template: VariableTemplates\PRDEnvironmentVariables.yml
 
   jobs:
@@ -420,6 +556,12 @@ stages:
       APIMPolicyPath: "$(Pipeline.Workspace)/${{ variables.SolutionBaseName }}.ApimPolicies/"
       ApimImportScript: "$(Pipeline.Workspace)/${{ variables.SolutionBaseName }}.Scripts/Import-ApimOpenApiDefinitionFromFile.ps1"
       SpecificationPath: "$(Pipeline.Workspace)/${{ variables.SolutionBaseName }}.OpenApiDocs"
+      RunInfrastructureDeployment: ${{ parameters.RunInfrastructureDeployment }}
+      UIFunctionalTestEnabled: false
+      UIFunctionalTestPackage: "$(Pipeline.Workspace)/${{ variables.SolutionBaseName }}.UI.FunctionalTests.DeploymentPackages/DFC.App.Banners.zip"
+      UIFunctionalTestProjectFolder: "$(Pipeline.Workspace)/${{ variables.SolutionBaseName }}.UI.FunctionalTests"
+      UIFunctionalTestCategory: Banners
+
 
 - stage: DeployToPRDDraftAppBanners
   condition:  and(eq(dependencies.DeployToPRDAppBanners.result,'Succeeded'), eq(variables['Build.SourceBranch'], 'refs/heads/master'))
@@ -432,6 +574,14 @@ stages:
   - group: dfc-app-draft
   - group: dfc-stax-shared-prd
   - group: dfc-compositeui-all
+  - group: dfc-app-uiautomation-browser-all
+  - group: dfc-app-uiautomation-browser-arguments-all
+  - group: dfc-app-uiautomation-browserstack-all
+  - group: dfc-app-uiautomation-browserstack-prd
+  - group: dfc-app-uiautomation-testexecution-timeout-all
+  - group: dfc-app-uiautomation-testexecution-retry-all
+  - group: dfc-browserstack
+  - group: dfc-app-uiautomation-prd
   - template: VariableTemplates\PRDDraftEnvironmentVariables.yml
 
   jobs:
@@ -459,3 +609,9 @@ stages:
       APIMPolicyPath: "$(Pipeline.Workspace)/${{ variables.SolutionBaseName }}.ApimPolicies/"
       ApimImportScript: "$(Pipeline.Workspace)/${{ variables.SolutionBaseName }}.Scripts/Import-ApimOpenApiDefinitionFromFile.ps1"
       SpecificationPath: "$(Pipeline.Workspace)/${{ variables.SolutionBaseName }}.OpenApiDocs"
+      RunInfrastructureDeployment: ${{ parameters.RunInfrastructureDeployment }}
+      UIFunctionalTestEnabled: false
+      UIFunctionalTestPackage: "$(Pipeline.Workspace)/${{ variables.SolutionBaseName }}.UI.FunctionalTests.DeploymentPackages/DFC.App.Banners.zip"
+      UIFunctionalTestProjectFolder: "$(Pipeline.Workspace)/${{ variables.SolutionBaseName }}.UI.FunctionalTests"
+      UIFunctionalTestCategory: Banners
+
