@@ -22,6 +22,10 @@ parameters:
   APIMPolicyPath: ''
   ApimImportScript: ''
   SpecificationPath: ''
+  UIFunctionalTestEnabled: ''
+  UIFunctionalTestPackage: ''
+  UIFunctionalTestProjectFolder: ''
+  UIFunctionalTestCategory: ''
 
 jobs:
 - deployment: DeployTemplate
@@ -70,3 +74,20 @@ jobs:
             APIMPolicyPath: '${{ parameters.APIMPolicyPath }}'
             ApimImportScript: '${{ parameters.ApimImportScript }}'
             SpecificationPath:  '${{ parameters.SpecificationPath }}'
+
+- deployment: DeployUIFunctionalTests
+  displayName: "Deploy ui functional tests"
+  environment: ${{ parameters.EnvironmentName }}
+  dependsOn:
+  - DeployApplication
+  strategy:
+    runOnce:
+      deploy:
+        steps:
+        - template: ../StepTemplates/run-functional-tests.yml
+          parameters:
+            environment: ${{ parameters.EnvironmentName }}
+            UIFunctionalTestEnabled: '${{ parameters.UIFunctionalTestEnabled }}'
+            UIFunctionalTestPackage: '${{ parameters.UIFunctionalTestPackage }}'
+            UIFunctionalTestProjectFolder: '${{ parameters.UIFunctionalTestProjectFolder }}'
+            UIFunctionalTestCategory: '${{ parameters.UIFunctionalTestCategory }}'
