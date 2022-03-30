@@ -42,13 +42,14 @@ namespace DFC.App.Banners.HostedServices
             return base.StopAsync(cancellationToken);
         }
 
-        protected override Task ExecuteAsync(CancellationToken stoppingToken)
+        protected override async Task ExecuteAsync(CancellationToken stoppingToken)
         {
             if (cmsApiClientOptions.BaseAddress != null)
             {
                 logger.LogInformation("Cache reload executing");
 
                 var task = hostedServiceTelemetryWrapper.Execute(() => cacheReloadService.Reload(stoppingToken), nameof(CacheReloadBackgroundService));
+                await task;
 
                 if (!task.IsCompletedSuccessfully)
                 {
@@ -59,11 +60,7 @@ namespace DFC.App.Banners.HostedServices
                         throw task.Exception;
                     }
                 }
-
-                return task;
             }
-
-            return Task.CompletedTask;
         }
     }
 }

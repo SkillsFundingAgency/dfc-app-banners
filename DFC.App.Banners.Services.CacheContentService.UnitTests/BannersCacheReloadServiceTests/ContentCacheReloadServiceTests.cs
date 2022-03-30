@@ -63,37 +63,9 @@ namespace DFC.App.Banners.Services.CacheContentService.UnitTests.BannersCacheRel
             await cacheReloadService.Reload(CancellationToken.None);
 
             //Assert
-            A.CallTo(() => FakeBannerDocumentService.PurgeAsync()).MustNotHaveHappened();
+            A.CallTo(() => FakeBannerDocumentService.PurgeAsync()).MustHaveHappenedOnceExactly();
             A.CallTo(() => FakeCmsApiService.GetItemAsync<PageBannerContentItemApiDataModel>(A<Uri>.Ignored)).MustHaveHappenedOnceExactly();
             A.CallTo(() => FakeBannerDocumentService.UpsertAsync(A<PageBannerContentItemModel>.Ignored)).MustHaveHappenedOnceExactly();
-        }
-
-        [Fact]
-        public async Task ReloadWhenLocalCacheHasItemsNotReturnedByContentApiThenDeleteThoseLocalItems()
-        {
-            //Arrange
-            var dummyContentItem = new PageBannerContentItemApiDataModel();
-            var dummySummary = BuildCmsApiSummaryItemModel();
-
-            var pageBannerContentItemModel = new PageBannerContentItemModel
-            {
-                Id = Guid.NewGuid(),
-                PageLocation = "/randomLocation",
-            };
-            A.CallTo(() => FakeBannerDocumentService.GetAllAsync()).Returns(new List<PageBannerContentItemModel>() { pageBannerContentItemModel });
-            A.CallTo(() => FakeCmsApiService.GetSummaryAsync<CmsApiSummaryItemModel>()).Returns(new List<CmsApiSummaryItemModel>() { dummySummary });
-            A.CallTo(() => FakeCmsApiService.GetItemAsync<PageBannerContentItemApiDataModel>(A<string>.Ignored, A<Guid>.Ignored)).Returns(dummyContentItem);
-            var cacheReloadService = BuildBannersCacheReloadService();
-
-            //Act
-            await cacheReloadService.Reload(CancellationToken.None);
-
-            //Assert
-            A.CallTo(() => FakeBannerDocumentService.PurgeAsync()).MustNotHaveHappened();
-            A.CallTo(() => FakeCmsApiService.GetItemAsync<PageBannerContentItemApiDataModel>(A<Uri>.Ignored)).MustHaveHappenedOnceExactly();
-            A.CallTo(() => FakeBannerDocumentService.UpsertAsync(A<PageBannerContentItemModel>.Ignored)).MustHaveHappenedOnceExactly();
-            A.CallTo(() => FakeBannerDocumentService.DeleteAsync(pageBannerContentItemModel.Id)).MustHaveHappenedOnceExactly();
-            A.CallTo(() => FakeBannerDocumentService.DeleteAsync(A<Guid>.Ignored)).MustHaveHappenedOnceExactly();
         }
 
         [Fact]
