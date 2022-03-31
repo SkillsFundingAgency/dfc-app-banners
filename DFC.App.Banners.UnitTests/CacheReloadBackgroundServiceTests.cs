@@ -45,9 +45,8 @@ namespace DFC.App.Banners.UnitTests
 
             // Act
             // Assert
-            var ex = await Assert.ThrowsAsync<AggregateException>(async () => await serviceToTest.StartAsync(default));
-            Assert.NotNull(ex.InnerException);
-            Assert.Equal(ex.InnerException?.Message, Message);
+            var ex = await Assert.ThrowsAsync<Exception>(async () => await serviceToTest.StartAsync(default));
+            Assert.Equal(ex.Message, Message);
             serviceToTest.Dispose();
         }
     }

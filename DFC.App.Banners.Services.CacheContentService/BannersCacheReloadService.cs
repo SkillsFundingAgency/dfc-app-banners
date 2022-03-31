@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Net;
 using System.Threading;
 using System.Threading.Tasks;
@@ -72,13 +70,13 @@ namespace DFC.App.Banners.Services.CacheContentService
         public async Task ReloadContent(CancellationToken stoppingToken)
         {
             var pageBanners = await cmsApiService.GetSummaryAsync<CmsApiSummaryItemModel>();
+            await bannerDocumentService.PurgeAsync();
+
             if (pageBanners is null || pageBanners.Count < 1)
             {
-                await bannerDocumentService.PurgeAsync();
                 return;
             }
 
-            var pageBannersContentItems = new List<PageBannerContentItemModel>(pageBanners.Count);
             foreach (var pageBanner in pageBanners)
             {
                 if (stoppingToken.IsCancellationRequested)
@@ -88,24 +86,13 @@ namespace DFC.App.Banners.Services.CacheContentService
                     return;
                 }
 
-                var contentItem = await GetPageBannerContentItemAsync(pageBanner.Url!);
-                if (contentItem != null)
-                {
-                    pageBannersContentItems.Add(contentItem);
-                }
+                await GetContentAndUpdateCache(pageBanner.Url!);
             }
-
-            var cachedDocuments = await bannerDocumentService.GetAllAsync();
-            var docsToDeletetasks = cachedDocuments
-                            .Where(pb => !pageBannersContentItems.Select(x => x.PageLocation).Contains(pb.PageLocation))
-                            .Select(pb => bannerDocumentService.DeleteAsync(pb.Id));
-
-            await Task.WhenAll(docsToDeletetasks);
         }
 
         public async Task<bool> ProcessPageBannerContentAsync(Uri url)
         {
-            var item = await GetPageBannerContentItemAsync(url);
+            var item = await GetContentAndUpdateCache(url);
             return item != null;
         }
 
@@ -118,10 +105,10 @@ namespace DFC.App.Banners.Services.CacheContentService
             return result;
         }
 
-        private async Task<PageBannerContentItemModel?> GetPageBannerContentItemAsync(Uri url)
+        private async Task<PageBannerContentItemModel?> GetContentAndUpdateCache(Uri url)
         {
             var apiDataModel = await cmsApiService.GetItemAsync<PageBannerContentItemApiDataModel>(url);
-            if (apiDataModel == null)
+            if (apiDataModel is null)
             {
                 logger.LogInformation($"Page Banner Url: {url}, result {HttpStatusCode.NoContent}: No content found");
                 return null;

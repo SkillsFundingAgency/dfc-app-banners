@@ -67,7 +67,7 @@ namespace DFC.App.Banners.Services.CacheContentService
                 urls.AddRange(result.Select(x => x.Url!));
             }
 
-            return urls.Any() ? urls : new List<Uri>();
+            return urls.Any() ? urls : Enumerable.Empty<Uri>();
         }
 
         public Task<HttpStatusCode> UpsertAsync(PageBannerContentItemModel pageBannerContentItemModel) =>
