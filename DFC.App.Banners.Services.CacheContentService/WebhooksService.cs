@@ -44,7 +44,7 @@ namespace DFC.App.Banners.Services.CacheContentService
         }
 
         private IEventHandler GetEventMessageHandler(string contentType) =>
-            eventHandlers.FirstOrDefault(x => x.ProcessType == contentType)
+            eventHandlers.FirstOrDefault(x => x.ProcessType.Equals(contentType, StringComparison.InvariantCultureIgnoreCase))
                 ?? throw new InvalidOperationException($"No implementation for {contentType} Found");
     }
 }
