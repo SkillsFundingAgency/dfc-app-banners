@@ -385,7 +385,7 @@ stages:
 
 - stage: DeployToPRDAppBanners
   condition:  and(eq(dependencies.DeployToPPDraftAppBanners.result,'Succeeded'), eq(variables['Build.SourceBranch'], 'refs/heads/master'))
-  displayName: Deploy to PRD_AppBanners
+  displayName: Deploy to PRD-AppBanners
   variables:
   - group: dfc-shared-all
   - group: dfc-shared-prd
@@ -406,7 +406,7 @@ stages:
       DfCDevopsPath: '$(Agent.BuildDirectory)/s/dfc-devops'
       PackageFile:  "$(Pipeline.Workspace)/${{ variables.SolutionBaseName }}.DeploymentPackages/${{ variables.SolutionBaseName }}.zip"
       ArmTemplateFolder: "$(Pipeline.Workspace)/${{ variables.SolutionBaseName }}.Resources.ArmTemplates/"
-      EnvironmentName: PRD_AppBanners
+      EnvironmentName: PRD-AppBanners
       AppSharedResourceGroup: $(AppSharedResourceGroup)
       appSharedCosmosDBName: $(appSharedCosmosDBName)
       AppServiceName: '$(AppServiceName)'
@@ -423,7 +423,7 @@ stages:
 
 - stage: DeployToPRDDraftAppBanners
   condition:  and(eq(dependencies.DeployToPRDAppBanners.result,'Succeeded'), eq(variables['Build.SourceBranch'], 'refs/heads/master'))
-  displayName: Deploy to PRD-DRAFT_AppBanners
+  displayName: Deploy to PRD-DRAFT-AppBanners
   variables:
   - group: dfc-shared-all
   - group: dfc-shared-prd
@@ -445,7 +445,7 @@ stages:
       DfCDevopsPath: '$(Agent.BuildDirectory)/s/dfc-devops'
       PackageFile:  "$(Pipeline.Workspace)/${{ variables.SolutionBaseName }}.DeploymentPackages/${{ variables.SolutionBaseName }}.zip"
       ArmTemplateFolder: "$(Pipeline.Workspace)/${{ variables.SolutionBaseName }}.Resources.ArmTemplates/"
-      EnvironmentName: PRD-DRAFT_AppBanners
+      EnvironmentName: PRD-DRAFT-AppBanners
       AppSharedResourceGroup: $(AppSharedResourceGroup)
       appSharedCosmosDBName: $(appSharedCosmosDBName)
       AppServiceName: '$(AppServiceName)'
