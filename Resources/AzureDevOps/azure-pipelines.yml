@@ -152,7 +152,7 @@ stages:
       SpecificationPath: "$(Pipeline.Workspace)/${{ variables.SolutionBaseName }}.OpenApiDocs"
 
 - stage: DeployToDevAppBanners
-  condition:  and(eq(dependencies.Build.result,'Succeeded'), or(eq(variables['Build.SourceBranch'], 'refs/heads/dev'), or(eq(variables['Build.SourceBranch'], 'refs/heads/feature/*'), eq(variables['Build.SourceBranch'], 'refs/heads/master')))
+  condition:  and(eq(dependencies.Build.result,'Succeeded'), or(eq(variables['Build.SourceBranch'], 'refs/heads/dev'), or(eq(variables['Build.SourceBranch'], 'refs/heads/feature/dotnet6'), eq(variables['Build.SourceBranch'], 'refs/heads/master')))
   displayName: Deploy to DEV_AppBanners
   variables:
   - group: dfc-shared-all
