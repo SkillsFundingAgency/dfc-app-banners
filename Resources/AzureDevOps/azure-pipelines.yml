@@ -75,7 +75,7 @@ stages:
         IntegrationTestSuffix: IntegrationTests
 
 - stage: DeployToLabAppBanners
-  condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/dev'))
+  condition: succeeded()
   displayName: Deploy to LAB_AppBanners
   variables:
   - group: dfc-shared-all
@@ -152,7 +152,7 @@ stages:
       SpecificationPath: "$(Pipeline.Workspace)/${{ variables.SolutionBaseName }}.OpenApiDocs"
 
 - stage: DeployToDevAppBanners
-  condition:  and(eq(dependencies.Build.result,'Succeeded'), or(eq(variables['Build.SourceBranch'], 'refs/heads/dev'), eq(variables['Build.SourceBranch'], 'refs/heads/feature/dotnet6'),  eq(variables['Build.SourceBranch'], 'refs/heads/master')))
+  condition: succeeded()
   displayName: Deploy to DEV_AppBanners
   variables:
   - group: dfc-shared-all
@@ -190,7 +190,7 @@ stages:
       SpecificationPath: "$(Pipeline.Workspace)/${{ variables.SolutionBaseName }}.OpenApiDocs"
 
 - stage: DeployToDevDraftAppBanners
-  condition:  and(eq(dependencies.DeployToDevAppBanners.result,'Succeeded'), or(eq(variables['Build.SourceBranch'], 'refs/heads/dev'), eq(variables['Build.SourceBranch'], 'refs/heads/master')))
+  condition: succeeded()
   displayName: Deploy to DEV-DRAFT_AppBanners
   variables:
   - group: dfc-shared-all
@@ -229,7 +229,7 @@ stages:
       SpecificationPath: "$(Pipeline.Workspace)/${{ variables.SolutionBaseName }}.OpenApiDocs"
 
 - stage: DeployToSitAppBanners
-  condition:  and(eq(dependencies.DeployToDevDraftAppBanners.result,'Succeeded'), or(eq(variables['Build.SourceBranch'], 'refs/heads/dev'), eq(variables['Build.SourceBranch'], 'refs/heads/master')))
+  condition: succeeded()
   displayName: Deploy to SIT_AppBanners
   variables:
   - group: dfc-shared-all
@@ -267,7 +267,7 @@ stages:
       SpecificationPath: "$(Pipeline.Workspace)/${{ variables.SolutionBaseName }}.OpenApiDocs"
 
 - stage: DeployToSitDraftAppBanners
-  condition:  and(eq(dependencies.DeployToSitAppBanners.result,'Succeeded'), or(eq(variables['Build.SourceBranch'], 'refs/heads/dev'), eq(variables['Build.SourceBranch'], 'refs/heads/master')))
+  condition: succeeded()
   displayName: Deploy to SIT-DRAFT_AppBanners
   variables:
   - group: dfc-shared-all
@@ -306,7 +306,7 @@ stages:
       SpecificationPath: "$(Pipeline.Workspace)/${{ variables.SolutionBaseName }}.OpenApiDocs"
 
 - stage: DeployToPPAppBanners
-  condition:  and(eq(dependencies.DeployToSitDraftAppBanners.result,'Succeeded'), eq(variables['Build.SourceBranch'], 'refs/heads/master'))
+  condition: succeeded()
   displayName: Deploy to PP_AppBanners
   variables:
   - group: dfc-shared-all
@@ -344,7 +344,7 @@ stages:
       SpecificationPath: "$(Pipeline.Workspace)/${{ variables.SolutionBaseName }}.OpenApiDocs"
 
 - stage: DeployToPPDraftAppBanners
-  condition:  and(eq(dependencies.DeployToPPAppBanners.result,'Succeeded'), eq(variables['Build.SourceBranch'], 'refs/heads/master'))
+  condition: succeeded()
   displayName: Deploy to PP-DRAFT_AppBanners
   variables:
   - group: dfc-shared-all
@@ -383,7 +383,7 @@ stages:
       SpecificationPath: "$(Pipeline.Workspace)/${{ variables.SolutionBaseName }}.OpenApiDocs"
 
 - stage: DeployToPRDAppBanners
-  condition:  and(eq(dependencies.DeployToPPDraftAppBanners.result,'Succeeded'), eq(variables['Build.SourceBranch'], 'refs/heads/master'))
+  condition: succeeded()
   displayName: Deploy to PRD-AppBanners
   variables:
   - group: dfc-shared-all
@@ -421,7 +421,7 @@ stages:
       SpecificationPath: "$(Pipeline.Workspace)/${{ variables.SolutionBaseName }}.OpenApiDocs"
 
 - stage: DeployToPRDDraftAppBanners
-  condition:  and(eq(dependencies.DeployToPRDAppBanners.result,'Succeeded'), eq(variables['Build.SourceBranch'], 'refs/heads/master'))
+  condition: succeeded()
   displayName: Deploy to PRD-DRAFT-AppBanners
   variables:
   - group: dfc-shared-all
