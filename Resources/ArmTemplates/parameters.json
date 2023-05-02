@@ -106,6 +106,9 @@
         },
         "LoggingLogLevelDefault": {
             "value": "__LoggingLogLevelDefault__"
-        }
+        },
+        "appInsightsInstrumentationKey": {
+          "value": "__appInsightsInstrumentationKey__" 
+        }  
     }
 }
