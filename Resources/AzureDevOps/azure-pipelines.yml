@@ -198,7 +198,7 @@ stages:
       UIFunctionalTestCategory: Banners
 
 - stage: DeployToDevAppBanners
-  condition:  and(eq(dependencies.Build.result,'Succeeded'), or(eq(variables['Build.SourceBranch'], 'refs/heads/dev'), eq(variables['Build.SourceBranch'], 'refs/heads/master')))
+  condition:  succeeded()
   displayName: Deploy to DEV_AppBanners
   variables:
   - group: dfc-shared-all
@@ -250,7 +250,7 @@ stages:
 
 
 - stage: DeployToDevDraftAppBanners
-  condition:  and(eq(dependencies.DeployToDevAppBanners.result,'Succeeded'), or(eq(variables['Build.SourceBranch'], 'refs/heads/dev'), eq(variables['Build.SourceBranch'], 'refs/heads/master')))
+  condition:  succeeded()
   displayName: Deploy to DEV-DRAFT_AppBanners
   variables:
   - group: dfc-shared-all
