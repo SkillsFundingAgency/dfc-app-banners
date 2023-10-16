@@ -20,7 +20,7 @@ namespace DFC.App.Banners.Controllers
     public class BannersController : Controller
     {
         public const string RegistrationPath = "banners";
-        private const int CacheDurationInSeconds = 10;
+        private const int CacheDurationInSeconds = 600;
 
         private readonly ILogger<BannersController> logger;
         private readonly IMapper mapper;
