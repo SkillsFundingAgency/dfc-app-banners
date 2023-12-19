@@ -106,6 +106,12 @@
         },
         "LoggingLogLevelDefault": {
             "value": "__LoggingLogLevelDefault__"
+        },
+        "workspaceName": {
+            "value": "__sharedLogAnalyticsWorkspace__"
+        },
+        "workspaceResourceGroup": {
+            "value": "__sharedLogAnalyticsResourceGroup__"
         }
     }
 }

@@ -97,6 +97,12 @@
         },
         "LoggingLogLevelDefault": {
             "value": "TraceLog"
+        },
+        "workspaceName": {
+            "value": "aTestLogAnalyticsAccount"
+        },
+        "workspaceResourceGroup": {
+            "value": "aResourceGroup"
         }
     }
 }
