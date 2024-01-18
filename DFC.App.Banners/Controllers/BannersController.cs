@@ -5,17 +5,18 @@ using System.Threading.Tasks;
 
 using AutoMapper;
 
-using DFC.App.Banners.Data.Models.ContentModels;
 using DFC.App.Banners.Extensions;
 using DFC.App.Banners.ViewModels;
 using DFC.Common.SharedContent.Pkg.Netcore;
 using DFC.Common.SharedContent.Pkg.Netcore.Interfaces;
 using DFC.Common.SharedContent.Pkg.Netcore.Model.ContentItems.PageBanner;
+using DFC.Common.SharedContent.Pkg.Netcore.Model.Response;
 using Microsoft.AspNetCore.DataProtection.KeyManagement;
 //using DFC.Compui.Cosmos.Contracts;
 
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
+using static System.Net.WebRequestMethods;
 
 namespace DFC.App.Banners.Controllers
 {
@@ -50,15 +51,16 @@ namespace DFC.App.Banners.Controllers
                 Documents = new List<IndexDocumentViewModel>(),
             };
 
-            var documents = new List<PageBannerContentItemModel>(); // await documentService.GetAllAsync();
+            var documents = await sharedContentRedis.GetDataAsync<PageBannerResponse>("PageBanners/All");
+            var pageBanners = documents.PageBanner;
 
-            if (documents?.Any() == true)
+            if (pageBanners.Count != 0)
             {
-                var docs = documents.OrderBy(o => o.PageLocation)
+                var docs = pageBanners.OrderBy(o => o.Banner.WebPageUrl)
                     .Select(a => new IndexDocumentViewModel
                     {
-                        PageLocation = a.PageLocation,
-                        PageName = a.PageName,
+                        PageLocation = a.Banner.WebPageUrl.Replace("https://nationalcareers.service.gov.uk", ""),
+                        PageName = a.Banner.WebPageName,
                     });
 
                 viewModel.Documents.AddRange(docs);

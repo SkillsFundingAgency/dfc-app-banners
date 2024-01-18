@@ -3,7 +3,7 @@ using System.Diagnostics.CodeAnalysis;
 using System.Net.Http;
 using AutoMapper;
 //using DFC.App.Banners.Data.Contracts;
-using DFC.App.Banners.Data.Models.ContentModels;
+//using DFC.App.Banners.Data.Models.ContentModels;
 //using DFC.App.Banners.HostedServices;
 //using DFC.App.Banners.Services.CacheContentService;
 using DFC.Common.SharedContent.Pkg.Netcore;
@@ -27,6 +27,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using DFC.Common.SharedContent.Pkg.Netcore.Model.ContentItems.PageBanner;
+using DFC.Common.SharedContent.Pkg.Netcore.Model.Response;
 
 namespace DFC.App.Banners
 {
@@ -97,6 +98,7 @@ namespace DFC.App.Banners
             });
 
             services.AddSingleton<ISharedContentRedisInterfaceStrategy<PageBanner>, PageBannerQueryStrategy>();
+            services.AddSingleton<ISharedContentRedisInterfaceStrategy<PageBannerResponse>, PageBannersAllQueryStrategy>();
             services.AddSingleton<ISharedContentRedisInterfaceStrategyFactory, SharedContentRedisStrategyFactory>();
             services.AddScoped<ISharedContentRedisInterface, SharedContentRedis>();
 
