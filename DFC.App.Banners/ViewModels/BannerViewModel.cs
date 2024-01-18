@@ -9,7 +9,7 @@ namespace DFC.App.Banners.ViewModels
     {
         public bool IsActive { get; set; }
 
-        public int Ordinal { get; set; }
+        //public int Ordinal { get; set; }
 
         public HtmlString? Body { get; set; } = new HtmlString(string.Empty);
     }

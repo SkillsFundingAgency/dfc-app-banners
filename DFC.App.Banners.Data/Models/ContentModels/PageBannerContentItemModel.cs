@@ -21,8 +21,8 @@ namespace DFC.App.Banners.Data.Models.ContentModels
 
         public string PageLocation { get; set; } = DefaultPageLocation;
 
-        [Required]
-        public Uri? Url { get; set; }
+        //[Required]
+        //public Uri? Url { get; set; }
 
         public Guid? ItemId { get; set; }
 
@@ -30,10 +30,10 @@ namespace DFC.App.Banners.Data.Models.ContentModels
 
         public List<BannerContentItemModel> Banners { get; set; } = new List<BannerContentItemModel>();
 
-        public DateTime LastReviewed { get; set; }
+        //public DateTime LastReviewed { get; set; }
 
-        public DateTime CreatedDate { get; set; }
+        //public DateTime CreatedDate { get; set; }
 
-        public DateTime LastCached { get; set; } = DateTime.UtcNow;
+        //public DateTime LastCached { get; set; } = DateTime.UtcNow;
     }
 }

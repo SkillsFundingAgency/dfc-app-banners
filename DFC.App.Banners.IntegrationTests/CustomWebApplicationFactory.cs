@@ -1,6 +1,6 @@
-﻿using DFC.App.Banners.Data.Contracts;
+﻿//using DFC.App.Banners.Data.Contracts;
 using DFC.App.Banners.Data.Models.ContentModels;
-using DFC.App.Banners.IntegrationTests.Fakes;
+//using DFC.App.Banners.IntegrationTests.Fakes;
 using DFC.Compui.Cosmos.Contracts;
 using FakeItEasy;
 using Microsoft.AspNetCore.Hosting;
@@ -30,12 +30,12 @@ namespace DFC.App.Banners.IntegrationTests
                 new PageBannerContentItemModel
                 {
                     Id = Guid.NewGuid(),
-                    Url = new Uri("http://www.test.com"),
+                    //Url = new Uri("http://www.test.com"),
                 },
                 new PageBannerContentItemModel
                 {
                     Id = Guid.NewGuid(),
-                    Url = new Uri("http://www.test.com"),
+                    //Url = new Uri("http://www.test.com"),
                 },
             };
         }
@@ -54,7 +54,7 @@ namespace DFC.App.Banners.IntegrationTests
             builder.ConfigureTestServices(services =>
             {
                 services.AddTransient(sp => MockCosmosRepo);
-                services.AddTransient<IWebhooksService, FakeWebhooksService>();
+                //services.AddTransient<IWebhooksService, FakeWebhooksService>();
             });
         }
     }

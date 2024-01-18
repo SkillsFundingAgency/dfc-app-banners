@@ -16,13 +16,13 @@ namespace DFC.App.Banners.Data.Models.ContentModels
 
         public bool IsGlobal { get; set; }
 
-        public bool UseBrowserWidth { get; set; }
+        //public bool UseBrowserWidth { get; set; }
 
-        public DateTime LastCached { get; set; } = DateTime.UtcNow;
+        //public DateTime LastCached { get; set; } = DateTime.UtcNow;
 
-        public DateTime? CreatedDate { get; set; }
+        //public DateTime? CreatedDate { get; set; }
 
-        public DateTime LastReviewed { get; set; }
+        //public DateTime LastReviewed { get; set; }
 
         public string Content { get; set; } = string.Empty;
     }

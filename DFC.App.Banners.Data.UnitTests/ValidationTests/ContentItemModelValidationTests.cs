@@ -35,10 +35,10 @@ namespace DFC.App.Banners.Data.UnitTests.ValidationTests
             var model = new PageBannerContentItemModel
             {
                 Id = documentId,
-                Url = new Uri("aaa-bbb", UriKind.Relative),
-                LastReviewed = DateTime.UtcNow,
-                CreatedDate = DateTime.UtcNow,
-                LastCached = DateTime.UtcNow,
+                //Url = new Uri("aaa-bbb", UriKind.Relative),
+                //LastReviewed = DateTime.UtcNow,
+                //CreatedDate = DateTime.UtcNow,
+                //LastCached = DateTime.UtcNow,
             };
 
             return model;

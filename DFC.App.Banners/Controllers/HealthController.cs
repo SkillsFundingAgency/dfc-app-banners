@@ -15,13 +15,13 @@ namespace DFC.App.Banners.Controllers
         public const string HealthViewCanonicalName = "health";
 
         private readonly ILogger<HealthController> logger;
-        private readonly IDocumentService<PageBannerContentItemModel> documentService;
+        //private readonly IDocumentService<PageBannerContentItemModel> documentService;
         private readonly string resourceName = typeof(Program).Namespace!;
 
-        public HealthController(ILogger<HealthController> logger, IDocumentService<PageBannerContentItemModel> sharedContentItemDocumentService)
+        public HealthController(ILogger<HealthController> logger/*, IDocumentService<PageBannerContentItemModel> sharedContentItemDocumentService*/)
         {
             this.logger = logger;
-            this.documentService = sharedContentItemDocumentService;
+            //this.documentService = sharedContentItemDocumentService;
         }
 
         [HttpGet]
@@ -39,7 +39,7 @@ namespace DFC.App.Banners.Controllers
         {
             logger.LogInformation("Generating Health report");
 
-            var isHealthy = await documentService.PingAsync();
+            var isHealthy = true; // await documentService.PingAsync();
 
             if (isHealthy)
             {
