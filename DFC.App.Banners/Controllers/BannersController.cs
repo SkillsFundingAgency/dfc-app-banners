@@ -27,18 +27,15 @@ namespace DFC.App.Banners.Controllers
         private readonly ILogger<BannersController> logger;
         private readonly IMapper mapper;
         private readonly ISharedContentRedisInterface sharedContentRedis;
-        //private readonly IDocumentService<PageBannerContentItemModel> documentService;
 
         public BannersController(
             ILogger<BannersController> logger,
             IMapper mapper,
             ISharedContentRedisInterface sharedContentRedis)
-            //IDocumentService<PageBannerContentItemModel> documentService)
         {
             this.logger = logger;
             this.mapper = mapper;
             this.sharedContentRedis = sharedContentRedis;
-            //this.documentService = documentService;
         }
 
         [HttpGet]
@@ -81,7 +78,7 @@ namespace DFC.App.Banners.Controllers
             }
 
             var pageBannerUrl = $"pagebanner/https://nationalcareers.service.gov.uk{path}";
-            var pageBannerContentItemModel = await sharedContentRedis.GetDataAsync<PageBanner>(pageBannerUrl); //Array.Empty<PageBannerContentItemModel>(); //await GetBannersAsync(path ?? "/");
+            var pageBannerContentItemModel = await sharedContentRedis.GetDataAsync<PageBanner>(pageBannerUrl);
 
             if (pageBannerContentItemModel != null)
             {
@@ -106,7 +103,7 @@ namespace DFC.App.Banners.Controllers
             }
 
             var pageBannerUrl = $"pagebanner/https://nationalcareers.service.gov.uk{path}";
-            var pageBannerContentItemModel = await sharedContentRedis.GetDataAsync<PageBanner>($"pagebanner/https://nationalcareers.service.gov.uk/{path}"); //Array.Empty<PageBannerContentItemModel>(); // await GetBannersAsync(path ?? "/");
+            var pageBannerContentItemModel = await sharedContentRedis.GetDataAsync<PageBanner>($"pagebanner/https://nationalcareers.service.gov.uk/{path}");
 
             if (pageBannerContentItemModel != null)
             {
@@ -130,29 +127,5 @@ namespace DFC.App.Banners.Controllers
 
             return cleanPageBanner;
         }
-
-
-        //private async Task<IEnumerable<PageBannerContentItemModel>> GetBannersAsync(string path)
-        //{
-        //    if (!path.StartsWith('/'))
-        //    {
-        //        path = $"/{path}";
-        //    }
-
-        //    if (!path.Equals("/"))
-        //    {
-        //        path = path.TrimEnd('/');
-        //    }
-
-        //    var banners = await documentService.GetAsync(a => a.PartitionKey == path);
-
-        //    if (banners?.Any() is true || string.IsNullOrWhiteSpace(path) || path.Equals("/"))
-        //    {
-        //        return banners ?? Array.Empty<PageBannerContentItemModel>();
-        //    }
-
-        //    var parentPath = path.Substring(0, path.LastIndexOf('/'));
-        //    return await GetBannersAsync(parentPath);
-        //}
     }
 }

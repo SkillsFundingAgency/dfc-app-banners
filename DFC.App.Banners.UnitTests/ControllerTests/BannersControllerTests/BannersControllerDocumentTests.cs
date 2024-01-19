@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
 
-using DFC.App.Banners.Data.Models.ContentModels;
 using DFC.App.Banners.ViewModels;
 
 using FakeItEasy;
@@ -74,7 +73,6 @@ namespace DFC.App.Banners.UnitTests.ControllerTests.BannersControllerTests
         {
             // Arrange
             var expectedResults = A.CollectionOfDummy<PageBannerContentItemModel>(1);
-            expectedResults[0].Banners = new List<BannerContentItemModel>(A.CollectionOfDummy<BannerContentItemModel>(1));
             var controller = BuildBannersController(mediaTypeName);
             A.CallTo(() => FakeDocumentService.GetAsync(A<Expression<Func<PageBannerContentItemModel, bool>>>.Ignored))
                 .Returns(expectedResults);

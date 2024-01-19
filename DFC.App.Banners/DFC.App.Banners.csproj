@@ -42,13 +42,6 @@
 
 
   <ItemGroup>
-    <ProjectReference Include="..\DFC.App.Banners.Data\DFC.App.Banners.Data.csproj" />
-    <ProjectReference Include="..\DFC.App.Banners.Services.CacheContentService\DFC.App.Banners.Services.CacheContentService.csproj" />
-  </ItemGroup>
-
-
-
-  <ItemGroup>
     <Content Update="appsettings.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
