@@ -19,17 +19,19 @@ using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Collections.Generic;
 using System.Net.Http;
+using Moq;
 
 namespace DFC.App.Banners.IntegrationTests
 {
     public class CustomWebApplicationFactory<TStartup> : WebApplicationFactory<TStartup>
         where TStartup : class
     {
-        private const string RedisCacheConnectionStringAppSettings = "Cms:RedisCacheConnectionString";
-        private const string GraphApiUrlAppSettings = "Cms:GraphApiUrl";
         public CustomWebApplicationFactory()
         {
+            this.MockSharedContentRedis = new Mock<ISharedContentRedisInterface>();
         }
+
+        public Mock<ISharedContentRedisInterface> MockSharedContentRedis { get; set; }
 
 
         protected override void ConfigureWebHost(IWebHostBuilder builder)
@@ -40,26 +42,7 @@ namespace DFC.App.Banners.IntegrationTests
                     .AddJsonFile("appsettings.json", optional: true, reloadOnChange: true)
                     .Build();
 
-                services.AddSingleton<IConfiguration>(configuration);
-                services.AddStackExchangeRedisCache(options => { options.Configuration = configuration.GetSection(RedisCacheConnectionStringAppSettings).Get<string>(); });
-
-                services.AddHttpClient();
-                services.AddSingleton<IGraphQLClient>(s =>
-                {
-                    var option = new GraphQLHttpClientOptions()
-                    {
-                        EndPoint = new Uri(configuration.GetSection(GraphApiUrlAppSettings).Get<string>()),
-
-                        HttpMessageHandler = new CmsRequestHandler(s.GetService<IHttpClientFactory>(), s.GetService<IConfiguration>(), s.GetService<IHttpContextAccessor>()),
-                    };
-                    var client = new GraphQLHttpClient(option, new NewtonsoftJsonSerializer());
-                    return client;
-                });
-
-                services.AddSingleton<ISharedContentRedisInterfaceStrategy<PageBanner>, PageBannerQueryStrategy>();
-                services.AddSingleton<ISharedContentRedisInterfaceStrategy<PageBannerResponse>, PageBannersAllQueryStrategy>();
-                services.AddSingleton<ISharedContentRedisInterfaceStrategyFactory, SharedContentRedisStrategyFactory>();
-                services.AddScoped<ISharedContentRedisInterface, SharedContentRedis>();
+                services.AddScoped(_ => MockSharedContentRedis.Object);
             });
         }
 

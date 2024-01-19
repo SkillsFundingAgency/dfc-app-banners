@@ -1,4 +1,6 @@
-﻿using FluentAssertions;
+﻿using DFC.Common.SharedContent.Pkg.Netcore.Model.ContentItems.PageBanner;
+using FluentAssertions;
+using Moq;
 using System;
 using System.Collections.Generic;
 using System.Net;
@@ -72,6 +74,12 @@ namespace DFC.App.Banners.IntegrationTests.ControllerTests
         {
             // Arrange
             var uri = new Uri(path, UriKind.Relative);
+            var pathtest = "actionplans-test";
+            this.factory.MockSharedContentRedis.Setup(
+                x => x.GetDataAsync<PageBanner>(
+                    It.IsAny<string>()))
+            .ReturnsAsync(new PageBanner());
+            var test = await this.factory.MockSharedContentRedis.Object.GetDataAsync<PageBanner>($"pagebanner/https://nationalcareers.service.gov.uk/{pathtest}");
             var client = this.factory.CreateClient();
             client.DefaultRequestHeaders.Accept.Clear();
             client.DefaultRequestHeaders.Accept.Add(new System.Net.Http.Headers.MediaTypeWithQualityHeaderValue(MediaTypeNames.Text.Html));
