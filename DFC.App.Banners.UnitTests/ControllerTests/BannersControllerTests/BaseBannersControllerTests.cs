@@ -4,7 +4,6 @@ using System.Net.Mime;
 using AutoMapper;
 
 using DFC.App.Banners.Controllers;
-using DFC.App.Banners.Data.Models.ContentModels;
 using DFC.Compui.Cosmos.Contracts;
 
 using FakeItEasy;
@@ -13,6 +12,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Microsoft.Net.Http.Headers;
+using DFC.Common.SharedContent.Pkg.Netcore.Interfaces;
 
 namespace DFC.App.Banners.UnitTests.ControllerTests.BannersControllerTests
 {
@@ -21,7 +21,7 @@ namespace DFC.App.Banners.UnitTests.ControllerTests.BannersControllerTests
         protected BaseBannersControllerTests()
         {
             Logger = A.Fake<ILogger<BannersController>>();
-            FakeDocumentService = A.Fake<IDocumentService<PageBannerContentItemModel>>();
+            FakeSharedContentRedis = A.Fake<ISharedContentRedisInterface>();
             FakeMapper = A.Fake<IMapper>();
         }
 
@@ -43,7 +43,8 @@ namespace DFC.App.Banners.UnitTests.ControllerTests.BannersControllerTests
 
         protected ILogger<BannersController> Logger { get; }
 
-        protected IDocumentService<PageBannerContentItemModel> FakeDocumentService { get; }
+        protected ISharedContentRedisInterface FakeSharedContentRedis { get; }
+
 
         protected IMapper FakeMapper { get; }
 
@@ -53,7 +54,7 @@ namespace DFC.App.Banners.UnitTests.ControllerTests.BannersControllerTests
 
             httpContext.Request.Headers[HeaderNames.Accept] = mediaTypeName;
 
-            var controller = new BannersController(Logger, FakeMapper, FakeDocumentService)
+            var controller = new BannersController(Logger, FakeMapper, FakeSharedContentRedis)
             {
                 ControllerContext = new ControllerContext()
                 {

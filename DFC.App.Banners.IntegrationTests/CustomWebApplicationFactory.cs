@@ -41,8 +41,11 @@ namespace DFC.App.Banners.IntegrationTests
                 var configuration = new ConfigurationBuilder()
                     .AddJsonFile("appsettings.json", optional: true, reloadOnChange: true)
                     .Build();
+            });
 
-                services.AddScoped(_ => MockSharedContentRedis.Object);
+            builder.ConfigureTestServices(services =>
+            {
+                services.AddScoped<ISharedContentRedisInterface>(_ => MockSharedContentRedis.Object);
             });
         }
 

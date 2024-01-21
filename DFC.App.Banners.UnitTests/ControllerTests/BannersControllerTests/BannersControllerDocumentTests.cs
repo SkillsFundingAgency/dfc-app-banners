@@ -8,8 +8,10 @@ using DFC.App.Banners.ViewModels;
 using FakeItEasy;
 
 using Microsoft.AspNetCore.Mvc;
+using DFC.Common.SharedContent.Pkg.Netcore.Interfaces;
 
 using Xunit;
+using DFC.Common.SharedContent.Pkg.Netcore.Model.ContentItems.PageBanner;
 
 namespace DFC.App.Banners.UnitTests.ControllerTests.BannersControllerTests
 {
@@ -35,10 +37,18 @@ namespace DFC.App.Banners.UnitTests.ControllerTests.BannersControllerTests
         [MemberData(nameof(HtmlMediaTypes))]
         public async Task BannersControllerDocumentHtmlReturnsSuccess(string mediaTypeName)
         {
-            // Arrange
-            var expectedResults = A.CollectionOfDummy<PageBannerContentItemModel>(1);
+            var expectedResults = A.Fake<PageBanner>();
+            expectedResults.Banner = new Banner()
+            {
+                WebPageUrl = "/test",
+                WebPageName = "Test"
+            };
+            expectedResults.GraphSync = new GraphSync()
+            {
+                NodeId = "<<contentapiprefix>>/banner/test-guidid"
+            };
             var controller = BuildBannersController(mediaTypeName);
-            A.CallTo(() => FakeDocumentService.GetAsync(A<Expression<Func<PageBannerContentItemModel, bool>>>.Ignored))
+            _ = A.CallTo(() => FakeSharedContentRedis.GetDataAsync<PageBanner>(A<string>.Ignored))
                 .Returns(expectedResults);
 
             // Act
@@ -72,9 +82,17 @@ namespace DFC.App.Banners.UnitTests.ControllerTests.BannersControllerTests
         public async Task BannersControllerBodyHtmlReturnsSuccess(string mediaTypeName)
         {
             // Arrange
-            var expectedResults = A.CollectionOfDummy<PageBannerContentItemModel>(1);
+            var expectedResults = A.Fake<PageBanner>();
+            expectedResults.Banner = new Banner() { 
+                WebPageUrl = "/test", 
+                WebPageName = "Test"
+            };
+            expectedResults.GraphSync = new GraphSync()
+            {
+                NodeId = "<<contentapiprefix>>/banner/test-guidid"
+            };
             var controller = BuildBannersController(mediaTypeName);
-            A.CallTo(() => FakeDocumentService.GetAsync(A<Expression<Func<PageBannerContentItemModel, bool>>>.Ignored))
+            _ = A.CallTo(() => FakeSharedContentRedis.GetDataAsync<PageBanner>(A<string>.Ignored))
                 .Returns(expectedResults);
 
             // Act
@@ -83,31 +101,6 @@ namespace DFC.App.Banners.UnitTests.ControllerTests.BannersControllerTests
             // Assert
             var viewResult = Assert.IsType<ViewResult>(result);
             _ = Assert.IsAssignableFrom<List<BannerViewModel>>(viewResult.ViewData.Model);
-
-            controller.Dispose();
-        }
-
-        [Theory]
-        [MemberData(nameof(HtmlMediaTypes))]
-        public async Task BannersControllerBodyHtmlWhenBannerNotFoundForPageLocationThenReturnsBannerForParentPageLocation(string mediaTypeName)
-        {
-            // Arrange
-            var path = "/careers-advice/interview-advice";
-            var expectedResults = A.CollectionOfDummy<PageBannerContentItemModel>(1);
-            expectedResults[0].Banners = new List<BannerContentItemModel>(A.CollectionOfDummy<BannerContentItemModel>(1));
-            var controller = BuildBannersController(mediaTypeName);
-            A.CallTo(() => FakeDocumentService.GetAsync(A<Expression<Func<PageBannerContentItemModel, bool>>>.Ignored))
-                .Returns(Array.Empty<PageBannerContentItemModel>()).Once()
-                .Then
-                .Returns(expectedResults);
-
-            // Act
-            var result = await controller.BodyAsync(path);
-
-            // Assert
-            var viewResult = Assert.IsType<ViewResult>(result);
-            _ = Assert.IsAssignableFrom<List<BannerViewModel>>(viewResult.ViewData.Model);
-            A.CallTo(() => FakeDocumentService.GetAsync(A<Expression<Func<PageBannerContentItemModel, bool>>>.Ignored)).MustHaveHappenedTwiceExactly();
 
             controller.Dispose();
         }

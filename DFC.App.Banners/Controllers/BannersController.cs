@@ -51,7 +51,7 @@ namespace DFC.App.Banners.Controllers
             var documents = await sharedContentRedis.GetDataAsync<PageBannerResponse>("PageBanners/All");
             var pageBanners = documents.PageBanner;
 
-            if (pageBanners.Count != 0)
+            if (pageBanners != null && pageBanners.Count != 0)
             {
                 var docs = pageBanners.OrderBy(o => o.Banner.WebPageUrl)
                     .Select(a => new IndexDocumentViewModel
@@ -80,7 +80,7 @@ namespace DFC.App.Banners.Controllers
             var pageBannerUrl = $"pagebanner/https://nationalcareers.service.gov.uk{path}";
             var pageBannerContentItemModel = await sharedContentRedis.GetDataAsync<PageBanner>(pageBannerUrl);
 
-            if (pageBannerContentItemModel != null)
+            if (pageBannerContentItemModel != null && pageBannerContentItemModel.Banner != null)
             {
                 pageBannerContentItemModel = TidyPageBannerFields(pageBannerContentItemModel);
                 var document = mapper.Map<PageBannerViewModel>(pageBannerContentItemModel);
@@ -105,7 +105,7 @@ namespace DFC.App.Banners.Controllers
             var pageBannerUrl = $"pagebanner/https://nationalcareers.service.gov.uk{path}";
             var pageBannerContentItemModel = await sharedContentRedis.GetDataAsync<PageBanner>($"pagebanner/https://nationalcareers.service.gov.uk/{path}");
 
-            if (pageBannerContentItemModel != null)
+            if (pageBannerContentItemModel != null && pageBannerContentItemModel.Banner != null)
             {
                 pageBannerContentItemModel = TidyPageBannerFields(pageBannerContentItemModel);
                 var document = mapper.Map<PageBannerViewModel>(pageBannerContentItemModel);
