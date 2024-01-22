@@ -15,7 +15,7 @@
       "value": "__aseResourceGroup__"
     },
     "aspInstances": {
-      "value": "__aspInstances__"
+      "value": __aspInstances__
     },
     "clientAffinity": {
       "value": "__clientAffinity__"
@@ -48,7 +48,7 @@
       "value": "__CosmosDbDatabaseDoesntExist__"
     },
     "appDatabaseThroughput": {
-      "value": "__appDatabaseThroughput__"
+      "value": __appDatabaseThroughput__
     },
     "enableAlerts": {
       "value": "__EnableAzureMonitorAlerting__"
