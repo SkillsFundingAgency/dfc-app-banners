@@ -125,10 +125,10 @@
       "type": "string"
     },
     "CmsClientSecret": {
-      "type": "string"
+      "type": "securestring"
     },
     "CmsRedisCacheConnectionString": {
-      "type": "string"
+      "type": "securestring"
     }
   },
     "variables": {
