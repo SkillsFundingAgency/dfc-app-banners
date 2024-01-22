@@ -95,7 +95,7 @@ namespace DFC.App.Banners.Controllers
 
         [HttpGet]
         [Route("body/{**path}")]
-        public async Task<IActionResult> BodyAsync(string? path = "/")
+        public async Task<IActionResult> BodyAsync(string? path)
         {
             if (path != null)
             {
@@ -103,7 +103,7 @@ namespace DFC.App.Banners.Controllers
             }
 
             var pageBannerUrl = $"pagebanner/https://nationalcareers.service.gov.uk{path}";
-            var pageBannerContentItemModel = await sharedContentRedis.GetDataAsync<PageBanner>($"pagebanner/https://nationalcareers.service.gov.uk/{path}");
+            var pageBannerContentItemModel = await sharedContentRedis.GetDataAsync<PageBanner>(pageBannerUrl);
 
             if (pageBannerContentItemModel != null && pageBannerContentItemModel.Banner != null)
             {
