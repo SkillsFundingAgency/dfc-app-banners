@@ -18,7 +18,7 @@
       "value": __aspInstances__
     },
     "clientAffinity": {
-      "value": "__clientAffinity__"
+      "value": __clientAffinity__
     },
     "aspTier": {
       "value": "__aspTier__"
@@ -45,13 +45,13 @@
       "value": "__cosmosDBCollectionName__"
     },
     "appDatabaseNeedsCreation": {
-      "value": "__CosmosDbDatabaseDoesntExist__"
+      "value": __CosmosDbDatabaseDoesntExist__
     },
     "appDatabaseThroughput": {
       "value": __appDatabaseThroughput__
     },
     "enableAlerts": {
-      "value": "__EnableAzureMonitorAlerting__"
+      "value": __EnableAzureMonitorAlerting__
     },
     "SubscriptionSettingsEndpoint": {
       "value": "__SubscriptionSettingsEndpoint__"
