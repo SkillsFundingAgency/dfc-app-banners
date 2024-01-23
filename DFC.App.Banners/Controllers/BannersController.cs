@@ -77,7 +77,7 @@ namespace DFC.App.Banners.Controllers
                 path = $"/{path}";
             }
 
-            var pageBannerUrl = $"pagebanner/https://nationalcareers.service.gov.uk{path}";
+            var pageBannerUrl = $"PageBanner/https://nationalcareers.service.gov.uk{path}";
             var pageBannerContentItemModel = await sharedContentRedis.GetDataAsync<PageBanner>(pageBannerUrl);
 
             if (pageBannerContentItemModel != null && pageBannerContentItemModel.Banner != null)
@@ -102,7 +102,7 @@ namespace DFC.App.Banners.Controllers
                 path = $"/{path}";
             }
 
-            var pageBannerUrl = $"pagebanner/https://nationalcareers.service.gov.uk{path}";
+            var pageBannerUrl = $"PageBanner/https://nationalcareers.service.gov.uk{path}";
             var pageBannerContentItemModel = await sharedContentRedis.GetDataAsync<PageBanner>(pageBannerUrl);
 
             if (pageBannerContentItemModel != null && pageBannerContentItemModel.Banner != null)
