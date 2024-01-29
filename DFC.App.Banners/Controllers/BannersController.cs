@@ -15,6 +15,7 @@ using Microsoft.AspNetCore.DataProtection.KeyManagement;
 //using DFC.Compui.Cosmos.Contracts;
 
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Azure.Documents.SystemFunctions;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using static System.Net.WebRequestMethods;
@@ -87,6 +88,16 @@ namespace DFC.App.Banners.Controllers
             var pageBannerUrl = $"PageBanner/{baseUrl}{path}";
             var pageBannerContentItemModel = await sharedContentRedis.GetDataAsync<PageBanner>(pageBannerUrl);
 
+            while (pageBannerContentItemModel == null)
+            {
+                if (pageBannerUrl == $"PageBanner/{baseUrl}")
+                {
+                    break;
+                }
+                pageBannerUrl = pageBannerUrl.Substring(0, pageBannerUrl.LastIndexOf('/'));
+                pageBannerContentItemModel = await sharedContentRedis.GetDataAsync<PageBanner>(pageBannerUrl);
+            }
+
             if (pageBannerContentItemModel != null && pageBannerContentItemModel.Banner != null)
             {
                 pageBannerContentItemModel = TidyPageBannerFields(pageBannerContentItemModel);
@@ -111,6 +122,16 @@ namespace DFC.App.Banners.Controllers
 
             var pageBannerUrl = $"PageBanner/{baseUrl}{path}";
             var pageBannerContentItemModel = await sharedContentRedis.GetDataAsync<PageBanner>(pageBannerUrl);
+
+            while (pageBannerContentItemModel == null)
+            {
+                if (pageBannerUrl == $"PageBanner/{baseUrl}")
+                {
+                    break;
+                }
+                pageBannerUrl = pageBannerUrl.Substring(0, pageBannerUrl.LastIndexOf('/'));
+                pageBannerContentItemModel = await sharedContentRedis.GetDataAsync<PageBanner>(pageBannerUrl);
+            }
 
             if (pageBannerContentItemModel != null && pageBannerContentItemModel.Banner != null)
             {
