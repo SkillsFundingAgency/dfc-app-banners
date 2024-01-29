@@ -138,12 +138,12 @@ namespace DFC.App.Banners.Controllers
         private string GetBaseUrl()
         {
             var baseUrlAppSettings = configuration.GetValue<string>(BaseUrlAppSettings);
-            if (baseUrlAppSettings != string.Empty)
+            if (baseUrlAppSettings != null && baseUrlAppSettings != string.Empty)
             {
                 return baseUrlAppSettings.Remove(baseUrlAppSettings.Length - 1);
             }
 
-            return baseUrlAppSettings;
+            return string.Empty;
         }
     }
 }
