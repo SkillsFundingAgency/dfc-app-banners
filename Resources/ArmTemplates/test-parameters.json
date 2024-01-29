@@ -118,6 +118,9 @@
     },
     "CmsRedisCacheConnectionString": {
       "value": "testconnectionstring"
+    },
+    "CmsNcsBaseUrl": {
+      "value": "url.com"
     }
   }
 }

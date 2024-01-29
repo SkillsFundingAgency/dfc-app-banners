@@ -127,6 +127,9 @@
     },
     "CmsRedisCacheConnectionString": {
       "value": "__RedisConnectionString__"
+    },
+    "CmsNcsBaseUrl": {
+      "value": "__CompositeBaseUrl__"
     }
   }
 }

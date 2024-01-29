@@ -129,6 +129,9 @@
     },
     "CmsRedisCacheConnectionString": {
       "type": "securestring"
+    },
+    "CmsNcsBaseUrl": {
+      "type": "string"
     }
   },
     "variables": {
@@ -400,6 +403,10 @@
                         {
                           "name": "Cms__RedisCacheConnectionString",
                           "value": "[parameters('CmsRedisCacheConnectionString')]"
+                        },
+                        {
+                          "name": "Cms__NcsBaseUrl",
+                          "value": "[parameters('CmsNcsBaseUrl')]"
                         }
                       ]
                     }

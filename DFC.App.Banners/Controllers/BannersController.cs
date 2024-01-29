@@ -15,6 +15,7 @@ using Microsoft.AspNetCore.DataProtection.KeyManagement;
 //using DFC.Compui.Cosmos.Contracts;
 
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using static System.Net.WebRequestMethods;
 
@@ -24,18 +25,24 @@ namespace DFC.App.Banners.Controllers
     public class BannersController : Controller
     {
         public const string RegistrationPath = "banners";
+        private const string BaseUrlAppSettings = "Cms:NcsBaseUrl";
         private readonly ILogger<BannersController> logger;
         private readonly IMapper mapper;
         private readonly ISharedContentRedisInterface sharedContentRedis;
+        private readonly IConfiguration configuration;
+        private readonly string baseUrl;
 
         public BannersController(
             ILogger<BannersController> logger,
             IMapper mapper,
-            ISharedContentRedisInterface sharedContentRedis)
+            ISharedContentRedisInterface sharedContentRedis,
+            IConfiguration configuration)
         {
             this.logger = logger;
             this.mapper = mapper;
             this.sharedContentRedis = sharedContentRedis;
+            this.configuration = configuration;
+            this.baseUrl = GetBaseUrl();
         }
 
         [HttpGet]
@@ -56,7 +63,7 @@ namespace DFC.App.Banners.Controllers
                 var docs = pageBanners.OrderBy(o => o.Banner.WebPageUrl)
                     .Select(a => new IndexDocumentViewModel
                     {
-                        PageLocation = a.Banner.WebPageUrl.Replace("https://nationalcareers.service.gov.uk", ""),
+                        PageLocation = a.Banner.WebPageUrl.Replace(baseUrl, ""),
                         PageName = a.Banner.WebPageName,
                     });
 
@@ -77,7 +84,7 @@ namespace DFC.App.Banners.Controllers
                 path = $"/{path}";
             }
 
-            var pageBannerUrl = $"PageBanner/https://nationalcareers.service.gov.uk{path}";
+            var pageBannerUrl = $"PageBanner/{baseUrl}{path}";
             var pageBannerContentItemModel = await sharedContentRedis.GetDataAsync<PageBanner>(pageBannerUrl);
 
             if (pageBannerContentItemModel != null && pageBannerContentItemModel.Banner != null)
@@ -102,7 +109,7 @@ namespace DFC.App.Banners.Controllers
                 path = $"/{path}";
             }
 
-            var pageBannerUrl = $"PageBanner/https://nationalcareers.service.gov.uk{path}";
+            var pageBannerUrl = $"PageBanner/{baseUrl}{path}";
             var pageBannerContentItemModel = await sharedContentRedis.GetDataAsync<PageBanner>(pageBannerUrl);
 
             if (pageBannerContentItemModel != null && pageBannerContentItemModel.Banner != null)
@@ -126,6 +133,17 @@ namespace DFC.App.Banners.Controllers
             cleanPageBanner.GraphSync.NodeId = originalPageBanner.GraphSync.NodeId.Substring(nodeIdLength - 36);
 
             return cleanPageBanner;
+        }
+
+        private string GetBaseUrl()
+        {
+            var baseUrlAppSettings = configuration.GetValue<string>(BaseUrlAppSettings);
+            if (baseUrlAppSettings != string.Empty)
+            {
+                return baseUrlAppSettings.Remove(baseUrlAppSettings.Length - 1);
+            }
+
+            return baseUrlAppSettings;
         }
     }
 }

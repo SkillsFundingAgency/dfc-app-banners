@@ -13,6 +13,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Microsoft.Net.Http.Headers;
 using DFC.Common.SharedContent.Pkg.Netcore.Interfaces;
+using Microsoft.Extensions.Configuration;
 
 namespace DFC.App.Banners.UnitTests.ControllerTests.BannersControllerTests
 {
@@ -23,6 +24,7 @@ namespace DFC.App.Banners.UnitTests.ControllerTests.BannersControllerTests
             Logger = A.Fake<ILogger<BannersController>>();
             FakeSharedContentRedis = A.Fake<ISharedContentRedisInterface>();
             FakeMapper = A.Fake<IMapper>();
+            FakeConfiguration = A.Fake<IConfiguration>();
         }
 
         public static IEnumerable<object[]> HtmlMediaTypes => new List<object[]>
@@ -45,6 +47,8 @@ namespace DFC.App.Banners.UnitTests.ControllerTests.BannersControllerTests
 
         protected ISharedContentRedisInterface FakeSharedContentRedis { get; }
 
+        protected IConfiguration FakeConfiguration { get; }
+
 
         protected IMapper FakeMapper { get; }
 
@@ -54,7 +58,7 @@ namespace DFC.App.Banners.UnitTests.ControllerTests.BannersControllerTests
 
             httpContext.Request.Headers[HeaderNames.Accept] = mediaTypeName;
 
-            var controller = new BannersController(Logger, FakeMapper, FakeSharedContentRedis)
+            var controller = new BannersController(Logger, FakeMapper, FakeSharedContentRedis, FakeConfiguration)
             {
                 ControllerContext = new ControllerContext()
                 {
