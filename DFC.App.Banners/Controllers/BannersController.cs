@@ -46,7 +46,7 @@ namespace DFC.App.Banners.Controllers
             this.sharedContentRedis = sharedContentRedis;
             this.configuration = configuration;
             this.baseUrl = GetBaseUrl();
-            status = configuration.GetConnectionString("contentMode.contentMode");
+            status = configuration.GetSection("contentMode:contentMode").Get<string>();
         }
 
         [HttpGet]
@@ -59,7 +59,7 @@ namespace DFC.App.Banners.Controllers
                 Documents = new List<IndexDocumentViewModel>(),
             };
 
-            if (status == string.Empty)
+            if (string.IsNullOrEmpty(status))
             {
                 status = "PUBLISHED";
             }
@@ -94,7 +94,7 @@ namespace DFC.App.Banners.Controllers
             }
 
 
-            if (status == string.Empty)
+            if (string.IsNullOrEmpty(status))
             {
                 status = "PUBLISHED";
             }
@@ -108,6 +108,7 @@ namespace DFC.App.Banners.Controllers
                 {
                     break;
                 }
+
                 pageBannerUrl = pageBannerUrl.Substring(0, pageBannerUrl.LastIndexOf('/'));
                 pageBannerContentItemModel = await sharedContentRedis.GetDataAsync<PageBanner>(pageBannerUrl, status);
             }
@@ -134,7 +135,7 @@ namespace DFC.App.Banners.Controllers
                 path = $"/{path}";
             }
 
-            if (status == string.Empty)
+            if (string.IsNullOrEmpty(status))
             {
                 status = "PUBLISHED";
             }
