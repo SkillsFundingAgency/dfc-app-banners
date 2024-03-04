@@ -130,6 +130,12 @@
     },
     "CmsNcsBaseUrl": {
       "value": "__CompositeBaseUrl__"
+    },
+    "WorkerThreads": {
+      "value": "__WorkerThreads__"
+    },
+    "IocpThreads": {
+        "value": "__IocpThreads__"
     }
   }
 }

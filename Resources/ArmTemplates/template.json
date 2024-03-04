@@ -132,6 +132,12 @@
     },
     "CmsNcsBaseUrl": {
       "type": "string"
+    },
+    "WorkerThreads": {
+      "type": "string"
+    },
+    "IocpThreads": {
+        "type": "string"
     }
   },
     "variables": {
@@ -407,6 +413,14 @@
                         {
                           "name": "Cms__NcsBaseUrl",
                           "value": "[parameters('CmsNcsBaseUrl')]"
+                        },
+                        {
+                          "name": "ThreadSettings__WorkerThreads",
+                          "value": "[parameters('WorkerThreads')]"
+                        },
+                        {
+                           "name": "ThreadSettings__IocpThreads",
+                           "value": "[parameters('IocpThreads')]"
                         }
                       ]
                     }

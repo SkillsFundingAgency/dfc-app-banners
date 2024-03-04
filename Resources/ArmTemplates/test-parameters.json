@@ -121,6 +121,12 @@
     },
     "CmsNcsBaseUrl": {
       "value": "url.com"
+    },
+    "WorkerThreads": {
+      "value": "200"
+    },
+    "IocpThreads": {
+        "value": "200"
     }
   }
 }
