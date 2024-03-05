@@ -46,7 +46,7 @@ namespace DFC.App.Banners.Controllers
             this.sharedContentRedis = sharedContentRedis;
             this.configuration = configuration;
             this.baseUrl = GetBaseUrl();
-            status = configuration.GetSection("contentMode:contentMode").Get<string>();
+            status = configuration.GetSection("ContentMode:ContentMode").Get<string>();
         }
 
         [HttpGet]

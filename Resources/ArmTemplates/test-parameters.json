@@ -121,6 +121,9 @@
     },
     "CmsNcsBaseUrl": {
       "value": "url.com"
+    },
+    "ContentMode": {
+      "value": "PUBLISHED"
     }
   }
 }
