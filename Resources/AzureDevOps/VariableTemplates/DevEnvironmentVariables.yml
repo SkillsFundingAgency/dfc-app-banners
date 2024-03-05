@@ -13,7 +13,7 @@ variables:
   value: registration.json
 - name: ApplicationName
   value: dfc-app-banners
-- name: contentMode
+- name: ContentMode
   value: PUBLISHED
 - name: contentUrl
   value: $(ContentApiAddress)/api/execute

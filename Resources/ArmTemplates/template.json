@@ -132,6 +132,9 @@
     },
     "CmsNcsBaseUrl": {
       "type": "string"
+    },
+    "ContentUrl": {
+      "type": "string"
     }
   },
     "variables": {
@@ -407,6 +410,10 @@
                         {
                           "name": "Cms__NcsBaseUrl",
                           "value": "[parameters('CmsNcsBaseUrl')]"
+                        },
+                        {
+                          "name": "ContentMode__ContentMode",
+                          "value": "[parameters('ContentMode')]"
                         }
                       ]
                     }
