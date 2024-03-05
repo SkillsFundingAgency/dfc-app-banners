@@ -133,7 +133,7 @@
     "CmsNcsBaseUrl": {
       "type": "string"
     },
-    "ContentUrl": {
+    "ContentMode": {
       "type": "string"
     }
   },
