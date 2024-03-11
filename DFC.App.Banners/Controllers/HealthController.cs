@@ -3,7 +3,6 @@ using System.Net;
 using System.Threading.Tasks;
 using DFC.App.Banners.Extensions;
 using DFC.App.Banners.ViewModels;
-using DFC.Compui.Cosmos.Contracts;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 

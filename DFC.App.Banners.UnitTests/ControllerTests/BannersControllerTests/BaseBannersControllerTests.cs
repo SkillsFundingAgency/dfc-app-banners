@@ -1,13 +1,8 @@
 ﻿using System.Collections.Generic;
 using System.Net.Mime;
-
 using AutoMapper;
-
 using DFC.App.Banners.Controllers;
-using DFC.Compui.Cosmos.Contracts;
-
 using FakeItEasy;
-
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
