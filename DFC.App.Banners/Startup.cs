@@ -19,6 +19,8 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using DFC.Common.SharedContent.Pkg.Netcore.Model.ContentItems.PageBanner;
 using DFC.Common.SharedContent.Pkg.Netcore.Model.Response;
+using System.Threading;
+using Microsoft.Extensions.Logging;
 
 namespace DFC.App.Banners
 {
@@ -27,14 +29,18 @@ namespace DFC.App.Banners
     {
         private const string RedisCacheConnectionStringAppSettings = "Cms:RedisCacheConnectionString";
         private const string GraphApiUrlAppSettings = "Cms:GraphApiUrl";
+        private const string WorkerThreadsConfigAppSettings = "ThreadSettings:WorkerThreads";
+        private const string IocpThreadsConfigAppSettings = "ThreadSettings:IocpThreads";
 
         private readonly IConfiguration configuration;
         private readonly IWebHostEnvironment env;
+        private readonly ILogger<Startup> logger;
 
-        public Startup(IConfiguration configuration, IWebHostEnvironment env)
+        public Startup(IConfiguration configuration, IWebHostEnvironment env, ILogger<Startup> logger)
         {
             this.configuration = configuration;
             this.env = env;
+            this.logger = logger;
         }
 
         public static void Configure(IApplicationBuilder app, IWebHostEnvironment env, IMapper mapper)
@@ -64,6 +70,7 @@ namespace DFC.App.Banners
 
         public void ConfigureServices(IServiceCollection services)
         {
+            ConfigureMinimumThreads();
 
             services.AddStackExchangeRedisCache(options => { options.Configuration = configuration.GetSection(RedisCacheConnectionStringAppSettings).Get<string>(); });
 
@@ -98,6 +105,25 @@ namespace DFC.App.Banners
                     config.ReturnHttpNotAcceptable = true;
                 })
                 .AddNewtonsoftJson();
+        }
+
+        private void ConfigureMinimumThreads()
+        {
+            var workerThreads = Convert.ToInt32(configuration[WorkerThreadsConfigAppSettings]);
+
+            var iocpThreads = Convert.ToInt32(configuration[IocpThreadsConfigAppSettings]);
+
+            if (ThreadPool.SetMinThreads(workerThreads, iocpThreads))
+            {
+                logger.LogInformation(
+                    "ConfigureMinimumThreads: Minimum configuration value set. IOCP = {0} and WORKER threads = {1}",
+                    iocpThreads,
+                    workerThreads);
+            }
+            else
+            {
+                logger.LogWarning("ConfigureMinimumThreads: The minimum number of threads was not changed");
+            }
         }
     }
 }
