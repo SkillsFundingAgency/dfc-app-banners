@@ -18,6 +18,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Azure.Documents.SystemFunctions;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
 using static System.Net.WebRequestMethods;
 
 namespace DFC.App.Banners.Controllers
@@ -32,6 +33,7 @@ namespace DFC.App.Banners.Controllers
         private readonly ISharedContentRedisInterface sharedContentRedis;
         private readonly IConfiguration configuration;
         private readonly string baseUrl;
+        private string status;
 
         public BannersController(
             ILogger<BannersController> logger,
@@ -44,6 +46,7 @@ namespace DFC.App.Banners.Controllers
             this.sharedContentRedis = sharedContentRedis;
             this.configuration = configuration;
             this.baseUrl = GetBaseUrl();
+            status = configuration.GetSection("ContentMode:ContentMode").Get<string>();
         }
 
         [HttpGet]
@@ -56,7 +59,12 @@ namespace DFC.App.Banners.Controllers
                 Documents = new List<IndexDocumentViewModel>(),
             };
 
-            var documents = await sharedContentRedis.GetDataAsync<PageBannerResponse>("PageBanners/All");
+            if (string.IsNullOrEmpty(status))
+            {
+                status = "PUBLISHED";
+            }
+
+            var documents = await sharedContentRedis.GetDataAsync<PageBannerResponse>("PageBanners/All", status);
             var pageBanners = documents.PageBanner;
 
             if (pageBanners != null && pageBanners.Count != 0)
@@ -85,8 +93,14 @@ namespace DFC.App.Banners.Controllers
                 path = $"/{path}";
             }
 
+
+            if (string.IsNullOrEmpty(status))
+            {
+                status = "PUBLISHED";
+            }
+
             var pageBannerUrl = $"PageBanner/{baseUrl}{path}";
-            var pageBannerContentItemModel = await sharedContentRedis.GetDataAsync<PageBanner>(pageBannerUrl);
+            var pageBannerContentItemModel = await sharedContentRedis.GetDataAsync<PageBanner>(pageBannerUrl, status);
 
             while (pageBannerContentItemModel == null)
             {
@@ -94,8 +108,9 @@ namespace DFC.App.Banners.Controllers
                 {
                     break;
                 }
+
                 pageBannerUrl = pageBannerUrl.Substring(0, pageBannerUrl.LastIndexOf('/'));
-                pageBannerContentItemModel = await sharedContentRedis.GetDataAsync<PageBanner>(pageBannerUrl);
+                pageBannerContentItemModel = await sharedContentRedis.GetDataAsync<PageBanner>(pageBannerUrl, status);
             }
 
             if (pageBannerContentItemModel != null && pageBannerContentItemModel.Banner != null)
@@ -120,8 +135,13 @@ namespace DFC.App.Banners.Controllers
                 path = $"/{path}";
             }
 
+            if (string.IsNullOrEmpty(status))
+            {
+                status = "PUBLISHED";
+            }
+
             var pageBannerUrl = $"PageBanner/{baseUrl}{path}";
-            var pageBannerContentItemModel = await sharedContentRedis.GetDataAsync<PageBanner>(pageBannerUrl);
+            var pageBannerContentItemModel = await sharedContentRedis.GetDataAsync<PageBanner>(pageBannerUrl, status);
 
             while (pageBannerContentItemModel == null)
             {
@@ -130,7 +150,7 @@ namespace DFC.App.Banners.Controllers
                     break;
                 }
                 pageBannerUrl = pageBannerUrl.Substring(0, pageBannerUrl.LastIndexOf('/'));
-                pageBannerContentItemModel = await sharedContentRedis.GetDataAsync<PageBanner>(pageBannerUrl);
+                pageBannerContentItemModel = await sharedContentRedis.GetDataAsync<PageBanner>(pageBannerUrl, status);
             }
 
             if (pageBannerContentItemModel != null && pageBannerContentItemModel.Banner != null)

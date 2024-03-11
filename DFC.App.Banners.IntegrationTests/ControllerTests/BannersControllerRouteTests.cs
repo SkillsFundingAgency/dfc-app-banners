@@ -41,7 +41,7 @@ namespace DFC.App.Banners.IntegrationTests.ControllerTests
             var uri = new Uri("/", UriKind.Relative);
             this.factory.MockSharedContentRedis.Setup(
                 x => x.GetDataAsync<PageBannerResponse>(
-                    It.IsAny<string>()))
+                    It.IsAny<string>(), "PUBLISHED"))
             .ReturnsAsync(new PageBannerResponse());
             var client = this.factory.CreateClient();
             client.DefaultRequestHeaders.Accept.Clear();
