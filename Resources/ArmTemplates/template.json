@@ -133,6 +133,12 @@
     "CmsNcsBaseUrl": {
       "type": "string"
     },
+    "WorkerThreads": {
+      "type": "string"
+    },
+    "IocpThreads": {
+        "type": "string"
+    },
     "ContentMode": {
       "type": "string"
     }
@@ -410,6 +416,14 @@
                         {
                           "name": "Cms__NcsBaseUrl",
                           "value": "[parameters('CmsNcsBaseUrl')]"
+                        },
+                        {
+                          "name": "ThreadSettings__WorkerThreads",
+                          "value": "[parameters('WorkerThreads')]"
+                        },
+                        {
+                           "name": "ThreadSettings__IocpThreads",
+                           "value": "[parameters('IocpThreads')]"
                         },
                         {
                           "name": "ContentMode__ContentMode",
