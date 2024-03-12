@@ -18,6 +18,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using static System.Net.WebRequestMethods;
+using AppConstants = DFC.Common.SharedContent.Pkg.Netcore.Constant.ApplicationKeys;
 
 namespace DFC.App.Banners.Controllers
 {
@@ -62,7 +63,7 @@ namespace DFC.App.Banners.Controllers
                 status = "PUBLISHED";
             }
 
-            var documents = await sharedContentRedis.GetDataAsync<PageBannerResponse>("PageBanners/All", status);
+            var documents = await sharedContentRedis.GetDataAsync<PageBannerResponse>(AppConstants.AllPageBanners, status);
             var pageBanners = documents.PageBanner;
 
             if (pageBanners != null && pageBanners.Count != 0)
