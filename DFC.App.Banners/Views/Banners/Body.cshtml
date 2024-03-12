@@ -1,6 +1,6 @@
 ﻿@model IEnumerable<BannerViewModel>
 
-@foreach (var banner in Model.OrderBy(b => b.Ordinal))
+@foreach (var banner in Model@*.OrderBy(b => b.Ordinal)*@)
 {
     if (banner?.IsActive is true)
     {

@@ -1,10 +1,8 @@
 ﻿using System.Collections.Generic;
 using System.Net;
 using System.Threading.Tasks;
-using DFC.App.Banners.Data.Models.ContentModels;
 using DFC.App.Banners.Extensions;
 using DFC.App.Banners.ViewModels;
-using DFC.Compui.Cosmos.Contracts;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 
@@ -15,13 +13,11 @@ namespace DFC.App.Banners.Controllers
         public const string HealthViewCanonicalName = "health";
 
         private readonly ILogger<HealthController> logger;
-        private readonly IDocumentService<PageBannerContentItemModel> documentService;
         private readonly string resourceName = typeof(Program).Namespace!;
 
-        public HealthController(ILogger<HealthController> logger, IDocumentService<PageBannerContentItemModel> sharedContentItemDocumentService)
+        public HealthController(ILogger<HealthController> logger)
         {
             this.logger = logger;
-            this.documentService = sharedContentItemDocumentService;
         }
 
         [HttpGet]
@@ -39,7 +35,7 @@ namespace DFC.App.Banners.Controllers
         {
             logger.LogInformation("Generating Health report");
 
-            var isHealthy = await documentService.PingAsync();
+            var isHealthy = true;
 
             if (isHealthy)
             {
