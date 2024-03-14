@@ -35,8 +35,9 @@ stages:
 - stage: Build
   displayName: Build, Test and Analyze
   jobs:
-
   - job: BuildTestAndAnalyze
+    workspace:
+      clean: all
     displayName: "Test & package ARM template(s)"
     steps:
     - template: AzureDevOpsTemplates\Build\StepTemplates\dfc-arm-build.yml@dfc-devops
@@ -84,8 +85,6 @@ stages:
   - group: dfc-app-shared-lab
   - group: dfc-stax-shared-lab
   - group: dfc-compositeui-all
-  - group: dfc-stax-shared-all
-  - group: KeyVault - dfc-lab-shared-kv
   - template: VariableTemplates\LabEnvironmentVariables.yml
 
   jobs:
@@ -125,8 +124,6 @@ stages:
   - group: dfc-app-draft
   - group: dfc-stax-shared-lab
   - group: dfc-compositeui-all
-  - group: dfc-stax-shared-all
-  - group: KeyVault - dfc-lab-shared-kv
   - template: VariableTemplates\LabDraftEnvironmentVariables.yml
 
   jobs:
@@ -165,8 +162,6 @@ stages:
   - group: dfc-app-shared-dev
   - group: dfc-stax-shared-dev
   - group: dfc-compositeui-all
-  - group: dfc-stax-shared-all
-  - group: KeyVault - dfc-dev-shared-kv
   - template: VariableTemplates\DevEnvironmentVariables.yml
 
   jobs:
@@ -206,8 +201,6 @@ stages:
   - group: dfc-app-draft
   - group: dfc-stax-shared-dev
   - group: dfc-compositeui-all
-  - group: dfc-stax-shared-all
-  - group: KeyVault - dfc-dev-shared-kv
   - template: VariableTemplates\DevDraftEnvironmentVariables.yml
 
   jobs:
@@ -246,8 +239,6 @@ stages:
   - group: dfc-app-shared-sit
   - group: dfc-stax-shared-sit
   - group: dfc-compositeui-all
-  - group: dfc-stax-shared-all
-  - group: KeyVault - dfc-sit-shared-kv
   - template: VariableTemplates\SitEnvironmentVariables.yml
 
   jobs:
@@ -287,8 +278,6 @@ stages:
   - group: dfc-app-draft
   - group: dfc-stax-shared-sit
   - group: dfc-compositeui-all
-  - group: dfc-stax-shared-all
-  - group: KeyVault - dfc-sit-shared-kv
   - template: VariableTemplates\SitDraftEnvironmentVariables.yml
 
   jobs:
@@ -327,8 +316,6 @@ stages:
   - group: dfc-app-shared-pp
   - group: dfc-stax-shared-pp
   - group: dfc-compositeui-all
-  - group: dfc-stax-shared-all
-  - group: KeyVault - dfc-pp-shared-kv
   - template: VariableTemplates\PPEnvironmentVariables.yml
 
   jobs:
@@ -368,8 +355,6 @@ stages:
   - group: dfc-app-draft
   - group: dfc-stax-shared-pp
   - group: dfc-compositeui-all
-  - group: dfc-stax-shared-all
-  - group: KeyVault - dfc-pp-shared-kv
   - template: VariableTemplates\PPDraftEnvironmentVariables.yml
 
   jobs:
@@ -408,8 +393,6 @@ stages:
   - group: dfc-app-shared-prd
   - group: dfc-stax-shared-prd
   - group: dfc-compositeui-all
-  - group: dfc-stax-shared-all
-  - group: KeyVault - dfc-prd-shared-kv
   - template: VariableTemplates\PRDEnvironmentVariables.yml
 
   jobs:
@@ -449,8 +432,6 @@ stages:
   - group: dfc-app-draft
   - group: dfc-stax-shared-prd
   - group: dfc-compositeui-all
-  - group: dfc-stax-shared-all
-  - group: KeyVault - dfc-prd-shared-kv
   - template: VariableTemplates\PRDDraftEnvironmentVariables.yml
 
   jobs:
