@@ -73,8 +73,7 @@ namespace DFC.App.Banners
         {
             ConfigureMinimumThreads();
 
-            var redisCacheConnectionString = ConfigurationOptions.Parse(configuration.GetSection(RedisCacheConnectionStringAppSettings).Get<string>() ??
-                            throw new ArgumentNullException($"{nameof(RedisCacheConnectionStringAppSettings)} is missing or has an invalid value."));
+            var redisCacheConnectionString = ConfigurationOptions.Parse(configuration.GetSection(RedisCacheConnectionStringAppSettings).Get<string>() ?? "RedisCacheConnectionStringAppSettings");
 
             services.AddStackExchangeRedisCache(options => { options.Configuration = configuration.GetSection(RedisCacheConnectionStringAppSettings).Get<string>(); });
             services.AddSingleton<IConnectionMultiplexer>(option =>
