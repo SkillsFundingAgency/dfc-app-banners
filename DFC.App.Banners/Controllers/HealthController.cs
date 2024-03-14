@@ -1,9 +1,11 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Net;
 using System.Threading.Tasks;
 using DFC.App.Banners.Extensions;
 using DFC.App.Banners.ViewModels;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Diagnostics.HealthChecks;
 using Microsoft.Extensions.Logging;
 
 namespace DFC.App.Banners.Controllers
@@ -13,18 +15,20 @@ namespace DFC.App.Banners.Controllers
         public const string HealthViewCanonicalName = "health";
 
         private readonly ILogger<HealthController> logger;
+        private readonly HealthCheckService healthCheckService;
         private readonly string resourceName = typeof(Program).Namespace!;
 
-        public HealthController(ILogger<HealthController> logger)
+        public HealthController(ILogger<HealthController> logger, HealthCheckService healthCheckService)
         {
+            this.healthCheckService = healthCheckService;
             this.logger = logger;
         }
 
         [HttpGet]
-        [Route("banners/health")]
+        [Route("pages/health")]
         public async Task<IActionResult> HealthView()
         {
-            var result = await Health();
+            var result = await Health().ConfigureAwait(false);
 
             return result;
         }
@@ -33,23 +37,29 @@ namespace DFC.App.Banners.Controllers
         [Route("health")]
         public async Task<IActionResult> Health()
         {
-            logger.LogInformation("Generating Health report");
+            logger.LogInformation($"{nameof(Health)} has been called");
 
-            var isHealthy = true;
-
-            if (isHealthy)
+            try
             {
-                const string message = "Document store is available";
-                logger.LogInformation($"{nameof(Health)} responded with: {resourceName} - {message}");
+                var report = await healthCheckService.CheckHealthAsync();
+                var status = report.Status;
 
-                var viewModel = CreateHealthViewModel(message);
+                if (status == HealthStatus.Healthy)
+                {
+                    const string message = "Redis and GraphQl are available";
+                    logger.LogInformation($"{nameof(Health)} responded with: {resourceName} - {message}");
 
-                logger.LogInformation("Generated Health report");
+                    var viewModel = CreateHealthViewModel(message);
 
-                return this.NegotiateContentResult(viewModel, viewModel.HealthItems);
+                    return this.NegotiateContentResult(viewModel, viewModel.HealthItems);
+                }
+
+                logger.LogError($"{nameof(Health)}: Ping to {resourceName} has failed");
             }
-
-            logger.LogError($"{nameof(Health)}: Ping to {resourceName} has failed");
+            catch (Exception ex)
+            {
+                logger.LogError(ex, $"{nameof(Health)}: {resourceName} exception: {ex.Message}");
+            }
 
             return StatusCode((int)HttpStatusCode.ServiceUnavailable);
         }
