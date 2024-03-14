@@ -21,6 +21,7 @@ using DFC.Common.SharedContent.Pkg.Netcore.Model.ContentItems.PageBanner;
 using DFC.Common.SharedContent.Pkg.Netcore.Model.Response;
 using System.Threading;
 using Microsoft.Extensions.Logging;
+using StackExchange.Redis;
 
 namespace DFC.App.Banners
 {
@@ -72,8 +73,18 @@ namespace DFC.App.Banners
         {
             ConfigureMinimumThreads();
 
-            services.AddStackExchangeRedisCache(options => { options.Configuration = configuration.GetSection(RedisCacheConnectionStringAppSettings).Get<string>(); });
+            var redisCacheConnectionString = ConfigurationOptions.Parse(configuration.GetSection(RedisCacheConnectionStringAppSettings).Get<string>() ?? "RedisCacheConnectionStringAppSettings");
 
+            services.AddStackExchangeRedisCache(options => { options.Configuration = configuration.GetSection(RedisCacheConnectionStringAppSettings).Get<string>(); });
+            services.AddSingleton<IConnectionMultiplexer>(option =>
+            ConnectionMultiplexer.Connect(new ConfigurationOptions
+            {
+                EndPoints = { redisCacheConnectionString.EndPoints[0] },
+                AbortOnConnectFail = false,
+                Ssl = true,
+                Password = redisCacheConnectionString.Password,
+            }));
+            services.AddHealthChecks().AddCheck<HealthCheck>("GraphQlRedisConnectionCheck");
             services.AddHttpClient();
             services.AddSingleton<IGraphQLClient>(s =>
             {
