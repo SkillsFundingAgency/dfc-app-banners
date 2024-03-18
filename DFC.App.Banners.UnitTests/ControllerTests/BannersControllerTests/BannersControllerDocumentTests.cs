@@ -11,6 +11,7 @@ using Microsoft.AspNetCore.Mvc;
 using DFC.Common.SharedContent.Pkg.Netcore.Interfaces;
 
 using Xunit;
+using DFC.Common.SharedContent.Pkg.Netcore.Model.Common;
 using DFC.Common.SharedContent.Pkg.Netcore.Model.ContentItems.PageBanner;
 
 namespace DFC.App.Banners.UnitTests.ControllerTests.BannersControllerTests
@@ -48,7 +49,7 @@ namespace DFC.App.Banners.UnitTests.ControllerTests.BannersControllerTests
                 NodeId = "<<contentapiprefix>>/banner/test-guidid"
             };
             var controller = BuildBannersController(mediaTypeName);
-            _ = A.CallTo(() => FakeSharedContentRedis.GetDataAsync<PageBanner>(A<string>.Ignored))
+            _ = A.CallTo(() => FakeSharedContentRedis.GetDataAsync<PageBanner>(A<string>.Ignored, "PUBLISHED"))
                 .Returns(expectedResults);
 
             // Act
@@ -92,7 +93,7 @@ namespace DFC.App.Banners.UnitTests.ControllerTests.BannersControllerTests
                 NodeId = "<<contentapiprefix>>/banner/test-guidid"
             };
             var controller = BuildBannersController(mediaTypeName);
-            _ = A.CallTo(() => FakeSharedContentRedis.GetDataAsync<PageBanner>(A<string>.Ignored))
+            _ = A.CallTo(() => FakeSharedContentRedis.GetDataAsync<PageBanner>(A<string>.Ignored, "PUBLISHED"))
                 .Returns(expectedResults);
 
             // Act

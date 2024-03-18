@@ -56,7 +56,7 @@ namespace DFC.App.Banners.Controllers
                 Documents = new List<IndexDocumentViewModel>(),
             };
 
-            var documents = await sharedContentRedis.GetDataAsync<PageBannerResponse>("PageBanners/All");
+            var documents = await sharedContentRedis.GetDataAsync<PageBannerResponse>("PageBanners/All", "PUBLISHED");
             var pageBanners = documents.PageBanner;
 
             if (pageBanners != null && pageBanners.Count != 0)
@@ -86,7 +86,7 @@ namespace DFC.App.Banners.Controllers
             }
 
             var pageBannerUrl = $"PageBanner/{baseUrl}{path}";
-            var pageBannerContentItemModel = await sharedContentRedis.GetDataAsync<PageBanner>(pageBannerUrl);
+            var pageBannerContentItemModel = await sharedContentRedis.GetDataAsync<PageBanner>(pageBannerUrl, "PUBLISHED");
 
             while (pageBannerContentItemModel == null)
             {
@@ -95,7 +95,7 @@ namespace DFC.App.Banners.Controllers
                     break;
                 }
                 pageBannerUrl = pageBannerUrl.Substring(0, pageBannerUrl.LastIndexOf('/'));
-                pageBannerContentItemModel = await sharedContentRedis.GetDataAsync<PageBanner>(pageBannerUrl);
+                pageBannerContentItemModel = await sharedContentRedis.GetDataAsync<PageBanner>(pageBannerUrl, "PUBLISHED");
             }
 
             if (pageBannerContentItemModel != null && pageBannerContentItemModel.Banner != null)
@@ -121,7 +121,7 @@ namespace DFC.App.Banners.Controllers
             }
 
             var pageBannerUrl = $"PageBanner/{baseUrl}{path}";
-            var pageBannerContentItemModel = await sharedContentRedis.GetDataAsync<PageBanner>(pageBannerUrl);
+            var pageBannerContentItemModel = await sharedContentRedis.GetDataAsync<PageBanner>(pageBannerUrl, "PUBLISHED");
 
             while (pageBannerContentItemModel == null)
             {
@@ -130,7 +130,7 @@ namespace DFC.App.Banners.Controllers
                     break;
                 }
                 pageBannerUrl = pageBannerUrl.Substring(0, pageBannerUrl.LastIndexOf('/'));
-                pageBannerContentItemModel = await sharedContentRedis.GetDataAsync<PageBanner>(pageBannerUrl);
+                pageBannerContentItemModel = await sharedContentRedis.GetDataAsync<PageBanner>(pageBannerUrl, "PUBLISHED");
             }
 
             if (pageBannerContentItemModel != null && pageBannerContentItemModel.Banner != null)
