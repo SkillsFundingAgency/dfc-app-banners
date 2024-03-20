@@ -1,95 +1,95 @@
-﻿using System;
-using System.IO;
-using System.Text;
+﻿//using System;
+//using System.IO;
+//using System.Text;
 
-using DFC.App.Banners.Controllers;
-using DFC.App.Banners.Data.Contracts;
+//using DFC.App.Banners.Controllers;
+//using DFC.App.Banners.Data.Contracts;
 
-using FakeItEasy;
+//using FakeItEasy;
 
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.ModelBinding.Validation;
-using Microsoft.Azure.EventGrid.Models;
-using Microsoft.Extensions.Logging;
-using Microsoft.Net.Http.Headers;
+//using Microsoft.AspNetCore.Http;
+//using Microsoft.AspNetCore.Mvc;
+//using Microsoft.AspNetCore.Mvc.ModelBinding.Validation;
+//using Microsoft.Azure.EventGrid.Models;
+//using Microsoft.Extensions.Logging;
+//using Microsoft.Net.Http.Headers;
 
-using Newtonsoft.Json;
+//using Newtonsoft.Json;
 
-namespace DFC.App.Banners.UnitTests.ControllerTests.WebhookControllerTests
-{
-    public abstract class BaseWebhooksControllerTests
-    {
-        protected const string EventTypePublished = "published";
-        protected const string EventTypeDraft = "draft";
-        protected const string EventTypeDraftDiscarded = "draft-discarded";
-        protected const string EventTypeDeleted = "deleted";
-        protected const string EventTypeUnpublished = "unpublished";
+//namespace DFC.App.Banners.UnitTests.ControllerTests.WebhookControllerTests
+//{
+//    public abstract class BaseWebhooksControllerTests
+//    {
+//        protected const string EventTypePublished = "published";
+//        protected const string EventTypeDraft = "draft";
+//        protected const string EventTypeDraftDiscarded = "draft-discarded";
+//        protected const string EventTypeDeleted = "deleted";
+//        protected const string EventTypeUnpublished = "unpublished";
 
-        protected const string ContentTypeBanners = "banners";
+//        protected const string ContentTypeBanners = "banners";
 
-        protected BaseWebhooksControllerTests()
-        {
-            Logger = A.Fake<ILogger<WebhooksController>>();
-            FakeWebhooksService = A.Fake<IWebhooksService>();
-        }
+//        protected BaseWebhooksControllerTests()
+//        {
+//            Logger = A.Fake<ILogger<WebhooksController>>();
+//            FakeWebhooksService = A.Fake<IWebhooksService>();
+//        }
 
-        protected Guid ItemIdForCreate { get; } = Guid.NewGuid();
+//        protected Guid ItemIdForCreate { get; } = Guid.NewGuid();
 
-        protected Guid ItemIdForUpdate { get; } = Guid.NewGuid();
+//        protected Guid ItemIdForUpdate { get; } = Guid.NewGuid();
 
-        protected Guid ItemIdForDelete { get; } = Guid.NewGuid();
+//        protected Guid ItemIdForDelete { get; } = Guid.NewGuid();
 
-        protected ILogger<WebhooksController> Logger { get; }
+//        protected ILogger<WebhooksController> Logger { get; }
 
-        protected IWebhooksService FakeWebhooksService { get; }
+//        protected IWebhooksService FakeWebhooksService { get; }
 
-        protected static EventGridEvent[] BuildValidEventGridEvent<TModel>(string eventType, TModel data)
-        {
-            var models = new EventGridEvent[]
-            {
-                new EventGridEvent
-                {
-                    Id = Guid.NewGuid().ToString(),
-                    Subject = $"{ContentTypeBanners}/a-canonical-name",
-                    Data = data,
-                    EventType = eventType,
-                    EventTime = DateTime.Now,
-                    DataVersion = "1.0",
-                },
-            };
+//        protected static EventGridEvent[] BuildValidEventGridEvent<TModel>(string eventType, TModel data)
+//        {
+//            var models = new EventGridEvent[]
+//            {
+//                new EventGridEvent
+//                {
+//                    Id = Guid.NewGuid().ToString(),
+//                    Subject = $"{ContentTypeBanners}/a-canonical-name",
+//                    Data = data,
+//                    EventType = eventType,
+//                    EventTime = DateTime.Now,
+//                    DataVersion = "1.0",
+//                },
+//            };
 
-            return models;
-        }
+//            return models;
+//        }
 
-        protected static Stream BuildStreamFromModel<TModel>(TModel model)
-        {
-            var jsonData = JsonConvert.SerializeObject(model);
-            byte[] byteArray = Encoding.ASCII.GetBytes(jsonData);
-            MemoryStream stream = new MemoryStream(byteArray);
+//        protected static Stream BuildStreamFromModel<TModel>(TModel model)
+//        {
+//            var jsonData = JsonConvert.SerializeObject(model);
+//            byte[] byteArray = Encoding.ASCII.GetBytes(jsonData);
+//            MemoryStream stream = new MemoryStream(byteArray);
 
-            return stream;
-        }
+//            return stream;
+//        }
 
-        protected WebhooksController BuildWebhooksController(string mediaTypeName)
-        {
-            var objectValidator = A.Fake<IObjectModelValidator>();
-            var httpContext = new DefaultHttpContext();
+//        protected WebhooksController BuildWebhooksController(string mediaTypeName)
+//        {
+//            var objectValidator = A.Fake<IObjectModelValidator>();
+//            var httpContext = new DefaultHttpContext();
 
-            httpContext.Request.Headers[HeaderNames.Accept] = mediaTypeName;
+//            httpContext.Request.Headers[HeaderNames.Accept] = mediaTypeName;
 
-            var controller = new WebhooksController(Logger, FakeWebhooksService)
-            {
-                ControllerContext = new ControllerContext()
-                {
-                    HttpContext = httpContext,
-                },
-                ObjectValidator = objectValidator,
-            };
+//            var controller = new WebhooksController(Logger, FakeWebhooksService)
+//            {
+//                ControllerContext = new ControllerContext()
+//                {
+//                    HttpContext = httpContext,
+//                },
+//                ObjectValidator = objectValidator,
+//            };
 
-            A.CallTo(() => controller.ObjectValidator.Validate(A<ActionContext>.Ignored, A<ValidationStateDictionary>.Ignored, A<string>.Ignored, A<object>.Ignored));
+//            A.CallTo(() => controller.ObjectValidator.Validate(A<ActionContext>.Ignored, A<ValidationStateDictionary>.Ignored, A<string>.Ignored, A<object>.Ignored));
 
-            return controller;
-        }
-    }
-}
+//            return controller;
+//        }
+//    }
+//}

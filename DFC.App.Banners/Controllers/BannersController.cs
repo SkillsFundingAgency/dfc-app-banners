@@ -5,13 +5,20 @@ using System.Threading.Tasks;
 
 using AutoMapper;
 
-using DFC.App.Banners.Data.Models.ContentModels;
 using DFC.App.Banners.Extensions;
 using DFC.App.Banners.ViewModels;
-using DFC.Compui.Cosmos.Contracts;
+using DFC.Common.SharedContent.Pkg.Netcore;
+using DFC.Common.SharedContent.Pkg.Netcore.Interfaces;
+using DFC.Common.SharedContent.Pkg.Netcore.Model.ContentItems.PageBanner;
+using DFC.Common.SharedContent.Pkg.Netcore.Model.Response;
+using Microsoft.AspNetCore.DataProtection.KeyManagement;
+//using DFC.Compui.Cosmos.Contracts;
 
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Azure.Documents.SystemFunctions;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
+using static System.Net.WebRequestMethods;
 
 namespace DFC.App.Banners.Controllers
 {
@@ -19,18 +26,24 @@ namespace DFC.App.Banners.Controllers
     public class BannersController : Controller
     {
         public const string RegistrationPath = "banners";
+        private const string BaseUrlAppSettings = "Cms:NcsBaseUrl";
         private readonly ILogger<BannersController> logger;
         private readonly IMapper mapper;
-        private readonly IDocumentService<PageBannerContentItemModel> documentService;
+        private readonly ISharedContentRedisInterface sharedContentRedis;
+        private readonly IConfiguration configuration;
+        private readonly string baseUrl;
 
         public BannersController(
             ILogger<BannersController> logger,
             IMapper mapper,
-            IDocumentService<PageBannerContentItemModel> documentService)
+            ISharedContentRedisInterface sharedContentRedis,
+            IConfiguration configuration)
         {
             this.logger = logger;
             this.mapper = mapper;
-            this.documentService = documentService;
+            this.sharedContentRedis = sharedContentRedis;
+            this.configuration = configuration;
+            this.baseUrl = GetBaseUrl();
         }
 
         [HttpGet]
@@ -43,15 +56,16 @@ namespace DFC.App.Banners.Controllers
                 Documents = new List<IndexDocumentViewModel>(),
             };
 
-            var documents = await documentService.GetAllAsync();
+            var documents = await sharedContentRedis.GetDataAsync<PageBannerResponse>("PageBanners/All", "PUBLISHED");
+            var pageBanners = documents.PageBanner;
 
-            if (documents?.Any() == true)
+            if (pageBanners != null && pageBanners.Count != 0)
             {
-                var docs = documents.OrderBy(o => o.PageLocation)
+                var docs = pageBanners.OrderBy(o => o.Banner.WebPageUrl)
                     .Select(a => new IndexDocumentViewModel
                     {
-                        PageLocation = a.PageLocation,
-                        PageName = a.PageName,
+                        PageLocation = a.Banner.WebPageUrl.Replace(baseUrl, ""),
+                        PageName = a.Banner.WebPageName,
                     });
 
                 viewModel.Documents.AddRange(docs);
@@ -64,61 +78,93 @@ namespace DFC.App.Banners.Controllers
 
         [HttpGet]
         [Route("document/{**path}")]
-        public async Task<IActionResult> DocumentAsync(string? path = "/")
+        public async Task<IActionResult> DocumentAsync(string? path)
         {
-            var pageBannerContentItemModel = await GetBannersAsync(path ?? "/");
-
-            if (pageBannerContentItemModel?.Any() is true)
+            if (path != null)
             {
-                var document = mapper.Map<PageBannerViewModel>(pageBannerContentItemModel.First());
-                logger.LogInformation($"{nameof(GetBannersAsync)} has succeeded");
+                path = $"/{path}";
+            }
+
+            var pageBannerUrl = $"PageBanner/{baseUrl}{path}";
+            var pageBannerContentItemModel = await sharedContentRedis.GetDataAsync<PageBanner>(pageBannerUrl, "PUBLISHED");
+
+            while (pageBannerContentItemModel == null)
+            {
+                if (pageBannerUrl == $"PageBanner/{baseUrl}")
+                {
+                    break;
+                }
+                pageBannerUrl = pageBannerUrl.Substring(0, pageBannerUrl.LastIndexOf('/'));
+                pageBannerContentItemModel = await sharedContentRedis.GetDataAsync<PageBanner>(pageBannerUrl, "PUBLISHED");
+            }
+
+            if (pageBannerContentItemModel != null && pageBannerContentItemModel.Banner != null)
+            {
+                pageBannerContentItemModel = TidyPageBannerFields(pageBannerContentItemModel);
+                var document = mapper.Map<PageBannerViewModel>(pageBannerContentItemModel);
+                logger.LogInformation($"{nameof(sharedContentRedis.GetDataAsync)} has succeeded");
 
                 return this.NegotiateContentResult(document);
             }
 
-            logger.LogWarning($"{nameof(GetBannersAsync)} has returned no results for path {path}");
+            logger.LogWarning($"{nameof(sharedContentRedis.GetDataAsync)} has returned no results for path {path}");
             return NoContent();
         }
 
         [HttpGet]
         [Route("body/{**path}")]
-        public async Task<IActionResult> BodyAsync(string? path = "/")
+        public async Task<IActionResult> BodyAsync(string? path)
         {
-            var pageBannerContentItemModel = await GetBannersAsync(path ?? "/");
-
-            if (pageBannerContentItemModel?.Any() is true)
-            {
-                var document = mapper.Map<PageBannerViewModel>(pageBannerContentItemModel.First());
-                logger.LogInformation($"{nameof(GetBannersAsync)} has succeeded");
-
-                return this.NegotiateContentResult(document.Banners);
-            }
-
-            logger.LogWarning($"{nameof(GetBannersAsync)} has returned no results for path {path}");
-            return NoContent();
-        }
-
-        private async Task<IEnumerable<PageBannerContentItemModel>> GetBannersAsync(string path)
-        {
-            if (!path.StartsWith('/'))
+            if (path != null)
             {
                 path = $"/{path}";
             }
 
-            if (!path.Equals("/"))
+            var pageBannerUrl = $"PageBanner/{baseUrl}{path}";
+            var pageBannerContentItemModel = await sharedContentRedis.GetDataAsync<PageBanner>(pageBannerUrl, "PUBLISHED");
+
+            while (pageBannerContentItemModel == null)
             {
-                path = path.TrimEnd('/');
+                if (pageBannerUrl == $"PageBanner/{baseUrl}")
+                {
+                    break;
+                }
+                pageBannerUrl = pageBannerUrl.Substring(0, pageBannerUrl.LastIndexOf('/'));
+                pageBannerContentItemModel = await sharedContentRedis.GetDataAsync<PageBanner>(pageBannerUrl, "PUBLISHED");
             }
 
-            var banners = await documentService.GetAsync(a => a.PartitionKey == path);
-
-            if (banners?.Any() is true || string.IsNullOrWhiteSpace(path) || path.Equals("/"))
+            if (pageBannerContentItemModel != null && pageBannerContentItemModel.Banner != null)
             {
-                return banners ?? Array.Empty<PageBannerContentItemModel>();
+                pageBannerContentItemModel = TidyPageBannerFields(pageBannerContentItemModel);
+                var document = mapper.Map<PageBannerViewModel>(pageBannerContentItemModel);
+                logger.LogInformation($"{nameof(sharedContentRedis.GetDataAsync)} has succeeded");
+
+                return this.NegotiateContentResult(document.Banners);
             }
 
-            var parentPath = path.Substring(0, path.LastIndexOf('/'));
-            return await GetBannersAsync(parentPath);
+            logger.LogWarning($"{nameof(sharedContentRedis.GetDataAsync)} has returned no results for path {path}");
+            return NoContent();
+        }
+
+        private PageBanner TidyPageBannerFields(PageBanner? originalPageBanner)
+        {
+            var cleanPageBanner = originalPageBanner;
+            var nodeIdLength = originalPageBanner.GraphSync.NodeId.Length;
+
+            cleanPageBanner.GraphSync.NodeId = originalPageBanner.GraphSync.NodeId.Substring(nodeIdLength - 36);
+
+            return cleanPageBanner;
+        }
+
+        private string GetBaseUrl()
+        {
+            var baseUrlAppSettings = configuration.GetValue<string>(BaseUrlAppSettings);
+            if (baseUrlAppSettings != null && baseUrlAppSettings != string.Empty)
+            {
+                return baseUrlAppSettings.Remove(baseUrlAppSettings.Length - 1);
+            }
+
+            return string.Empty;
         }
     }
 }
