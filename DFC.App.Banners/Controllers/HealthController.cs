@@ -35,23 +35,15 @@ namespace DFC.App.Banners.Controllers
         {
             logger.LogInformation("Generating Health report");
 
-            var isHealthy = true;
+            const string message = "Document store is available";
+            logger.LogInformation($"{nameof(Health)} responded with: {resourceName} - {message}");
 
-            if (isHealthy)
-            {
-                const string message = "Document store is available";
-                logger.LogInformation($"{nameof(Health)} responded with: {resourceName} - {message}");
+            var viewModel = CreateHealthViewModel(message);
 
-                var viewModel = CreateHealthViewModel(message);
+            logger.LogInformation("Generated Health report");
 
-                logger.LogInformation("Generated Health report");
+            return this.NegotiateContentResult(viewModel, viewModel.HealthItems);
 
-                return this.NegotiateContentResult(viewModel, viewModel.HealthItems);
-            }
-
-            logger.LogError($"{nameof(Health)}: Ping to {resourceName} has failed");
-
-            return StatusCode((int)HttpStatusCode.ServiceUnavailable);
         }
 
         [HttpGet]
