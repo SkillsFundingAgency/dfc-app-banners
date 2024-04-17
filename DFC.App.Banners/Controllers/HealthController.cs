@@ -22,16 +22,16 @@ namespace DFC.App.Banners.Controllers
 
         [HttpGet]
         [Route("banners/health")]
-        public async Task<IActionResult> HealthView()
+        public IActionResult HealthView()
         {
-            var result = await Health();
+            var result = Health();
 
             return result;
         }
 
         [HttpGet]
         [Route("health")]
-        public async Task<IActionResult> Health()
+        public IActionResult Health()
         {
             logger.LogInformation("Generating Health report");
 

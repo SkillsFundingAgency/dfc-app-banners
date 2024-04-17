@@ -13,8 +13,8 @@ namespace DFC.App.Banners.ViewModels
 
         public string PageLocation { get; set; } = string.Empty;
 
-
         public string PageName { get; set; } = string.Empty;
+
         public List<BannerViewModel> Banners { get; set; } = new List<BannerViewModel>();
     }
 }

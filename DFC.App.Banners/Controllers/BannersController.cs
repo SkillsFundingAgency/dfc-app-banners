@@ -2,22 +2,15 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-
 using AutoMapper;
-
 using DFC.App.Banners.Extensions;
 using DFC.App.Banners.ViewModels;
-using DFC.Common.SharedContent.Pkg.Netcore;
 using DFC.Common.SharedContent.Pkg.Netcore.Interfaces;
 using DFC.Common.SharedContent.Pkg.Netcore.Model.ContentItems.PageBanner;
 using DFC.Common.SharedContent.Pkg.Netcore.Model.Response;
-using Microsoft.AspNetCore.DataProtection.KeyManagement;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Azure.Documents.SystemFunctions;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Options;
-using static System.Net.WebRequestMethods;
 using AppConstants = DFC.Common.SharedContent.Pkg.Netcore.Constant.ApplicationKeys;
 
 namespace DFC.App.Banners.Controllers
@@ -45,7 +38,7 @@ namespace DFC.App.Banners.Controllers
             this.sharedContentRedis = sharedContentRedis;
             this.configuration = configuration;
             this.baseUrl = GetBaseUrl();
-            status = configuration.GetSection("ContentMode:ContentMode").Get<string>();
+            status = configuration.GetSection("ContentMode:ContentMode").Get<string>() ?? "PUBLISHED";
         }
 
         [HttpGet]
@@ -71,7 +64,7 @@ namespace DFC.App.Banners.Controllers
                 var docs = pageBanners.OrderBy(o => o.Banner.WebPageUrl)
                     .Select(a => new IndexDocumentViewModel
                     {
-                        PageLocation = a.Banner.WebPageUrl.Replace(baseUrl, ""),
+                        PageLocation = a.Banner.WebPageUrl.Replace(baseUrl, string.Empty),
                         PageName = a.Banner.WebPageName,
                     });
 
@@ -91,7 +84,6 @@ namespace DFC.App.Banners.Controllers
             {
                 path = $"/{path}";
             }
-
 
             if (string.IsNullOrEmpty(status))
             {
@@ -148,6 +140,7 @@ namespace DFC.App.Banners.Controllers
                 {
                     break;
                 }
+
                 pageBannerUrl = pageBannerUrl.Substring(0, pageBannerUrl.LastIndexOf('/'));
                 pageBannerContentItemModel = await sharedContentRedis.GetDataAsync<PageBanner>(pageBannerUrl, status);
             }

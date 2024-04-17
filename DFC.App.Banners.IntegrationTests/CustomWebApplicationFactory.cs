@@ -33,7 +33,6 @@ namespace DFC.App.Banners.IntegrationTests
 
         public Mock<ISharedContentRedisInterface> MockSharedContentRedis { get; set; }
 
-
         protected override void ConfigureWebHost(IWebHostBuilder builder)
         {
             builder?.ConfigureServices(services =>
@@ -48,6 +47,5 @@ namespace DFC.App.Banners.IntegrationTests
                 services.AddScoped<ISharedContentRedisInterface>(_ => MockSharedContentRedis.Object);
             });
         }
-
     }
 }

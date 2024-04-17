@@ -41,11 +41,11 @@ namespace DFC.App.Banners.UnitTests.ControllerTests.BannersControllerTests
             expectedResults.Banner = new Banner()
             {
                 WebPageUrl = "/test",
-                WebPageName = "Test"
+                WebPageName = "Test",
             };
             expectedResults.GraphSync = new GraphSync()
             {
-                NodeId = "<<contentapiprefix>>/banner/test-guidid"
+                NodeId = "<<contentapiprefix>>/banner/test-guidid",
             };
             var controller = BuildBannersController(mediaTypeName);
             _ = A.CallTo(() => FakeSharedContentRedis.GetDataAsync<PageBanner>(A<string>.Ignored, "PUBLISHED"))
@@ -83,13 +83,14 @@ namespace DFC.App.Banners.UnitTests.ControllerTests.BannersControllerTests
         {
             // Arrange
             var expectedResults = A.Fake<PageBanner>();
-            expectedResults.Banner = new Banner() { 
-                WebPageUrl = "/test", 
-                WebPageName = "Test"
+            expectedResults.Banner = new Banner()
+            {
+                WebPageUrl = "/test",
+                WebPageName = "Test",
             };
             expectedResults.GraphSync = new GraphSync()
             {
-                NodeId = "<<contentapiprefix>>/banner/test-guidid"
+                NodeId = "<<contentapiprefix>>/banner/test-guidid",
             };
             var controller = BuildBannersController(mediaTypeName);
             _ = A.CallTo(() => FakeSharedContentRedis.GetDataAsync<PageBanner>(A<string>.Ignored, "PUBLISHED"))

@@ -44,7 +44,6 @@ namespace DFC.App.Banners.UnitTests.ControllerTests.BannersControllerTests
 
         protected IConfiguration FakeConfiguration { get; }
 
-
         protected IMapper FakeMapper { get; }
 
         protected BannersController BuildBannersController(string mediaTypeName)

@@ -1,11 +1,14 @@
 ﻿using System;
 using System.Diagnostics.CodeAnalysis;
 using System.Net.Http;
+using System.Threading;
 using AutoMapper;
 using DFC.Common.SharedContent.Pkg.Netcore;
-using DFC.Common.SharedContent.Pkg.Netcore.Infrastructure.Strategy;
 using DFC.Common.SharedContent.Pkg.Netcore.Infrastructure;
+using DFC.Common.SharedContent.Pkg.Netcore.Infrastructure.Strategy;
 using DFC.Common.SharedContent.Pkg.Netcore.Interfaces;
+using DFC.Common.SharedContent.Pkg.Netcore.Model.ContentItems.PageBanner;
+using DFC.Common.SharedContent.Pkg.Netcore.Model.Response;
 using DFC.Common.SharedContent.Pkg.Netcore.RequestHandler;
 using DFC.Compui.Telemetry;
 using GraphQL.Client.Abstractions;
@@ -17,9 +20,6 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using DFC.Common.SharedContent.Pkg.Netcore.Model.ContentItems.PageBanner;
-using DFC.Common.SharedContent.Pkg.Netcore.Model.Response;
-using System.Threading;
 using Microsoft.Extensions.Logging;
 
 namespace DFC.App.Banners
@@ -33,13 +33,11 @@ namespace DFC.App.Banners
         private const string IocpThreadsConfigAppSettings = "ThreadSettings:IocpThreads";
 
         private readonly IConfiguration configuration;
-        private readonly IWebHostEnvironment env;
         private readonly ILogger<Startup> logger;
 
-        public Startup(IConfiguration configuration, IWebHostEnvironment env, ILogger<Startup> logger)
+        public Startup(IConfiguration configuration, ILogger<Startup> logger)
         {
             this.configuration = configuration;
-            this.env = env;
             this.logger = logger;
         }
 
@@ -97,7 +95,6 @@ namespace DFC.App.Banners
 
             services.AddAutoMapper(typeof(Startup).Assembly);
             services.AddHostedServiceTelemetryWrapper();
-
 
             services.AddMvc(config =>
                 {
