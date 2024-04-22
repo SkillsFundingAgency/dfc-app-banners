@@ -1,35 +1,44 @@
-﻿using System.Diagnostics.CodeAnalysis;
+﻿using System;
+using System.Diagnostics.CodeAnalysis;
+using System.Net.Http;
+using System.Threading;
 using AutoMapper;
-using DFC.App.Banners.Data.Contracts;
-using DFC.App.Banners.Data.Models.ContentModels;
-using DFC.App.Banners.HostedServices;
-using DFC.App.Banners.Services.CacheContentService;
-using DFC.Compui.Cosmos;
-using DFC.Compui.Cosmos.Contracts;
-using DFC.Compui.Subscriptions.Pkg.Netstandard.Extensions;
+using DFC.Common.SharedContent.Pkg.Netcore;
+using DFC.Common.SharedContent.Pkg.Netcore.Infrastructure;
+using DFC.Common.SharedContent.Pkg.Netcore.Infrastructure.Strategy;
+using DFC.Common.SharedContent.Pkg.Netcore.Interfaces;
+using DFC.Common.SharedContent.Pkg.Netcore.Model.ContentItems.PageBanner;
+using DFC.Common.SharedContent.Pkg.Netcore.Model.Response;
+using DFC.Common.SharedContent.Pkg.Netcore.RequestHandler;
 using DFC.Compui.Telemetry;
-using DFC.Content.Pkg.Netcore.Data.Models.ClientOptions;
-using DFC.Content.Pkg.Netcore.Extensions;
+using GraphQL.Client.Abstractions;
+using GraphQL.Client.Http;
+using GraphQL.Client.Serializer.Newtonsoft;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Logging;
 
 namespace DFC.App.Banners
 {
     [ExcludeFromCodeCoverage]
     public class Startup
     {
-        private const string CosmosDbContentBannersConfigAppSettings = "Configuration:CosmosDbConnections:ContentBanners";
+        private const string RedisCacheConnectionStringAppSettings = "Cms:RedisCacheConnectionString";
+        private const string GraphApiUrlAppSettings = "Cms:GraphApiUrl";
+        private const string WorkerThreadsConfigAppSettings = "ThreadSettings:WorkerThreads";
+        private const string IocpThreadsConfigAppSettings = "ThreadSettings:IocpThreads";
 
         private readonly IConfiguration configuration;
-        private readonly IWebHostEnvironment env;
+        private readonly ILogger<Startup> logger;
 
-        public Startup(IConfiguration configuration, IWebHostEnvironment env)
+        public Startup(IConfiguration configuration, ILogger<Startup> logger)
         {
             this.configuration = configuration;
-            this.env = env;
+            this.logger = logger;
         }
 
         public static void Configure(IApplicationBuilder app, IWebHostEnvironment env, IMapper mapper)
@@ -59,32 +68,33 @@ namespace DFC.App.Banners
 
         public void ConfigureServices(IServiceCollection services)
         {
-            var cosmosDbConnectionSharedContent = configuration.GetSection(CosmosDbContentBannersConfigAppSettings).Get<CosmosDbConnection>();
-            var cosmosRetryOptions = new Microsoft.Azure.Documents.Client.RetryOptions
+            ConfigureMinimumThreads();
+
+            services.AddStackExchangeRedisCache(options => { options.Configuration = configuration.GetSection(RedisCacheConnectionStringAppSettings).Get<string>(); });
+
+            services.AddHttpClient();
+            services.AddSingleton<IGraphQLClient>(s =>
             {
-                MaxRetryAttemptsOnThrottledRequests = 20,
-                MaxRetryWaitTimeInSeconds = 60,
-            };
-            services.AddDocumentServices<PageBannerContentItemModel>(cosmosDbConnectionSharedContent, env.IsDevelopment(), cosmosRetryOptions);
+                var option = new GraphQLHttpClientOptions()
+                {
+                    EndPoint = new Uri(configuration.GetSection(GraphApiUrlAppSettings).Get<string>()),
+
+                    HttpMessageHandler = new CmsRequestHandler(s.GetService<IHttpClientFactory>(), s.GetService<IConfiguration>(), s.GetService<IHttpContextAccessor>()),
+                };
+                var client = new GraphQLHttpClient(option, new NewtonsoftJsonSerializer());
+                return client;
+            });
+
+            services.AddSingleton<ISharedContentRedisInterfaceStrategy<PageBanner>, PageBannerQueryStrategy>();
+            services.AddSingleton<ISharedContentRedisInterfaceStrategy<PageBannerResponse>, PageBannersAllQueryStrategy>();
+            services.AddSingleton<ISharedContentRedisInterfaceStrategyFactory, SharedContentRedisStrategyFactory>();
+            services.AddScoped<ISharedContentRedisInterface, SharedContentRedis>();
 
             services.AddApplicationInsightsTelemetry();
             services.AddHttpContextAccessor();
-            services.AddTransient<IBannersCacheReloadService, BannersCacheReloadService>();
-            services.AddTransient<IWebhooksService, WebhooksService>();
-            services.AddTransient<IBannerDocumentService, BannerDocumentService>();
-            services.AddTransient<IEventHandler, BannerEventHandler>();
-            services.AddTransient<IEventHandler, PageBannerEventHandler>();
 
             services.AddAutoMapper(typeof(Startup).Assembly);
-            CmsApiClientOptions cmsApiClientOptions = configuration.GetSection(nameof(CmsApiClientOptions)).Get<CmsApiClientOptions>();
-            services.AddSingleton(cmsApiClientOptions ?? new CmsApiClientOptions());
             services.AddHostedServiceTelemetryWrapper();
-            services.AddHostedService<CacheReloadBackgroundService>();
-            services.AddSubscriptionBackgroundService(configuration);
-
-            var policyRegistry = services.AddPolicyRegistry();
-
-            services.AddApiServices(configuration, policyRegistry);
 
             services.AddMvc(config =>
                 {
@@ -92,6 +102,25 @@ namespace DFC.App.Banners
                     config.ReturnHttpNotAcceptable = true;
                 })
                 .AddNewtonsoftJson();
+        }
+
+        private void ConfigureMinimumThreads()
+        {
+            var workerThreads = Convert.ToInt32(configuration[WorkerThreadsConfigAppSettings]);
+
+            var iocpThreads = Convert.ToInt32(configuration[IocpThreadsConfigAppSettings]);
+
+            if (ThreadPool.SetMinThreads(workerThreads, iocpThreads))
+            {
+                logger.LogInformation(
+                    "ConfigureMinimumThreads: Minimum configuration value set. IOCP = {0} and WORKER threads = {1}",
+                    iocpThreads,
+                    workerThreads);
+            }
+            else
+            {
+                logger.LogWarning("ConfigureMinimumThreads: The minimum number of threads was not changed");
+            }
         }
     }
 }

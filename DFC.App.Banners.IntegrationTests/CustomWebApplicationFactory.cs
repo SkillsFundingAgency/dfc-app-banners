@@ -1,15 +1,25 @@
-﻿using DFC.App.Banners.Data.Contracts;
-using DFC.App.Banners.Data.Models.ContentModels;
-using DFC.App.Banners.IntegrationTests.Fakes;
+﻿using DFC.Common.SharedContent.Pkg.Netcore.Infrastructure.Strategy;
+using DFC.Common.SharedContent.Pkg.Netcore.Infrastructure;
+using DFC.Common.SharedContent.Pkg.Netcore.Interfaces;
+using DFC.Common.SharedContent.Pkg.Netcore.Model.ContentItems.PageBanner;
+using DFC.Common.SharedContent.Pkg.Netcore.Model.Response;
+using DFC.Common.SharedContent.Pkg.Netcore.RequestHandler;
+using DFC.Common.SharedContent.Pkg.Netcore;
 using DFC.Compui.Cosmos.Contracts;
 using FakeItEasy;
+using GraphQL.Client.Abstractions;
+using GraphQL.Client.Http;
+using GraphQL.Client.Serializer.Newtonsoft;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.AspNetCore.TestHost;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Collections.Generic;
+using System.Net.Http;
+using Moq;
 
 namespace DFC.App.Banners.IntegrationTests
 {
@@ -18,27 +28,10 @@ namespace DFC.App.Banners.IntegrationTests
     {
         public CustomWebApplicationFactory()
         {
-            this.MockCosmosRepo = A.Fake<ICosmosRepository<PageBannerContentItemModel>>();
+            this.MockSharedContentRedis = new Mock<ISharedContentRedisInterface>();
         }
 
-        internal ICosmosRepository<PageBannerContentItemModel> MockCosmosRepo { get; set; }
-
-        internal static IEnumerable<PageBannerContentItemModel> GetContentPageModels()
-        {
-            return new List<PageBannerContentItemModel>
-            {
-                new PageBannerContentItemModel
-                {
-                    Id = Guid.NewGuid(),
-                    Url = new Uri("http://www.test.com"),
-                },
-                new PageBannerContentItemModel
-                {
-                    Id = Guid.NewGuid(),
-                    Url = new Uri("http://www.test.com"),
-                },
-            };
-        }
+        public Mock<ISharedContentRedisInterface> MockSharedContentRedis { get; set; }
 
         protected override void ConfigureWebHost(IWebHostBuilder builder)
         {
@@ -47,14 +40,11 @@ namespace DFC.App.Banners.IntegrationTests
                 var configuration = new ConfigurationBuilder()
                     .AddJsonFile("appsettings.json", optional: true, reloadOnChange: true)
                     .Build();
-
-                services.AddSingleton<IConfiguration>(configuration);
             });
 
             builder.ConfigureTestServices(services =>
             {
-                services.AddTransient(sp => MockCosmosRepo);
-                services.AddTransient<IWebhooksService, FakeWebhooksService>();
+                services.AddScoped<ISharedContentRedisInterface>(_ => MockSharedContentRedis.Object);
             });
         }
     }

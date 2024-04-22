@@ -1,10 +1,8 @@
 ﻿using System.Collections.Generic;
 using System.Net;
 using System.Threading.Tasks;
-using DFC.App.Banners.Data.Models.ContentModels;
 using DFC.App.Banners.Extensions;
 using DFC.App.Banners.ViewModels;
-using DFC.Compui.Cosmos.Contracts;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 
@@ -15,47 +13,37 @@ namespace DFC.App.Banners.Controllers
         public const string HealthViewCanonicalName = "health";
 
         private readonly ILogger<HealthController> logger;
-        private readonly IDocumentService<PageBannerContentItemModel> documentService;
         private readonly string resourceName = typeof(Program).Namespace!;
 
-        public HealthController(ILogger<HealthController> logger, IDocumentService<PageBannerContentItemModel> sharedContentItemDocumentService)
+        public HealthController(ILogger<HealthController> logger)
         {
             this.logger = logger;
-            this.documentService = sharedContentItemDocumentService;
         }
 
         [HttpGet]
         [Route("banners/health")]
-        public async Task<IActionResult> HealthView()
+        public IActionResult HealthView()
         {
-            var result = await Health();
+            var result = Health();
 
             return result;
         }
 
         [HttpGet]
         [Route("health")]
-        public async Task<IActionResult> Health()
+        public IActionResult Health()
         {
             logger.LogInformation("Generating Health report");
 
-            var isHealthy = await documentService.PingAsync();
+            const string message = "Document store is available";
+            logger.LogInformation($"{nameof(Health)} responded with: {resourceName} - {message}");
 
-            if (isHealthy)
-            {
-                const string message = "Document store is available";
-                logger.LogInformation($"{nameof(Health)} responded with: {resourceName} - {message}");
+            var viewModel = CreateHealthViewModel(message);
 
-                var viewModel = CreateHealthViewModel(message);
+            logger.LogInformation("Generated Health report");
 
-                logger.LogInformation("Generated Health report");
+            return this.NegotiateContentResult(viewModel, viewModel.HealthItems);
 
-                return this.NegotiateContentResult(viewModel, viewModel.HealthItems);
-            }
-
-            logger.LogError($"{nameof(Health)}: Ping to {resourceName} has failed");
-
-            return StatusCode((int)HttpStatusCode.ServiceUnavailable);
         }
 
         [HttpGet]
