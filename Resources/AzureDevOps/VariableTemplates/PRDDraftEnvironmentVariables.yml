@@ -3,8 +3,6 @@ variables:
   value: prd-draft
 - name: AppServiceName
   value: $(WebAppPrefix)-as
-- name: cosmosDBCollectionName
-  value: banners-draft
 - name: ResourceGroup
   value: $(WebAppPrefix)-rg
 - name: WebAppProjectName
@@ -17,10 +15,6 @@ variables:
   value: DRAFT
 - name: contentUrl
   value: $(ContentApiDraftAddress)/api/execute
-- name: subscriptionUrl
-  value: https://dfc-prd-api-eventgridsubscriptions-fa.$(appServiceDomain)
-- name: SubscriptionSettingsEndpoint
-  value: $(ApimProxyAddress)/composite-ui/banners-draft
 - name: apiName
   value: banners-draft
 - name: apiId
@@ -29,14 +23,6 @@ variables:
   value: https://$(AppServiceName).$(appServiceDomain)
 - name: WebAppPrefix
   value: dfc-prd-draft-app-banners
-- name: SubscriptionSettingsFilterIncludeEventTypes3
-  value: draft-discarded
-- name: SubscriptionSettingsFilterIncludeEventTypes4
-  value: draft
-- name: SubscriptionSettingsFilterPropertyContainsFilters0Values0
-  value: /content/banner/
-- name: SubscriptionSettingsFilterPropertyContainsFilters0Values1
-  value: /content/pagebanner/
 - name: EnableAzureMonitorAlerting
   value: true
 - name: aspTier
@@ -55,7 +41,5 @@ variables:
   value: 75
 - name: CPUPercentageThreshold
   value: 75
-- name: SubscriptionPosturi
-  value: https://$(AppServiceName).$(AppServiceDomain)/subscription/
 - name: LoggingLogLevelDefault
   value: Warning
