@@ -28,19 +28,7 @@
     "clientAffinity": {
       "type": "bool"
     },
-    "CosmosDbResourceGroup": {
-      "type": "string"
-    },
-    "cosmosDbName": {
-      "type": "string"
-    },
-    "cosmosDbKey": {
-      "type": "securestring"
-    },
     "environment": {
-      "type": "string"
-    },
-    "cosmosDBCollectionName": {
       "type": "string"
     },
     "appDatabaseNeedsCreation": {
@@ -52,31 +40,13 @@
     "enableAlerts": {
       "type": "bool"
     },
-    "SubscriptionSettingsEndpoint": {
-      "type": "string"
-    },
     "apimCompositeApiKey": {
       "type": "securestring"
-    },
-    "SubscriptionSettingsFilterIncludeEventTypes3": {
-      "type": "string"
-    },
-    "SubscriptionSettingsFilterIncludeEventTypes4": {
-      "type": "string"
-    },
-    "SubscriptionSettingsFilterPropertyContainsFilters0Values0": {
-      "type": "string"
-    },
-    "SubscriptionSettingsFilterPropertyContainsFilters0Values1": {
-      "type": "string"
     },
     "ApplicationName": {
       "type": "string"
     },
     "contentUrl": {
-      "type": "string"
-    },
-    "subscriptionUrl": {
       "type": "string"
     },
     "ApimResourceGroup": {
@@ -148,9 +118,6 @@
         "appServicePlanName": "[concat(variables('resourcePrefix'), '-asp')]",
         "appServicePlanResourceGroup": "[concat(variables('resourcePrefix'),'-rg')]",
         "buildingBlocksDfcBaseUrl": "https://raw.githubusercontent.com/SkillsFundingAgency/dfc-devops/master/ArmTemplates/",
-        "cosmosDbDatabaseName": "dfc-app-banners",
-        "cosmosDbCollectionPartitionKey": "/PartitionKey",
-        "cosmosDbEndpoint": "[concat('https://', parameters('cosmosDbName'), '.documents.azure.com:443/')]",
         "resourcePrefix": "[tolower(concat('dfc-', parameters('Environment'), '-app-banners'))]",
         "webAppName": "[concat(variables('ResourcePrefix'), '-as')]",
         "webAppInsightsName": "[concat(variables('resourcePrefix'), '-ai')]",
@@ -265,26 +232,6 @@
                           "value": "1"
                         },
                         {
-                          "name": "Configuration__CosmosDbConnections__ContentBanners__AccessKey",
-                          "value": "[parameters('cosmosDbKey')]"
-                        },
-                        {
-                          "name": "Configuration__CosmosDbConnections__ContentBanners__EndpointUrl",
-                          "value": "[variables('cosmosDbEndpoint')]"
-                        },
-                        {
-                          "name": "Configuration__CosmosDbConnections__ContentBanners__DatabaseId",
-                          "value": "[variables('cosmosDbDatabaseName')]"
-                        },
-                        {
-                          "name": "Configuration__CosmosDbConnections__ContentBanners__CollectionId",
-                          "value": "[parameters('cosmosDbCollectionName')]"
-                        },
-                        {
-                          "name": "Configuration__CosmosDbConnections__ContentBanners__PartitionKey",
-                          "value": "[variables('cosmosDbCollectionPartitionKey')]"
-                        },
-                        {
                           "name": "CmsApiClientOptions__BaseAddress",
                           "value": "[parameters('contentUrl')]"
                         },
@@ -315,46 +262,6 @@
                         {
                           "name": "Policies__HttpRetry__Count",
                           "value": 3
-                        },
-                        {
-                          "name": "SubscriptionSettings__Filter__IncludeEventTypes__0",
-                          "value": "published"
-                        },
-                        {
-                          "name": "SubscriptionSettings__Filter__IncludeEventTypes__1",
-                          "value": "unpublished"
-                        },
-                        {
-                          "name": "SubscriptionSettings__Filter__IncludeEventTypes__2",
-                          "value": "deleted"
-                        },
-                        {
-                          "name": "SubscriptionSettings__Filter__IncludeEventTypes__3",
-                          "value": "[parameters('SubscriptionSettingsFilterIncludeEventTypes3')]"
-                        },
-                        {
-                          "name": "SubscriptionSettings__Filter__IncludeEventTypes__4",
-                          "value": "[parameters('SubscriptionSettingsFilterIncludeEventTypes4')]"
-                        },
-                        {
-                          "name": "SubscriptionSettings__Endpoint",
-                          "value": "[concat(parameters('SubscriptionSettingsEndpoint'),'/api/webhook/ReceiveEvents?subscription-key=',parameters('apimCompositeApiKey'))]"
-                        },
-                        {
-                          "name": "SubscriptionSettings__SubscriptionServiceEndpoint",
-                          "value": "[concat(parameters('subscriptionUrl'),'/api/Execute')]"
-                        },
-                        {
-                          "name": "SubscriptionSettings__Filter__PropertyContainsFilters__0__Key",
-                          "value": "subject"
-                        },
-                        {
-                          "name": "SubscriptionSettings__Filter__PropertyContainsFilters__0__Values__0",
-                          "value": "[parameters('SubscriptionSettingsFilterPropertyContainsFilters0Values0')]"
-                        },
-                        {
-                          "name": "SubscriptionSettings__Filter__PropertyContainsFilters__0__Values__1",
-                          "value": "[parameters('SubscriptionSettingsFilterPropertyContainsFilters0Values1')]"
                         },
                         {
                           "name": "Logging__LogLevel__Default",
@@ -397,69 +304,6 @@
                           "value": "[parameters('ContentMode')]"
                         }
                       ]
-                    }
-                }
-            }
-        },
-        {
-            "name": "[variables('CosmosDbDatabaseName')]",
-            "type": "Microsoft.Resources/deployments",
-            "resourceGroup": "[parameters('CosmosDbResourceGroup')]",
-            "apiVersion": "2017-05-10",
-            "properties": {
-                "mode": "Incremental",
-                "templateLink": {
-                    "uri": "[concat(variables('BuildingBlocksDfcBaseUrl'),'CosmosDb/cosmos-database.json')]",
-                    "contentVersion": "1.0.0.0"
-                },
-                "parameters": {
-                    "accountName": {
-                        "value": "[parameters('CosmosDbName')]"
-                    },
-                    "databaseName": {
-                        "value": "[variables('CosmosDbDatabaseName')]"
-                    },
-                    "useSharedRequestUnits": {
-                        "value": true
-                    },
-                    "offerThroughput": {
-                        "value": "[parameters('appDatabaseThroughput')]"
-                    },
-                    "databaseNeedsCreation": {
-                        "value": "[parameters('appDatabaseNeedsCreation')]"
-                    }
-                }
-            }
-        },
-        {
-            "apiVersion": "2017-05-10",
-            "name": "[parameters('cosmosDbCollectionName')]",
-            "type": "Microsoft.Resources/deployments",
-            "dependsOn": [
-                "[variables('CosmosDbDatabaseName')]"
-            ],
-            "resourceGroup": "[parameters('CosmosDbResourceGroup')]",
-            "properties": {
-                "mode": "Incremental",
-                "templateLink": {
-                    "uri": "[concat(variables('BuildingBlocksDfcBaseUrl'), 'CosmosDb/cosmos-collection.json')]",
-                    "contentVersion": "1.0.0.0"
-                },
-                "parameters": {
-                    "accountName": {
-                        "value": "[parameters('cosmosDbName')]"
-                    },
-                    "databaseName": {
-                        "value": "[variables('cosmosDbDatabaseName')]"
-                    },
-                    "collectionName": {
-                        "value": "[parameters('cosmosDbCollectionName')]"
-                    },
-                    "provisionRequestUnits": {
-                        "value": false
-                    },
-                    "partitionKey": {
-                        "value": "[variables('cosmosDbCollectionPartitionKey')]"
                     }
                 }
             }
