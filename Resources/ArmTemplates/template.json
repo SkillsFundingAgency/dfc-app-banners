@@ -31,9 +31,6 @@
     "environment": {
       "type": "string"
     },
-    "appDatabaseNeedsCreation": {
-      "type": "bool"
-    },
     "appDatabaseThroughput": {
       "type": "int"
     },
