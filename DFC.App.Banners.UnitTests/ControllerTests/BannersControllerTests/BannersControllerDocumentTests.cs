@@ -1,17 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq.Expressions;
-using System.Threading.Tasks;
-
-using DFC.App.Banners.ViewModels;
-
-using FakeItEasy;
-
-using Microsoft.AspNetCore.Mvc;
-using DFC.Common.SharedContent.Pkg.Netcore.Interfaces;
-
-using Xunit;
+﻿using DFC.App.Banners.ViewModels;
+using DFC.Common.SharedContent.Pkg.Netcore.Model.Common;
 using DFC.Common.SharedContent.Pkg.Netcore.Model.ContentItems.PageBanner;
+using FakeItEasy;
+using Microsoft.AspNetCore.Mvc;
+using System.Collections.Generic;
+using System.Threading.Tasks;
+using Xunit;
 
 namespace DFC.App.Banners.UnitTests.ControllerTests.BannersControllerTests
 {
@@ -48,7 +42,7 @@ namespace DFC.App.Banners.UnitTests.ControllerTests.BannersControllerTests
                 NodeId = "<<contentapiprefix>>/banner/test-guidid",
             };
             var controller = BuildBannersController(mediaTypeName);
-            _ = A.CallTo(() => FakeSharedContentRedis.GetDataAsync<PageBanner>(A<string>.Ignored, "PUBLISHED"))
+            _ = A.CallTo(() => FakeSharedContentRedis.GetDataAsync<PageBanner>(A<string>.Ignored, "PUBLISHED", A<double>.Ignored))
                 .Returns(expectedResults);
 
             // Act
@@ -93,7 +87,7 @@ namespace DFC.App.Banners.UnitTests.ControllerTests.BannersControllerTests
                 NodeId = "<<contentapiprefix>>/banner/test-guidid",
             };
             var controller = BuildBannersController(mediaTypeName);
-            _ = A.CallTo(() => FakeSharedContentRedis.GetDataAsync<PageBanner>(A<string>.Ignored, "PUBLISHED"))
+            _ = A.CallTo(() => FakeSharedContentRedis.GetDataAsync<PageBanner>(A<string>.Ignored, "PUBLISHED", A<double>.Ignored))
                 .Returns(expectedResults);
 
             // Act
