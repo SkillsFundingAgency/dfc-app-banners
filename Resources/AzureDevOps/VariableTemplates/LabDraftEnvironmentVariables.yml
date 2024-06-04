@@ -23,7 +23,6 @@ variables:
   value: https://$(AppServiceName).$(appServiceDomain)
 - name: WebAppPrefix
   value: dfc-lab-draft-app-banners
-  value: /content/pagebanner/
 - name: EnableAzureMonitorAlerting
   value: true
 - name: aspTier
