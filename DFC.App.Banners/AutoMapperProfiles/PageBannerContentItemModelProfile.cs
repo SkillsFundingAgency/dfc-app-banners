@@ -1,6 +1,7 @@
 ﻿using System.Diagnostics.CodeAnalysis;
 using AutoMapper;
 using DFC.App.Banners.ViewModels;
+using DFC.Common.SharedContent.Pkg.Netcore.Model.Common;
 using DFC.Common.SharedContent.Pkg.Netcore.Model.ContentItems.PageBanner;
 using Microsoft.AspNetCore.Html;
 
