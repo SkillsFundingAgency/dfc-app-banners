@@ -43,3 +43,5 @@ variables:
   value: 75
 - name: LoggingLogLevelDefault
   value: Warning
+- name: Expiry
+  value: 4

@@ -42,7 +42,7 @@ namespace DFC.App.Banners.UnitTests.ControllerTests.BannersControllerTests
                 NodeId = "<<contentapiprefix>>/banner/test-guidid",
             };
             var controller = BuildBannersController(mediaTypeName);
-            _ = A.CallTo(() => FakeSharedContentRedis.GetDataAsync<PageBanner>(A<string>.Ignored, "PUBLISHED", A<double>.Ignored))
+            _ = A.CallTo(() => FakeSharedContentRedis.GetDataAsyncWithExpiry<PageBanner>(A<string>.Ignored, "PUBLISHED", A<double>.Ignored))
                 .Returns(expectedResults);
 
             // Act
@@ -87,7 +87,7 @@ namespace DFC.App.Banners.UnitTests.ControllerTests.BannersControllerTests
                 NodeId = "<<contentapiprefix>>/banner/test-guidid",
             };
             var controller = BuildBannersController(mediaTypeName);
-            _ = A.CallTo(() => FakeSharedContentRedis.GetDataAsync<PageBanner>(A<string>.Ignored, "PUBLISHED", A<double>.Ignored))
+            _ = A.CallTo(() => FakeSharedContentRedis.GetDataAsyncWithExpiry<PageBanner>(A<string>.Ignored, "PUBLISHED", A<double>.Ignored))
                 .Returns(expectedResults);
 
             // Act

@@ -42,4 +42,6 @@ variables:
 - name: CPUPercentageThreshold
   value: 75
 - name: LoggingLogLevelDefault
-  value: Trace  
+  value: Trace 
+- name: Expiry
+  value: 4 
