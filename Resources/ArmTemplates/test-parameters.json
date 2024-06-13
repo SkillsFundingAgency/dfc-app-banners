@@ -113,6 +113,9 @@
     "CmsNcsBaseUrl": {
       "value": "url.com"
     },
+    "CmsCacheKeyExpiry": {
+      "value": "some-value"
+    },
     "WorkerThreads": {
       "value": "200"
     },
