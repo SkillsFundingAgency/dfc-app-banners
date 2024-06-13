@@ -20,12 +20,14 @@ namespace DFC.App.Banners.Controllers
     {
         public const string RegistrationPath = "banners";
         private const string BaseUrlAppSettings = "Cms:NcsBaseUrl";
+        private const string ExpiryAppSettings = "Cms:Expiry";
         private readonly ILogger<BannersController> logger;
         private readonly IMapper mapper;
         private readonly ISharedContentRedisInterface sharedContentRedis;
         private readonly IConfiguration configuration;
         private readonly string baseUrl;
         private string status;
+        private double expiry = 4;
 
         public BannersController(
             ILogger<BannersController> logger,
@@ -39,6 +41,9 @@ namespace DFC.App.Banners.Controllers
             this.configuration = configuration;
             this.baseUrl = GetBaseUrl();
             status = configuration.GetSection("ContentMode:ContentMode").Get<string>() ?? "PUBLISHED";
+
+            string expiryAppString = this.configuration.GetSection(ExpiryAppSettings).Get<string>();
+            this.expiry = double.Parse(string.IsNullOrEmpty(expiryAppString) ? "4" : expiryAppString);
         }
 
         [HttpGet]
@@ -56,7 +61,7 @@ namespace DFC.App.Banners.Controllers
                 status = "PUBLISHED";
             }
 
-            var documents = await sharedContentRedis.GetDataAsync<PageBannerResponse>(AppConstants.AllPageBanners, status);
+            var documents = await sharedContentRedis.GetDataAsyncWithExpiry<PageBannerResponse>(AppConstants.AllPageBanners, status, expiry);
             var pageBanners = documents.PageBanner;
 
             if (pageBanners != null && pageBanners.Count != 0)
@@ -91,7 +96,7 @@ namespace DFC.App.Banners.Controllers
             }
 
             var pageBannerUrl = $"PageBanner/{baseUrl}{path}";
-            var pageBannerContentItemModel = await sharedContentRedis.GetDataAsync<PageBanner>(pageBannerUrl, status);
+            var pageBannerContentItemModel = await sharedContentRedis.GetDataAsyncWithExpiry<PageBanner>(pageBannerUrl, status, expiry);
 
             while (pageBannerContentItemModel == null)
             {
@@ -101,19 +106,19 @@ namespace DFC.App.Banners.Controllers
                 }
 
                 pageBannerUrl = pageBannerUrl.Substring(0, pageBannerUrl.LastIndexOf('/'));
-                pageBannerContentItemModel = await sharedContentRedis.GetDataAsync<PageBanner>(pageBannerUrl, status);
+                pageBannerContentItemModel = await sharedContentRedis.GetDataAsyncWithExpiry<PageBanner>(pageBannerUrl, status, expiry);
             }
 
             if (pageBannerContentItemModel != null && pageBannerContentItemModel.Banner != null)
             {
                 pageBannerContentItemModel = TidyPageBannerFields(pageBannerContentItemModel);
                 var document = mapper.Map<PageBannerViewModel>(pageBannerContentItemModel);
-                logger.LogInformation($"{nameof(sharedContentRedis.GetDataAsync)} has succeeded");
+                logger.LogInformation($"{nameof(sharedContentRedis.GetDataAsyncWithExpiry)} has succeeded");
 
                 return this.NegotiateContentResult(document);
             }
 
-            logger.LogWarning($"{nameof(sharedContentRedis.GetDataAsync)} has returned no results for path {path}");
+            logger.LogWarning($"{nameof(sharedContentRedis.GetDataAsyncWithExpiry)} has returned no results for path {path}");
             return NoContent();
         }
 
@@ -132,7 +137,7 @@ namespace DFC.App.Banners.Controllers
             }
 
             var pageBannerUrl = $"PageBanner/{baseUrl}{path}";
-            var pageBannerContentItemModel = await sharedContentRedis.GetDataAsync<PageBanner>(pageBannerUrl, status);
+            var pageBannerContentItemModel = await sharedContentRedis.GetDataAsyncWithExpiry<PageBanner>(pageBannerUrl, status, expiry);
 
             while (pageBannerContentItemModel == null)
             {
@@ -142,19 +147,19 @@ namespace DFC.App.Banners.Controllers
                 }
 
                 pageBannerUrl = pageBannerUrl.Substring(0, pageBannerUrl.LastIndexOf('/'));
-                pageBannerContentItemModel = await sharedContentRedis.GetDataAsync<PageBanner>(pageBannerUrl, status);
+                pageBannerContentItemModel = await sharedContentRedis.GetDataAsyncWithExpiry<PageBanner>(pageBannerUrl, status, expiry);
             }
 
             if (pageBannerContentItemModel != null && pageBannerContentItemModel.Banner != null)
             {
                 pageBannerContentItemModel = TidyPageBannerFields(pageBannerContentItemModel);
                 var document = mapper.Map<PageBannerViewModel>(pageBannerContentItemModel);
-                logger.LogInformation($"{nameof(sharedContentRedis.GetDataAsync)} has succeeded");
+                logger.LogInformation($"{nameof(sharedContentRedis.GetDataAsyncWithExpiry)} has succeeded");
 
                 return this.NegotiateContentResult(document.Banners);
             }
 
-            logger.LogWarning($"{nameof(sharedContentRedis.GetDataAsync)} has returned no results for path {path}");
+            logger.LogWarning($"{nameof(sharedContentRedis.GetDataAsyncWithExpiry)} has returned no results for path {path}");
             return NoContent();
         }
 
