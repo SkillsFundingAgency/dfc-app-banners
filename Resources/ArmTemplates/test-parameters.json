@@ -8,20 +8,20 @@
     "appSharedStorageAccountName": {
       "value": "dfcdevappsharedstr"
     },
+    "aspSize": {
+      "value": "2"
+    },
+    "aspTier": {
+      "value": "Standard"
+    },
+    "aspInstances": {
+      "value": 2
+    },
     "appServiceName": {
       "value": "dfc-foo-app-banners-as-ver"
     },
     "appServicePlanSuffix": {
       "value": "-migrated"
-    },
-    "cosmosDBName": {
-      "value": "dfc-dev-app-sharedresources-cdb"
-    },
-    "cosmosDBCollectionName": {
-      "value": "cosmosDBCollectionName"
-    },
-    "cosmosDbKey": {
-      "value": "not-a-real-key"
     },
     "clientAffinity": {
       "value": false
@@ -29,43 +29,19 @@
     "Environment": {
       "value": "FOO"
     },
-    "CosmosDbResourceGroup": {
-      "value": "dfc-dev-app-sharedresources-rg"
-    },
-    "appDatabaseNeedsCreation": {
-      "value": true
-    },
     "appDatabaseThroughput": {
       "value": 2
     },
     "enableAlerts": {
       "value": false
     },
-    "SubscriptionSettingsEndpoint": {
-      "value": "http://www.food.co.uk"
-    },
     "apimCompositeApiKey": {
       "value": "fake-key-mate"
-    },
-    "SubscriptionSettingsFilterIncludeEventTypes3": {
-      "value": "value"
-    },
-    "SubscriptionSettingsFilterIncludeEventTypes4": {
-      "value": "anothervalue"
-    },
-    "SubscriptionSettingsFilterPropertyContainsFilters0Values0": {
-      "value": "anothervalue"
-    },
-    "SubscriptionSettingsFilterPropertyContainsFilters0Values1": {
-      "value": "anothervalue"
     },
     "ApplicationName": {
       "value": "anothervalue"
     },
     "contentUrl": {
-      "value": "anothervalue"
-    },
-    "subscriptionUrl": {
       "value": "anothervalue"
     },
     "ApimResourceGroup": {
@@ -117,10 +93,13 @@
       "value": "200"
     },
     "IocpThreads": {
-        "value": "200"
+      "value": "200"
     },
     "ContentMode": {
       "value": "PUBLISHED"
+    },
+    "Expiry": {
+      "value": "4"
     }
   }
 }
