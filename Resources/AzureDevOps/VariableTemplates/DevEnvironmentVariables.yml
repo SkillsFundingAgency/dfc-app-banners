@@ -25,23 +25,15 @@ variables:
   value: dfc-dev-app-banners
 - name: EnableAzureMonitorAlerting
   value: true
-- name: aspTier
-  value: Standard
-- name: aspInstances
-  value: 2
-- name: aspSize
-  value: 2
 - name: clientAffinity
   value: false
 - name: appDatabaseThroughput
   value: 400
 - name: ExceptionCountThreshold
   value: 10
-- name: MemoryPercentageThreshold
-  value: 75
-- name: CPUPercentageThreshold
-  value: 75
 - name: LoggingLogLevelDefault
   value: Trace
 - name: Expiry
   value: 4
+- name: SubscriptionPosturi
+  value: https://$(AppServiceName).$(AppServiceDomain)/subscription/

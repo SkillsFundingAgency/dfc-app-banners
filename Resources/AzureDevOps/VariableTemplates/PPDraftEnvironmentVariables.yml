@@ -2,7 +2,9 @@ variables:
 - name: ReleaseEnvironmentName
   value: pp-draft
 - name: AppServiceName
-  value: $(WebAppPrefix)-as
+  value: $(WebAppPrefix)-as-ver2
+- name: AppServicePlanSuffix
+  value: -migrated
 - name: ResourceGroup
   value: $(WebAppPrefix)-rg
 - name: WebAppProjectName
@@ -15,6 +17,8 @@ variables:
   value: DRAFT
 - name: contentUrl
   value: $(ContentApiDraftAddress)/api/execute
+- name: subscriptionUrl
+  value: https://dfc-pp-api-eventgridsubscriptions-fa-ver2.$(appServiceDomain)
 - name: apiName
   value: banners-draft
 - name: apiId
@@ -25,23 +29,15 @@ variables:
   value: dfc-pp-draft-app-banners
 - name: EnableAzureMonitorAlerting
   value: true
-- name: aspTier
-  value: Standard
-- name: aspInstances
-  value: 2
-- name: aspSize
-  value: 1
 - name: clientAffinity
   value: false
 - name: appDatabaseThroughput
   value: 5000
 - name: ExceptionCountThreshold
   value: 10
-- name: MemoryPercentageThreshold
-  value: 75
-- name: CPUPercentageThreshold
-  value: 75
 - name: LoggingLogLevelDefault
   value: Warning
 - name: Expiry
   value: 4
+- name: SubscriptionPosturi
+  value: https://$(AppServiceName).$(AppServiceDomain)/subscription/

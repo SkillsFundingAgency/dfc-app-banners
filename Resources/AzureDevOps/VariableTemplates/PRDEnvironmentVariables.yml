@@ -25,22 +25,14 @@ variables:
   value: dfc-prd-app-banners
 - name: EnableAzureMonitorAlerting
   value: true
-- name: aspTier
-  value: Standard
-- name: aspInstances
-  value: 4
-- name: aspSize
-  value: 1
 - name: clientAffinity
   value: false
 - name: appDatabaseThroughput
   value: 5000
 - name: ExceptionCountThreshold
   value: 10
-- name: MemoryPercentageThreshold
-  value: 75
-- name: CPUPercentageThreshold
-  value: 75
+- name: SubscriptionPosturi
+  value: https://$(AppServiceName).$(AppServiceDomain)/subscription/
 - name: LoggingLogLevelDefault
   value: Warning
 - name: Expiry

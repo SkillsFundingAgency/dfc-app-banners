@@ -17,6 +17,12 @@
     "aspInstances": {
       "value": 2
     },
+    "appServiceName": {
+      "value": "dfc-foo-app-banners-as-ver"
+    },
+    "appServicePlanSuffix": {
+      "value": "-migrated"
+    },
     "clientAffinity": {
       "value": false
     },
@@ -54,12 +60,6 @@
       "value": "banners"
     },
     "ExceptionCountThreshold": {
-      "value": "0"
-    },
-    "MemoryPercentageThreshold": {
-      "value": "0"
-    },
-    "CPUPercentageThreshold": {
       "value": "0"
     },
     "LoggingLogLevelDefault": {
