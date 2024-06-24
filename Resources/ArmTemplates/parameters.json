@@ -17,26 +17,11 @@
     "clientAffinity": {
       "value": __clientAffinity__
     },
-    "cosmosDBName": {
-      "value": "__appSharedCosmosDBName__"
-    },
-    "cosmosDbKey": {
-      "value": "__appSharedCosmosPrimaryKey__"
-    },
-    "CosmosDbResourceGroup": {
-      "value": "__appSharedResourceGroup__"
-    },
     "environment": {
       "value": "__ReleaseEnvironmentName__",
       "metadata": {
         "comment": "Bug in tokenisation task prevents referencing Release.EnvironmentName directly.  https://github.com/TotalALM/VSTS-Tasks/issues/29"
       }
-    },
-    "cosmosDBCollectionName": {
-      "value": "__cosmosDBCollectionName__"
-    },
-    "appDatabaseNeedsCreation": {
-      "value": __CosmosDbDatabaseDoesntExist__
     },
     "appDatabaseThroughput": {
       "value": __appDatabaseThroughput__
@@ -44,32 +29,14 @@
     "enableAlerts": {
       "value": __EnableAzureMonitorAlerting__
     },
-    "SubscriptionSettingsEndpoint": {
-      "value": "__SubscriptionSettingsEndpoint__"
-    },
     "apimCompositeApiKey": {
       "value": "__apimCompositeKey__"
-    },
-    "SubscriptionSettingsFilterIncludeEventTypes3": {
-      "value": "__SubscriptionSettingsFilterIncludeEventTypes3__"
-    },
-    "SubscriptionSettingsFilterIncludeEventTypes4": {
-      "value": "__SubscriptionSettingsFilterIncludeEventTypes4__"
-    },
-    "SubscriptionSettingsFilterPropertyContainsFilters0Values0": {
-      "value": "__SubscriptionSettingsFilterPropertyContainsFilters0Values0__"
-    },
-    "SubscriptionSettingsFilterPropertyContainsFilters0Values1": {
-      "value": "__SubscriptionSettingsFilterPropertyContainsFilters0Values1__"
     },
     "ApplicationName": {
       "value": "__ApplicationName__"
     },
     "contentUrl": {
       "value": "__contentUrl__"
-    },
-    "subscriptionUrl": {
-      "value": "__subscriptionUrl__"
     },
     "ApimResourceGroup": {
       "value": "__SharedResourceGroupName__"
@@ -124,6 +91,9 @@
     },
     "ContentMode": {
       "value": "__ContentMode__"
+    },
+    "Expiry": {
+      "value": "__Expiry__"
     }
   }
 }

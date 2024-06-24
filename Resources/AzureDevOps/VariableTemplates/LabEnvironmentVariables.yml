@@ -3,8 +3,6 @@ variables:
   value: lab
 - name: AppServiceName
   value: $(WebAppPrefix)-as
-- name: cosmosDBCollectionName
-  value: banners
 - name: ResourceGroup
   value: $(WebAppPrefix)-rg
 - name: WebAppProjectName
@@ -17,10 +15,6 @@ variables:
   value: PUBLISHED
 - name: contentUrl
   value: $(ContentApiAddress)/api/execute
-- name: subscriptionUrl
-  value: https://dfc-lab-api-eventgridsubscriptions-fa.$(appServiceDomain)
-- name: SubscriptionSettingsEndpoint
-  value: $(ApimProxyAddress)/composite-ui/banners
 - name: apiName
   value: banners
 - name: apiId
@@ -29,14 +23,6 @@ variables:
   value: https://$(AppServiceName).$(appServiceDomain)
 - name: WebAppPrefix
   value: dfc-lab-app-banners
-- name: SubscriptionSettingsFilterIncludeEventTypes3
-  value:
-- name: SubscriptionSettingsFilterIncludeEventTypes4
-  value:
-- name: SubscriptionSettingsFilterPropertyContainsFilters0Values0
-  value: /content/banner/
-- name: SubscriptionSettingsFilterPropertyContainsFilters0Values1
-  value: /content/pagebanner/
 - name: EnableAzureMonitorAlerting
   value: true
 - name: clientAffinity
@@ -45,7 +31,9 @@ variables:
   value: 400
 - name: ExceptionCountThreshold
   value: 10
+- name: LoggingLogLevelDefault
+  value: Trace 
+- name: Expiry
+  value: 4 
 - name: SubscriptionPosturi
   value: https://$(AppServiceName).$(AppServiceDomain)/subscription/
-- name: LoggingLogLevelDefault
-  value: Trace

@@ -1,5 +1,4 @@
-﻿using DFC.Common.SharedContent.Pkg.Netcore.Model.ContentItems.PageBanner;
-using DFC.Common.SharedContent.Pkg.Netcore.Model.Response;
+﻿using DFC.Common.SharedContent.Pkg.Netcore.Model.Response;
 using FluentAssertions;
 using Moq;
 using System;
@@ -39,9 +38,7 @@ namespace DFC.App.Banners.IntegrationTests.ControllerTests
         {
             // Arrange
             var uri = new Uri("/", UriKind.Relative);
-            this.factory.MockSharedContentRedis.Setup(
-                x => x.GetDataAsync<PageBannerResponse>(
-                    It.IsAny<string>(), "PUBLISHED"))
+            this.factory.MockSharedContentRedis.Setup(x => x.GetDataAsyncWithExpiry<PageBannerResponse>(It.IsAny<string>(), "PUBLISHED",  It.IsAny<double>()))
             .ReturnsAsync(new PageBannerResponse());
             var client = this.factory.CreateClient();
             client.DefaultRequestHeaders.Accept.Clear();

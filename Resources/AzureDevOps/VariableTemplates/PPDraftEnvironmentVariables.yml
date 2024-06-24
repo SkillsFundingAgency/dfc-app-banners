@@ -5,8 +5,6 @@ variables:
   value: $(WebAppPrefix)-as-ver2
 - name: AppServicePlanSuffix
   value: -migrated
-- name: cosmosDBCollectionName
-  value: banners-draft
 - name: ResourceGroup
   value: $(WebAppPrefix)-rg
 - name: WebAppProjectName
@@ -21,8 +19,6 @@ variables:
   value: $(ContentApiDraftAddress)/api/execute
 - name: subscriptionUrl
   value: https://dfc-pp-api-eventgridsubscriptions-fa-ver2.$(appServiceDomain)
-- name: SubscriptionSettingsEndpoint
-  value: $(ApimProxyAddress)/composite-ui/banners-draft
 - name: apiName
   value: banners-draft
 - name: apiId
@@ -31,14 +27,6 @@ variables:
   value: https://$(AppServiceName).$(appServiceDomain)
 - name: WebAppPrefix
   value: dfc-pp-draft-app-banners
-- name: SubscriptionSettingsFilterIncludeEventTypes3
-  value: draft-discarded
-- name: SubscriptionSettingsFilterIncludeEventTypes4
-  value: draft
-- name: SubscriptionSettingsFilterPropertyContainsFilters0Values0
-  value: /content/banner/
-- name: SubscriptionSettingsFilterPropertyContainsFilters0Values1
-  value: /content/pagebanner/
 - name: EnableAzureMonitorAlerting
   value: true
 - name: clientAffinity
@@ -47,7 +35,9 @@ variables:
   value: 5000
 - name: ExceptionCountThreshold
   value: 10
-- name: SubscriptionPosturi
-  value: https://$(AppServiceName).$(AppServiceDomain)/subscription/
 - name: LoggingLogLevelDefault
   value: Warning
+- name: Expiry
+  value: 4
+- name: SubscriptionPosturi
+  value: https://$(AppServiceName).$(AppServiceDomain)/subscription/
