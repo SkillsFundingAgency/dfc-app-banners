@@ -17,12 +17,6 @@
     "clientAffinity": {
       "value": __clientAffinity__
     },
-    "aspTier": {
-      "value": "__aspTier__"
-    },
-    "aspSize": {
-      "value": "__aspSize__"
-    },
     "environment": {
       "value": "__ReleaseEnvironmentName__",
       "metadata": {

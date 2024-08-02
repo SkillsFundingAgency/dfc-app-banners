@@ -8,15 +8,6 @@
     "appSharedStorageAccountName": {
       "value": "dfcdevappsharedstr"
     },
-    "aspSize": {
-      "value": "2"
-    },
-    "aspTier": {
-      "value": "Standard"
-    },
-    "aspInstances": {
-      "value": 2
-    },
     "appServiceName": {
       "value": "dfc-foo-app-banners-as-ver"
     },
