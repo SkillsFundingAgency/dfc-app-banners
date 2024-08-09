@@ -27,7 +27,7 @@ namespace DFC.App.Banners.Controllers
         private readonly IConfiguration configuration;
         private readonly string baseUrl;
         private string status;
-        private double expiry = 4;
+        private double expiryInHours = 4;
 
         public BannersController(
             ILogger<BannersController> logger,
@@ -43,7 +43,10 @@ namespace DFC.App.Banners.Controllers
             status = configuration.GetSection("ContentMode:ContentMode").Get<string>() ?? "PUBLISHED";
 
             string expiryAppString = this.configuration.GetSection(ExpiryAppSettings).Get<string>();
-            this.expiry = double.Parse(string.IsNullOrEmpty(expiryAppString) ? "4" : expiryAppString);
+            if (double.TryParse(expiryAppString, out var expiryAppStringParseResult))
+            {
+                expiryInHours = expiryAppStringParseResult;
+            }
         }
 
         [HttpGet]
@@ -61,7 +64,7 @@ namespace DFC.App.Banners.Controllers
                 status = "PUBLISHED";
             }
 
-            var documents = await sharedContentRedis.GetDataAsyncWithExpiry<PageBannerResponse>(AppConstants.AllPageBanners, status, expiry);
+            var documents = await sharedContentRedis.GetDataAsyncWithExpiry<PageBannerResponse>(AppConstants.AllPageBanners, status, expiryInHours);
             var pageBanners = documents.PageBanner;
 
             if (pageBanners != null && pageBanners.Count != 0)
@@ -96,7 +99,7 @@ namespace DFC.App.Banners.Controllers
             }
 
             var pageBannerUrl = $"PageBanner/{baseUrl}{path}";
-            var pageBannerContentItemModel = await sharedContentRedis.GetDataAsyncWithExpiry<PageBanner>(pageBannerUrl, status, expiry);
+            var pageBannerContentItemModel = await sharedContentRedis.GetDataAsyncWithExpiry<PageBanner>(pageBannerUrl, status, expiryInHours);
 
             while (pageBannerContentItemModel == null)
             {
@@ -106,7 +109,7 @@ namespace DFC.App.Banners.Controllers
                 }
 
                 pageBannerUrl = pageBannerUrl.Substring(0, pageBannerUrl.LastIndexOf('/'));
-                pageBannerContentItemModel = await sharedContentRedis.GetDataAsyncWithExpiry<PageBanner>(pageBannerUrl, status, expiry);
+                pageBannerContentItemModel = await sharedContentRedis.GetDataAsyncWithExpiry<PageBanner>(pageBannerUrl, status, expiryInHours);
             }
 
             if (pageBannerContentItemModel != null && pageBannerContentItemModel.Banner != null)
@@ -137,7 +140,7 @@ namespace DFC.App.Banners.Controllers
             }
 
             var pageBannerUrl = $"PageBanner/{baseUrl}{path}";
-            var pageBannerContentItemModel = await sharedContentRedis.GetDataAsyncWithExpiry<PageBanner>(pageBannerUrl, status, expiry);
+            var pageBannerContentItemModel = await sharedContentRedis.GetDataAsyncWithExpiry<PageBanner>(pageBannerUrl, status, expiryInHours);
 
             while (pageBannerContentItemModel == null)
             {
@@ -147,7 +150,7 @@ namespace DFC.App.Banners.Controllers
                 }
 
                 pageBannerUrl = pageBannerUrl.Substring(0, pageBannerUrl.LastIndexOf('/'));
-                pageBannerContentItemModel = await sharedContentRedis.GetDataAsyncWithExpiry<PageBanner>(pageBannerUrl, status, expiry);
+                pageBannerContentItemModel = await sharedContentRedis.GetDataAsyncWithExpiry<PageBanner>(pageBannerUrl, status, expiryInHours);
             }
 
             if (pageBannerContentItemModel != null && pageBannerContentItemModel.Banner != null)
